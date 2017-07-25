@@ -1,0 +1,154 @@
+* {
+  box-sizing: border-box;
+  font: 13px/1.0em Arial;
+  font: 12px/1.0em "Comfortaa";
+  margin: 0; padding: 0;
+  color: hsl(0, 0%, 25%);
+  color: hsl(0, 0%, 80%);
+  border: none; outline: none;
+}
+
+html {
+  display: flex;
+  min-height: 100%;
+}
+
+body {
+  display: flex;
+  flex: 1;
+  background: hsl(0, 0%, 90%);
+  background: hsl(0, 0%, 50%);
+  background: hsl(0, 0%, 0%);
+}
+
+main {
+  flex: 1;
+  max-width: 1024px;
+  margin: auto;
+  xbackground: hsl(0, 0%, 94%);
+  xbackground: hsl(0, 0%, 100%);
+  xoutline: 1px solid hsl(0, 0%, 80%);
+  outline: 1px solid hsla(0, 0%, 0%, 0.05);
+  height: 100%;
+}
+
+ul {
+  list-style: none;
+}
+
+
+div.directors h1 {
+  padding: 0 10px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+div.directors ul {
+  visibility: hidden;
+  background: hsl(0, 0%, 10%);
+  position: absolute;
+  left: 0; top: 50px;
+  columns: 200px 4;
+  width: 1024px;
+}
+
+div.directors:hover ul {
+  visibility: visible;;
+}
+
+div.directors ul > li {
+  padding: 5px 10px;
+}
+
+
+ul.groups {
+  padding-top: 50px;
+  padding-bottom: 10px;
+}
+
+ul.groups > li {
+  margin-top: 15px;
+}
+
+ul.groups h1 {
+  height: 20px;
+  padding: 0 10px;
+  margin-top: 25px;
+  xbackground: hsl(0, 0%, 95%);
+  xborder-bottom: 1px solid hsl(0, 0%, 80%);
+  font-size: 25px;
+  font-weight: 600;
+  xcolor: hsl(0, 0%, 100%);
+}
+
+ul.groups > li:first-child {
+  xmargin-top: 0;
+}
+
+
+
+ul.movies {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+ul.movies > li {
+  margin: 10px 0 0 10px;
+  position: relative;
+  transition: all 0.125s ease-in;
+}
+
+ul.movies > li:hover, ul.movies > li.selected {
+  transform: scale(1.0625, 1.0625);
+  xtransform: scale(1.125, 1.125);
+  transition: all 0.0625s ease-out;
+  z-index: 100;
+  xbox-shadow: 0 0 10px hsla(0, 0%, 0%, 0.25);
+  box-shadow: 0 0 30px hsla(200, 100%, 50%, 1.0);
+}
+
+ul.movies > li::before {
+  content: "";
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  border: 1px solid hsla(0, 0%, 0%, 0.125);
+  border: 1px solid hsla(0, 0%, 100%, 0.125);
+  outline: 1px solid hsla(0, 0%, 0%, 0.5);
+}
+
+ul.movies > li::after {
+  opacity: 0;
+  transition: opacity 0.125s linear;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: pre-wrap;
+  content: attr(data-title) "\a \2014  " attr(data-released) " \2014 ";
+  text-align: center;
+  position: absolute;
+  xtop: 0; right: 0; bottom: 0; left: 0;
+  padding: 5px;
+  xmargin: 5px;
+  line-height: 1.5em;
+  xborder-radius: 2px;
+
+  background: hsla(0, 0%, 0%, 0.85);
+  xbackground: hsla(0, 0%, 100%, 0.75);
+  box-shadow: 0 0 1px hsla(0, 0%, 100%, 0.5);
+  xbox-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
+  xcolor: hsl(0, 0%, 95%);
+  xcolor: hsl(0, 0%, 0%);
+  text-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
+  xtext-shadow: 0 0 1px hsla(0, 0%, 100%, 0.5);
+  xfilter: blur(5px);
+}
+
+ul.movies > li:hover::after, ul.movies > li:focus::after {
+  opacity: 1;
+  transition: opacity 0.0625s linear;
+}
+
+ul.movies > li img {
+  display: block;
+}
