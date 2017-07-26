@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Immutable from "immutable";
 
+import smoothScroll from "smoothscroll";
+
 import directors from "./directors";
 import movies from "./movies";
 
@@ -19,8 +21,10 @@ const categories = {
 class Movie extends React.PureComponent {
 
   componentDidUpdate() {
-    if (this.props.selected) {
-      window.scrollTo(0, this.li.offsetTop - 105);
+    if (this.props.selected && ((this.li.offsetTop + this.li.offsetHeight + 20) > (window.innerHeight + document.body.scrollTop) ||
+                                (this.li.offsetTop < document.body.scrollTop + 105))) {
+      //window.scrollTo(0, this.li.offsetTop - 105);
+      smoothScroll(this.anchor);
     }
   }
 
@@ -29,7 +33,8 @@ class Movie extends React.PureComponent {
 
     return (
       <li ref={li => this.li = li} className={this.props.selected ? "selected" : ""} data-title={this.props.title} data-released={this.props.released}>
-        <img src={imageURL} width="135" height="199" title={this.props.title} />
+        <div ref={element => this.anchor = element} style={{position: "relative", top: -350}} />
+        <img src={imageURL} width="147" height="219" title={this.props.title} />
       </li>
     );
   }
@@ -81,13 +86,13 @@ class App extends React.PureComponent {
 
     const directorsSortedByCount = directors2.sortBy((count, director) => -count);
 
-    console.log(directorsSortedByCount);
+    //console.log(directorsSortedByCount);
 
     return (
       <div>
         <div style={{display: "flex", justifyContent: "center", position: "fixed", top: 0, right: 0, left: 0, height: "50px", background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 0%, 1.0)", zIndex: 1000}}>
-          <div style={{display: "flex", justifyContent: "space-between", width: 1024, alignItems: "center", xpadding: "0 10px", xpaddingTop: 4, position: "relative"}}>
-            <div>
+          <div style={{display: "flex", justifyContent: "space-between", width: 1355, alignItems: "center", xpadding: "0 10px", xpaddingTop: 4, position: "relative"}}>
+            <div style={{width: 300}}>
               <div className="directors">
                 <h1 style={{fontSize: 25}}>Directors</h1>
                 <ul style={{position: "absolute"}}>
@@ -96,7 +101,7 @@ class App extends React.PureComponent {
               </div>
             </div>
             <div>{this.props.movies.size} Movies</div>
-            <div style={{fontSize: 25}}>{this.props.movies.size} movies so far...</div>
+            <div style={{fontSize: 25, width: 300, padding: "0 20px", display: "flex", justifyContent: "flex-end"}}>Movies</div>
           </div>
         </div>
         <ul className="groups">

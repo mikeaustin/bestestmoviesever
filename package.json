@@ -17,6 +17,7 @@
     "immutable": "^3.8.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "smoothscroll": "^0.3.0",
     "webpack": "^3.3.0",
     "webpack-dev-server": "^2.5.1"
   }

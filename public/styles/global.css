@@ -19,14 +19,18 @@ body {
   background: hsl(0, 0%, 90%);
   background: hsl(0, 0%, 50%);
   background: hsl(0, 0%, 0%);
+  xbackground: radial-gradient(closest-side, hsl(0, 0%, 30%), hsl(0, 0%, 10%));
+  background-attachment: fixed;;
 }
 
 main {
   flex: 1;
   max-width: 1024px;
+  max-width: 1190px;
+  max-width: 1355px;
   margin: auto;
-  xbackground: hsl(0, 0%, 94%);
-  xbackground: hsl(0, 0%, 100%);
+  background: hsl(0, 0%, 94%);
+  background: hsl(0, 0%, 0%);
   xoutline: 1px solid hsl(0, 0%, 80%);
   outline: 1px solid hsla(0, 0%, 0%, 0.05);
   height: 100%;
@@ -38,7 +42,7 @@ ul {
 
 
 div.directors h1 {
-  padding: 0 10px;
+  padding: 0 20px;
   height: 50px;
   display: flex;
   align-items: center;
@@ -51,10 +55,12 @@ div.directors ul {
   left: 0; top: 50px;
   columns: 200px 4;
   width: 1024px;
+  width: 1190px;
 }
 
 div.directors:hover ul {
   visibility: visible;;
+  padding: 10px;
 }
 
 div.directors ul > li {
@@ -73,8 +79,8 @@ ul.groups > li {
 
 ul.groups h1 {
   height: 20px;
-  padding: 0 10px;
-  margin-top: 25px;
+  padding: 0 20px;
+  xmargin-top: 25px;
   xbackground: hsl(0, 0%, 95%);
   xborder-bottom: 1px solid hsl(0, 0%, 80%);
   font-size: 25px;
@@ -87,21 +93,21 @@ ul.groups > li:first-child {
 }
 
 
-
 ul.movies {
   display: flex;
   flex-wrap: wrap;
+  padding: 10px 0 10px 10px;
 }
 
 ul.movies > li {
-  margin: 10px 0 0 10px;
+  margin: 10px 10px 10px 10px;
   position: relative;
   transition: all 0.125s ease-in;
 }
 
 ul.movies > li:hover, ul.movies > li.selected {
-  transform: scale(1.0625, 1.0625);
-  xtransform: scale(1.125, 1.125);
+  xtransform: scale(1.0625, 1.0625);
+  transform: scale(1.125, 1.125);
   transition: all 0.0625s ease-out;
   z-index: 100;
   xbox-shadow: 0 0 10px hsla(0, 0%, 0%, 0.25);
