@@ -28,6 +28,7 @@ main {
   max-width: 1024px;
   max-width: 1190px;
   max-width: 1355px;
+  max-width: 1920px;
   margin: auto;
   background: hsl(0, 0%, 94%);
   background: hsl(0, 0%, 0%);
@@ -53,7 +54,7 @@ div.directors ul {
   background: hsl(0, 0%, 10%);
   position: absolute;
   left: 0; top: 50px;
-  columns: 200px 4;
+  columns: 0 5;
   width: 1024px;
   width: 1190px;
 }

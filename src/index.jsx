@@ -33,8 +33,8 @@ class Movie extends React.PureComponent {
 
     return (
       <li ref={li => this.li = li} className={this.props.selected ? "selected" : ""} data-title={this.props.title} data-released={this.props.released}>
-        <div ref={element => this.anchor = element} style={{position: "relative", top: -350}} />
-        <img src={imageURL} width="147" height="219" title={this.props.title} />
+        <div ref={element => this.anchor = element} style={{position: "relative", top: -260}} />
+        <img src={imageURL} width="160" height="238" title={this.props.title} />
       </li>
     );
   }
