@@ -17,7 +17,7 @@ body {
   display: flex;
   flex: 1;
   background: hsl(0, 0%, 90%);
-  background: hsl(0, 0%, 50%);
+  background: hsl(0, 0%, 7%);
   background: hsl(0, 0%, 0%);
   xbackground: radial-gradient(closest-side, hsl(0, 0%, 30%), hsl(0, 0%, 10%));
   background-attachment: fixed;;
@@ -26,9 +26,7 @@ body {
 main {
   flex: 1;
   max-width: 1024px;
-  max-width: 1190px;
-  max-width: 1355px;
-  max-width: 1920px;
+  max-width: 1280px;
   margin: auto;
   background: hsl(0, 0%, 94%);
   background: hsl(0, 0%, 0%);
@@ -39,6 +37,15 @@ main {
 
 ul {
   list-style: none;
+}
+
+#categories th, td {
+  text-align: center;
+  padding: 0 5px 10px 5px;
+}
+
+#categories th {
+  width: 50px;
 }
 
 
@@ -56,7 +63,7 @@ div.directors ul {
   left: 0; top: 50px;
   columns: 0 5;
   width: 1024px;
-  width: 1190px;
+  max-width: 1280px;
 }
 
 div.directors:hover ul {
@@ -158,4 +165,17 @@ ul.movies > li:hover::after, ul.movies > li:focus::after {
 
 ul.movies > li img {
   display: block;
+  width: 160px; height: 238px;
+}
+
+@media screen and (max-width: 1024px) {
+  ul.movies > li img {
+    width: 147px; height: 219px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  ul.movies > li img {
+    width: 167px; height: 249px;
+  }
 }

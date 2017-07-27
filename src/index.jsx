@@ -20,21 +20,51 @@ const categories = {
 
 class Movie extends React.PureComponent {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      imageURL: null
+    };
+
+    this.handleScroll = this.handleScroll.bind(this);
+  }
+
+  loadImages() {
+    if (this.li.offsetTop < window.innerHeight + window.scrollY && !this.state.imageURL) {
+      this.setState({
+        imageURL: "images/" + (this.props.image ? this.props.image : this.props.title.replace(/ /g, "_") + ".jpg")
+      });
+    }
+  }
+
+  handleScroll(event) {
+    this.loadImages();
+  }
+
+  componentDidMount() {
+    this.loadImages();
+
+    document.addEventListener("scroll", this.handleScroll, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("scroll", this.handleScroll, false);
+  }
+
   componentDidUpdate() {
-    if (this.props.selected && ((this.li.offsetTop + this.li.offsetHeight + 20) > (window.innerHeight + document.body.scrollTop) ||
-                                (this.li.offsetTop < document.body.scrollTop + 105))) {
-      //window.scrollTo(0, this.li.offsetTop - 105);
-      smoothScroll(this.anchor);
+    if (this.props.selected && ((this.li.offsetTop + this.li.offsetHeight + 10) > (window.innerHeight + document.body.scrollTop) ||
+                                (this.li.offsetTop < document.body.scrollTop + 50))) {
+      //smoothScroll(this.li.offsetTop - 105 - (window.innerHeight / 2) + (this.li.offsetTop / 2));
+      //smoothScroll(this.li.offsetTop - ((window.innerHeight + 50) / 2) + (this.li.offsetHeight / 2));
+      smoothScroll(this.li.offsetTop - ((window.innerHeight + 50 - this.li.offsetHeight) / 2));
     }
   }
 
   render() {
-    const imageURL = "images/" + (this.props.image ? this.props.image : this.props.title.replace(/ /g, "_") + ".jpg");
-
     return (
       <li ref={li => this.li = li} className={this.props.selected ? "selected" : ""} data-title={this.props.title} data-released={this.props.released}>
-        <div ref={element => this.anchor = element} style={{position: "relative", top: -260}} />
-        <img src={imageURL} width="160" height="238" title={this.props.title} />
+        <img src={this.state.imageURL} title={this.props.title} />
       </li>
     );
   }
@@ -91,17 +121,42 @@ class App extends React.PureComponent {
     return (
       <div>
         <div style={{display: "flex", justifyContent: "center", position: "fixed", top: 0, right: 0, left: 0, height: "50px", background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 0%, 1.0)", zIndex: 1000}}>
-          <div style={{display: "flex", justifyContent: "space-between", width: 1355, alignItems: "center", xpadding: "0 10px", xpaddingTop: 4, position: "relative"}}>
+          <div style={{display: "flex", justifyContent: "space-between", width: 1280, alignItems: "center", xpadding: "0 10px", xpaddingTop: 4, position: "relative"}}>
             <div style={{width: 300}}>
-              <div className="directors">
+              {/*<div className="directors">
                 <h1 style={{fontSize: 25}}>Directors</h1>
                 <ul style={{position: "absolute"}}>
                   {directorsSortedByCount.entrySeq().map(([director, count]) => <li key={director}>{director} ({count})</li>)}
                 </ul>
-              </div>
+              </div>*/}
             </div>
-            <div>{this.props.movies.size} Movies</div>
-            <div style={{fontSize: 25, width: 300, padding: "0 20px", display: "flex", justifyContent: "flex-end"}}>Movies</div>
+            <div style={{fontSize: 25, paddingTop: 2}}>{this.props.movies.size} Movies</div>
+            <div style={{fontSize: 25, width: 300, padding: "0 20px", display: "flex", justifyContent: "flex-end"}}>
+              {/*<div style={{position: "absolute", display: "flex", flexDirection: "column"}}>
+                <table id="categories">
+                  <thead>
+                    <tr><th>AND</th><th></th><th>OR</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><input type="checkbox" /></td><td>Sci-Fi</td><td><input type="checkbox" /></td></tr>
+                    <tr><td><input type="checkbox" /></td><td>Drama</td><td><input type="checkbox" /></td></tr>
+                    <tr><td><input type="checkbox" /></td><td>Comedy</td><td><input type="checkbox" /></td></tr>
+                  </tbody>
+                </table>
+              </div>*/}
+
+              <select style={{color: "black", display: "none"}}>
+                <option value="0">Sci-Fi</option>
+                <option value="1">Drama</option>
+                <option value="2">Comedy</option>
+                <option value="3">Crime</option>
+                <option value="4">Action</option>
+                <option value="5">Thriller</option>
+                <option value="6">Adventure</option>
+                <option value="7">Western</option>
+                <option value="8">Horror</option>
+              </select>
+            </div>
           </div>
         </div>
         <ul className="groups">
