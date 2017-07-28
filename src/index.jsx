@@ -17,7 +17,6 @@ const categories = {
   6: "Thriller"
 }
 
-
 class Movie extends React.PureComponent {
 
   constructor(props) {
@@ -28,6 +27,7 @@ class Movie extends React.PureComponent {
     };
 
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   loadImages() {
@@ -40,6 +40,10 @@ class Movie extends React.PureComponent {
 
   handleScroll(event) {
     this.loadImages();
+  }
+
+  handleClick(event) {
+    this.props.onSelectIndex(this.props.index);
   }
 
   componentDidMount() {
@@ -63,8 +67,23 @@ class Movie extends React.PureComponent {
 
   render() {
     return (
-      <li ref={li => this.li = li} className={this.props.selected ? "selected" : ""} data-title={this.props.title} data-released={this.props.released}>
-        <img src={this.state.imageURL} title={this.props.title} />
+      <li ref={li => this.li = li} className={this.props.selected ? "selected" : ""} data-index={this.props.index} data-title={this.props.title} data-released={this.props.released}>
+        <div className="image" data-title={this.props.title} data-released={this.props.released} onClick={this.handleClick}>
+          {this.props.selected ? [
+            <div style={{position: "absolute", background: "hsl(0, 0%, 10%)", width: 13, height: 13, left: "50%", marginLeft: -7, bottom: -25,
+                         transform: "rotate(45deg)", borderLeft: "1px solid hsl(0, 0%, 20%)", borderTop: "1px solid hsl(0, 0%, 20%)"}}></div>
+          ] : null}
+          <img src={this.state.imageURL} title={this.props.title} />
+        </div>
+        {this.props.selected ? (
+          <div className="details" style={{height: 60, marginTop: 20, marginBottom: 10}}>
+            <div style={{display: "flex", flexDirection: "column", justifyContent: "center", position: "absolute", left: 20, right: 20, padding: "0 0px", background: "hsl(0, 0%, 10%", height: 60,
+                         outline: "1px solid hsl(0, 0%, 20%)"}}>
+              <div style={{fontSize: 20, fontWeight: 700, display: "flex", justifyContent: "center", marginBottom: 7}}>{this.props.title}</div>
+              <div style={{fontSize: 15, fontWeight: 400, display: "flex", justifyContent: "center"}}>{this.props.released} &nbsp;&#9632;&nbsp; {this.props.directors ? this.props.directors.map(id => directors.get(id)).join(", ") : "Unknown"}</div>
+            </div>
+          </div>
+        ) : null}
       </li>
     );
   }
@@ -76,30 +95,87 @@ class App extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.buildData();
+
     this.state = {
-      selectedIndex: -1
+      selectedIndex: 0
     };
+
+    this.handleSelectIndex = this.handleSelectIndex.bind(this);
   }
 
   componentDidMount() {
     document.addEventListener("keydown", event => {
-      if (event.code === "ArrowRight" && this.state.selectedIndex < this.props.movies.size - 1) {
-        this.setState(state => ({
-          selectedIndex: state.selectedIndex + 1
-        }));
-      } else if (event.code === "ArrowLeft" && this.state.selectedIndex > 0) {
-        this.setState(state => ({
-          selectedIndex: state.selectedIndex - 1
-        }));
+      //console.log(event);
+
+      const offset = (() => {
+        if (event.keyCode === 39 && this.state.selectedIndex < this.props.movies.size - 1) {
+          return this.state.selectedIndex + 1;
+        } else if (event.keyCode === 37 && this.state.selectedIndex > 0) {
+          return this.state.selectedIndex - 1;
+        } else if (event.keyCode === 40) {
+          event.stopPropagation();
+          event.preventDefault();
+
+          var nextItem = null;
+          var row = 0;
+
+          const selected = document.querySelector(".movies li.selected");
+          const items1 = Immutable.List(document.querySelectorAll(".movies li"));
+
+          const items2 = items1.toSeq()
+                             .skipWhile(item => Number(item.dataset.index) <= this.state.selectedIndex)
+                             .skipWhile(item => item.offsetLeft > selected.offsetLeft)
+                             .takeWhile(item => item.offsetLeft <= selected.offsetLeft)
+          console.log(items2.toArray());
+          const nextRowItems = items2.take(1).concat(items2.skip(1).takeWhile(item => item.offsetLeft !== items1.first().offsetLeft));
+
+          //console.log(first.concat(items6).last());
+          nextItem = nextRowItems.last();
+
+          // for (var i = Number(selected.dataset.index) + 1; i < items.length; i++) {
+          //   if (Number(items[i].dataset.index) > this.state.selectedIndex) {
+          //     if (items[i].offsetLeft === items[0].offsetLeft) {
+          //       row += 1;
+          //     }
+
+          //     if (items[i].offsetLeft === selected.offsetLeft) {
+          //       nextItem = items[i];
+          //       break;
+          //     } else if (row > 1) {
+          //       nextItem = items[i - 1];
+          //       break;
+          //     }
+          //   }
+          // }
+
+          //console.log(nextItem.dataset.index);
+
+          return Number(nextItem.dataset.index);
+        }
+
+        return null;
+      })();
+
+      if (offset !== null) {
+        this.setState({
+          selectedIndex: offset
+        });
       }
     }, false);
   }
 
-  render() {
+  handleSelectIndex(index) {
+    this.setState({
+      selectedIndex: index
+    });
+  }
+
+  buildData() {
     const released = movie => movie.released;
 
     const index = (movie, index) => {
-      return {index: index, title: movie.title, image: movie.image, released: movie.released};
+      return {index: index, title: movie.title, image: movie.image, released: movie.released, directors: movie.directors};
     };
 
     const range = movie => {
@@ -108,19 +184,22 @@ class App extends React.PureComponent {
       return Math.floor(movie.released / scale) * scale;
     };
 
-    const sorted = this.props.movies.sortBy(released).map(index).groupBy(range).entrySeq();
+    this.indexed = this.props.movies.sortBy(released).map(index);
+    this.sorted = this.indexed.groupBy(range).entrySeq();
 
-    const directors2 = this.props.movies.reduce((map, movie) => {
+    this.directors2 = this.props.movies.reduce((map, movie) => {
       return map.update(movie.directors ? directors.get(movie.directors[0]) : "Unknown", (count = 0) => count + 1)
     }, Immutable.Map());
 
-    const directorsSortedByCount = directors2.sortBy((count, director) => -count);
+    this.directorsSortedByCount = this.directors2.sortBy((count, director) => -count);
+  }
 
-    //console.log(directorsSortedByCount);
+  render() {
+    const selectedMovie = this.indexed.find(movie => movie.index === this.state.selectedIndex);
 
     return (
       <div>
-        <div style={{display: "flex", justifyContent: "center", position: "fixed", top: 0, right: 0, left: 0, height: "50px", background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 0%, 1.0)", zIndex: 1000}}>
+        <div style={{display: "flex", justifyContent: "center", position: "fixed", top: 0, right: 0, left: 0, height: "50px", background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 100%, 0.2)", zIndex: 1000}}>
           <div style={{display: "flex", justifyContent: "space-between", width: 1280, alignItems: "center", xpadding: "0 10px", xpaddingTop: 4, position: "relative"}}>
             <div style={{width: 300}}>
               {/*<div className="directors">
@@ -130,7 +209,9 @@ class App extends React.PureComponent {
                 </ul>
               </div>*/}
             </div>
-            <div style={{fontSize: 25, paddingTop: 2}}>{this.props.movies.size} Movies</div>
+            <div style={{fontSize: 25, fontWeight: 700, paddingTop: 4}}>
+              Movies ({this.indexed.size})
+            </div>
             <div style={{fontSize: 25, width: 300, padding: "0 20px", display: "flex", justifyContent: "flex-end"}}>
               {/*<div style={{position: "absolute", display: "flex", flexDirection: "column"}}>
                 <table id="categories">
@@ -159,13 +240,15 @@ class App extends React.PureComponent {
             </div>
           </div>
         </div>
+
         <ul className="groups">
-          {sorted.map(([decade, movies], decadeIndex) => {
+          {this.sorted.map(([decade, movies], decadeIndex) => {
             return (
               <li key={decade}>
                 <h1>{decade}</h1>
                 <ul className="movies">
-                  {movies.map((movie, movieIndex) => <Movie key={movie.title} index={movie.index} title={movie.title} released={movie.released} image={movie.image} selected={movie.index === this.state.selectedIndex} />)}
+                  {movies.map((movie, movieIndex) => <Movie key={movie.title} index={movie.index} title={movie.title} released={movie.released} directors={movie.directors} image={movie.image} selected={movie.index === this.state.selectedIndex}
+                                                            onSelectIndex={this.handleSelectIndex} />)}
                 </ul>
               </li>
             );

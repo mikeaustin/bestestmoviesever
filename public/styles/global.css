@@ -33,6 +33,7 @@ main {
   xoutline: 1px solid hsl(0, 0%, 80%);
   outline: 1px solid hsla(0, 0%, 0%, 0.05);
   height: 100%;
+  position: relative;
 }
 
 ul {
@@ -107,22 +108,27 @@ ul.movies {
   padding: 10px 0 10px 10px;
 }
 
-ul.movies > li {
-  margin: 10px 10px 10px 10px;
+ul.movies > li .image {
   position: relative;
+  margin: 10px 10px 10px 10px;
+  xposition: relative;
   transition: all 0.125s ease-in;
+  cursor: pointer;
 }
 
-ul.movies > li:hover, ul.movies > li.selected {
+ul.movies > li:hover .image, ul.movies > li.selected .image {
   xtransform: scale(1.0625, 1.0625);
-  transform: scale(1.125, 1.125);
+  transform: translate(0, -15px) scale(1.125, 1.125);
+  transform: translate(0, -7px) scale(1.0625, 1.0625);
+  transform: translate(0, -5px) scale(1.04, 1.04);
   transition: all 0.0625s ease-out;
+  xtransition: all 0.125s ease-out;
   z-index: 100;
   xbox-shadow: 0 0 10px hsla(0, 0%, 0%, 0.25);
   box-shadow: 0 0 30px hsla(200, 100%, 50%, 1.0);
 }
 
-ul.movies > li::before {
+ul.movies > li .image::before {
   content: "";
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
@@ -131,7 +137,7 @@ ul.movies > li::before {
   outline: 1px solid hsla(0, 0%, 0%, 0.5);
 }
 
-ul.movies > li::after {
+ul.movies > li .image::after {
   opacity: 0;
   transition: opacity 0.125s linear;
   display: flex;
@@ -158,7 +164,7 @@ ul.movies > li::after {
   xfilter: blur(5px);
 }
 
-ul.movies > li:hover::after, ul.movies > li:focus::after {
+ul.movies > li:hover .image::after, ul.movies > li:focus::after {
   opacity: 1;
   transition: opacity 0.0625s linear;
 }
@@ -167,6 +173,7 @@ ul.movies > li img {
   display: block;
   width: 160px; height: 238px;
 }
+
 
 @media screen and (max-width: 1024px) {
   ul.movies > li img {
