@@ -106,8 +106,6 @@ class App extends React.PureComponent {
 
   componentDidMount() {
     document.addEventListener("keydown", event => {
-      //console.log(event);
-
       const offset = (() => {
         if (event.keyCode === 39 && this.state.selectedIndex < this.props.movies.size - 1) {
           return this.state.selectedIndex + 1;
@@ -117,41 +115,18 @@ class App extends React.PureComponent {
           event.stopPropagation();
           event.preventDefault();
 
-          var nextItem = null;
-          var row = 0;
+          const selectedItem = document.querySelector(".movies li.selected");
+          const allItems = Immutable.List(document.querySelectorAll(".movies li"));
 
-          const selected = document.querySelector(".movies li.selected");
-          const items1 = Immutable.List(document.querySelectorAll(".movies li"));
+          const afterSelectedItems = allItems.toSeq()
+                               .skipWhile(item => Number(item.dataset.index) <= this.state.selectedIndex)
+                               .skipWhile(item => item.offsetLeft > selectedItem.offsetLeft)
 
-          const items2 = items1.toSeq()
-                             .skipWhile(item => Number(item.dataset.index) <= this.state.selectedIndex)
-                             .skipWhile(item => item.offsetLeft > selected.offsetLeft)
-                             .takeWhile(item => item.offsetLeft <= selected.offsetLeft)
-          console.log(items2.toArray());
-          const nextRowItems = items2.take(1).concat(items2.skip(1).takeWhile(item => item.offsetLeft !== items1.first().offsetLeft));
+          const nextRowItems = afterSelectedItems.take(1).concat(afterSelectedItems.skip(1).takeWhile(
+            item => item.offsetLeft <= selectedItem.offsetLeft && item.offsetLeft !== allItems.first().offsetLeft
+          ));
 
-          //console.log(first.concat(items6).last());
-          nextItem = nextRowItems.last();
-
-          // for (var i = Number(selected.dataset.index) + 1; i < items.length; i++) {
-          //   if (Number(items[i].dataset.index) > this.state.selectedIndex) {
-          //     if (items[i].offsetLeft === items[0].offsetLeft) {
-          //       row += 1;
-          //     }
-
-          //     if (items[i].offsetLeft === selected.offsetLeft) {
-          //       nextItem = items[i];
-          //       break;
-          //     } else if (row > 1) {
-          //       nextItem = items[i - 1];
-          //       break;
-          //     }
-          //   }
-          // }
-
-          //console.log(nextItem.dataset.index);
-
-          return Number(nextItem.dataset.index);
+          return Number(nextRowItems.last().dataset.index);
         }
 
         return null;
