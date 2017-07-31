@@ -66,6 +66,10 @@ class Movie extends React.PureComponent {
   }
 
   render() {
+    const group = this.props.group ? (
+      <h1>{this.props.group}</h1>
+    ) : null;
+
     const stem = this.props.selected ? (
       <div style={{position: "absolute", background: "hsl(0, 0%, 10%)", width: 13, height: 13, left: "50%", marginLeft: -7, bottom: -25,
                    transform: "rotate(45deg)", borderLeft: "1px solid hsl(0, 0%, 20%)", borderTop: "1px solid hsl(0, 0%, 20%)"}}></div>
@@ -74,7 +78,7 @@ class Movie extends React.PureComponent {
     const details = this.props.selected ? (
       <div className="details" style={{height: 60, marginTop: 20, marginBottom: 10}}>
         <div style={{display: "flex", flexDirection: "column", justifyContent: "center", position: "absolute", left: 20, right: 20, padding: "0 0px", background: "hsl(0, 0%, 10%", height: 60,
-                     outline: "1px solid hsl(0, 0%, 20%)"}}>
+                     border: "1px solid hsl(0, 0%, 20%)"}}>
           <div style={{fontSize: 20, fontWeight: 700, display: "flex", justifyContent: "center", marginBottom: 7}}>{this.props.title}</div>
           <div style={{fontSize: 15, fontWeight: 400, display: "flex", justifyContent: "center"}}>{this.props.released} &nbsp;&#9632;&nbsp; {this.props.directors ? this.props.directors.map(id => directors.get(id)).join(", ") : "Unknown"}</div>
         </div>
@@ -83,6 +87,7 @@ class Movie extends React.PureComponent {
 
     return (
       <li ref={li => this.li = li} className={this.props.selected ? "selected" : ""} data-index={this.props.index} data-title={this.props.title} data-released={this.props.released}>
+        <h1>{this.props.group}</h1>
         <div className="image" data-title={this.props.title} data-released={this.props.released} onClick={this.handleClick}>
           {stem}
           <img src={this.state.imageURL} title={this.props.title} />
@@ -241,7 +246,7 @@ class App extends React.PureComponent {
 
     return (
       <div>
-        <div style={{display: "flex", justifyContent: "center", position: "fixed", top: 0, right: 0, left: 0, height: "50px", background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 100%, 0.2)", zIndex: 1000}}>
+        <div style={{display: "flex", justifyContent: "center", position: "fixed", top: 0, right: 0, left: 0, height: "45px", background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 100%, 0.2)", zIndex: 1000}}>
           <div style={{display: "flex", justifyContent: "space-between", width: 1280, alignItems: "center", xpadding: "0 10px", xpaddingTop: 4, position: "relative"}}>
             <div style={{width: 300}}>
               {/*<div className="directors">
@@ -251,8 +256,8 @@ class App extends React.PureComponent {
                 </ul>
               </div>*/}
             </div>
-            <div style={{fontSize: 25, fontWeight: 700, paddingTop: 4}}>
-              Movies ({this.indexed.size})
+            <div style={{fontSize: 30, xfontWeight: 700, paddingTop: 4}}>
+              <span style={{fontSize: 30, fontWeight: 800}}>Movies</span> ({this.indexed.size})
             </div>
             <div style={{fontSize: 25, width: 300, padding: "0 20px", display: "flex", justifyContent: "flex-end"}}>
               {/*<div style={{position: "absolute", display: "flex", flexDirection: "column"}}>
@@ -282,21 +287,14 @@ class App extends React.PureComponent {
             </div>
           </div>
         </div>
-
-        <ul className="groups">
-          {this.sorted.map(([decade, movies], decadeIndex) => {
-            return (
-              <li key={decade}>
-                <h1>{decade}</h1>
                 <ul className="movies">
-                  {movies.map((movie, movieIndex) => <Movie key={movie.title} index={movie.index} title={movie.title} released={movie.released} directors={movie.directors} image={movie.image} selected={movie.index === this.state.selectedIndex}
-                                                            onSelectIndex={this.handleSelectIndex} />)}
-                </ul>
-              </li>
-            );
-          })}
+                  {this.indexed.reduce(([released, list], movie) => {
+                    const element = <Movie key={movie.title} index={movie.index} title={movie.title} released={movie.released} directors={movie.directors} image={movie.image}
+                                           selected={movie.index === this.state.selectedIndex} group={released !== movie.released ? movie.released : ""} onSelectIndex={this.handleSelectIndex} />;
 
-        </ul>
+                    return [movie.released, list.concat(element)];
+                  }, [0, []])[1]}
+                </ul>
       </div>
     );
   }

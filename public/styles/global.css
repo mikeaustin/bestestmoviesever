@@ -2,6 +2,7 @@
   box-sizing: border-box;
   font: 13px/1.0em Arial;
   font: 12px/1.0em "Comfortaa";
+  font: 12px/1.0em "Coda";
   margin: 0; padding: 0;
   color: hsl(0, 0%, 25%);
   color: hsl(0, 0%, 80%);
@@ -86,15 +87,19 @@ ul.groups > li {
   margin-top: 15px;
 }
 
-ul.groups h1 {
+ul.groups h1, ul.movies > li h1 {
+  margin-top: 15px;
+  xmargin-bottom: 15px;
   height: 20px;
   padding: 0 20px;
   xmargin-top: 25px;
   xbackground: hsl(0, 0%, 95%);
   xborder-bottom: 1px solid hsl(0, 0%, 80%);
   font-size: 25px;
-  font-weight: 600;
+  font-weight: 400;
   xcolor: hsl(0, 0%, 100%);
+  text-shadow: 0 0 5px hsla(0, 0%, 0%, 1.0);
+  xposition: absolute;
 }
 
 ul.groups > li:first-child {
@@ -105,7 +110,8 @@ ul.groups > li:first-child {
 ul.movies {
   display: flex;
   flex-wrap: wrap;
-  padding: 10px 0 10px 10px;
+  xalign-items: flex-end;
+  padding: 60px 0 10px 10px;
 }
 
 ul.movies > li .image {
@@ -118,9 +124,10 @@ ul.movies > li .image {
 
 ul.movies > li:hover .image, ul.movies > li.selected .image {
   xtransform: scale(1.0625, 1.0625);
-  transform: translate(0, -15px) scale(1.125, 1.125);
-  transform: translate(0, -7px) scale(1.0625, 1.0625);
-  transform: translate(0, -5px) scale(1.04, 1.04);
+  xtransform: translate(0, -15px) scale(1.125, 1.125);
+  xtransform: translate(0, -7px) scale(1.0625, 1.0625);
+  transform: translate3d(0, -15px, -1px) scale(1.125, 1.125);
+  xtransform: translate(0, 0) scale(1.04, 1.04);
   transition: all 0.0625s ease-out;
   xtransition: all 0.125s ease-out;
   z-index: 100;

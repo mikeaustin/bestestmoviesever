@@ -64,7 +64,7 @@ const movies = Immutable.List([
   { title: "National Lampoon's Van Wilder", released: 2002, directors: [65] },
   { title: "American Pie", released: 1999, directors: [66] },
   { title: "My Cousin Vinny", released: 1992, directors: [67] },
-  { title: "Robin Hood: Men in Tights", image: "Robin_Hood_Men_in_Tights.jps", released: 1993, directors: [68] },
+  { title: "Robin Hood: Men in Tights", image: "Robin_Hood_Men_in_Tights.jpg", released: 1993, directors: [68] },
   { title: "Scarface", released: 1983, directors: [14] },
   { title: "Good Will Hunting", released: 1997, directors: [69] },
   { title: "Bruce Almighty", released: 2003, directors: [29] },
