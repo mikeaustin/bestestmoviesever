@@ -1,10 +1,7 @@
 * {
   box-sizing: border-box;
-  font: 13px/1.0em Arial;
-  font: 12px/1.0em "Comfortaa";
   font: 12px/1.0em "Coda";
   margin: 0; padding: 0;
-  color: hsl(0, 0%, 25%);
   color: hsl(0, 0%, 80%);
   border: none; outline: none;
 }
@@ -17,29 +14,28 @@ html {
 body {
   display: flex;
   flex: 1;
-  background: hsl(0, 0%, 90%);
-  background: hsl(0, 0%, 7%);
   background: hsl(0, 0%, 0%);
-  xbackground: radial-gradient(closest-side, hsl(0, 0%, 30%), hsl(0, 0%, 10%));
-  background-attachment: fixed;;
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 main {
   flex: 1;
-  max-width: 1024px;
   max-width: 1280px;
   margin: auto;
-  background: hsl(0, 0%, 94%);
   background: hsl(0, 0%, 0%);
-  xoutline: 1px solid hsl(0, 0%, 80%);
-  outline: 1px solid hsla(0, 0%, 0%, 0.05);
-  height: 100%;
+  min-height: 100%;
   position: relative;
 }
 
 ul {
   list-style: none;
 }
+
 
 #categories th, td {
   text-align: center;
@@ -90,27 +86,55 @@ ul.groups > li {
 ul.groups h1, ul.movies > li h1 {
   margin-top: 15px;
   xmargin-bottom: 15px;
+  margin-bottom: -3px;
   height: 20px;
   padding: 0 20px;
   xmargin-top: 25px;
   xbackground: hsl(0, 0%, 95%);
   xborder-bottom: 1px solid hsl(0, 0%, 80%);
-  font-size: 25px;
+  font-size: 20px;
   font-weight: 400;
   xcolor: hsl(0, 0%, 100%);
-  text-shadow: 0 0 5px hsla(0, 0%, 0%, 1.0);
-  xposition: absolute;
+  xtext-shadow: 0 0 5px hsla(0, 0%, 0%, 1.0);
 }
 
-ul.groups > li:first-child {
-  xmargin-top: 0;
+
+.categories {
+  border-right: 1px transparent;
+  transform: translate(-99%, 0);
+  transition: all 0.125s ease-in;
+}
+
+.categories:hover {
+  transform: translate(0, 0);
+  transition: all 0.0625s ease-out;
+  border-right: 1px solid hsl(0, 0%, 10%);
+}
+
+.categories > * {
+  height: 35px;
+  font-size: 20px;
+}
+
+.categories > div {
+  cursor: pointer;
+  xcolor: hsl(0, 0%, 60%);
+}
+
+.categories > div.selected::before {
+  position: absolute;
+  content: '\2713';
+  margin-left: 3px;
+}
+
+.categories div:hover {
+  color: white;
 }
 
 
 ul.movies {
   display: flex;
   flex-wrap: wrap;
-  xalign-items: flex-end;
   padding: 60px 0 10px 10px;
 }
 
@@ -122,16 +146,16 @@ ul.movies > li .image {
   cursor: pointer;
 }
 
-ul.movies > li:hover .image, ul.movies > li.selected .image {
-  xtransform: scale(1.0625, 1.0625);
-  xtransform: translate(0, -15px) scale(1.125, 1.125);
-  xtransform: translate(0, -7px) scale(1.0625, 1.0625);
-  transform: translate3d(0, -15px, -1px) scale(1.125, 1.125);
-  xtransform: translate(0, 0) scale(1.04, 1.04);
+ul.movies > li:hover .image {
   transition: all 0.0625s ease-out;
-  xtransition: all 0.125s ease-out;
   z-index: 100;
-  xbox-shadow: 0 0 10px hsla(0, 0%, 0%, 0.25);
+  box-shadow: 0 0 30px hsla(200, 100%, 50%, 1.0);
+}
+
+ul.movies > li.selected .image {
+  transform: translate(0, -15px) scale(1.125, 1.125);
+  transition: all 0.0625s ease-out;
+  z-index: 100;
   box-shadow: 0 0 30px hsla(200, 100%, 50%, 1.0);
 }
 
@@ -139,41 +163,8 @@ ul.movies > li .image::before {
   content: "";
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
-  border: 1px solid hsla(0, 0%, 0%, 0.125);
   border: 1px solid hsla(0, 0%, 100%, 0.125);
   outline: 1px solid hsla(0, 0%, 0%, 0.5);
-}
-
-ul.movies > li .image::after {
-  opacity: 0;
-  transition: opacity 0.125s linear;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  white-space: pre-wrap;
-  content: attr(data-title) "\a \2014  " attr(data-released) " \2014 ";
-  text-align: center;
-  position: absolute;
-  xtop: 0; right: 0; bottom: 0; left: 0;
-  padding: 5px;
-  xmargin: 5px;
-  line-height: 1.5em;
-  xborder-radius: 2px;
-
-  background: hsla(0, 0%, 0%, 0.85);
-  xbackground: hsla(0, 0%, 100%, 0.75);
-  box-shadow: 0 0 1px hsla(0, 0%, 100%, 0.5);
-  xbox-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
-  xcolor: hsl(0, 0%, 95%);
-  xcolor: hsl(0, 0%, 0%);
-  text-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
-  xtext-shadow: 0 0 1px hsla(0, 0%, 100%, 0.5);
-  xfilter: blur(5px);
-}
-
-ul.movies > li:hover .image::after, ul.movies > li:focus::after {
-  opacity: 1;
-  transition: opacity 0.0625s linear;
 }
 
 ul.movies > li img {
@@ -182,14 +173,27 @@ ul.movies > li img {
 }
 
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1024px) and (orientation: landscape) {
   ul.movies > li img {
     width: 147px; height: 219px;
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) and (orientation: landscape) {
+  ul.movies > li img {
+    width: 21vw; height: 50vh;
+  }
+}
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
   ul.movies > li img {
     width: 167px; height: 249px;
+  }
+}
+
+
+@media screen and (max-width: 480px) and (orientation: portrait) {
+  ul.movies > li img {
+    width: 42vw; height: 35vh;
   }
 }
