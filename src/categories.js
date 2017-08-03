@@ -11,7 +11,15 @@ const categories = Immutable.Map([
   [6, "Adventure"],
   [7, "Western"],
   [8, "Horror"],
-  [9, "Music"]
+  [9, "Music"],
+  [10, "Fantasy"],
+  [11, "Animation"],
+  [12, "Romance"],
+  [13, "History"],
+  [13, "Biography"],
+  [14, "Mystery"],
+  [15, "Family"],
+  [16, "Sport"]
 ]);
 
 export default categories;
