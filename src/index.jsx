@@ -8,102 +8,8 @@ import movies from "./movies";
 import directors from "./directors";
 import categories from "./categories";
 
+import MovieList from "./MovieList";
 
-class Movie extends React.PureComponent {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      imageURL: null
-    };
-
-    this.handleScroll = this.handleScroll.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  loadImages() {
-    if (this.li.offsetTop < window.innerHeight + window.scrollY && !this.state.imageURL) {
-      this.setState({
-        imageURL: "images/" + (this.props.image ? this.props.image : this.props.title.replace(/ /g, "_") + ".jpg")
-      });
-    }
-  }
-
-  handleScroll(event) {
-    this.loadImages();
-  }
-
-  handleClick(event) {
-    this.props.onSelectIndex(this.props.index);
-  }
-
-  componentDidMount() {
-    this.loadImages();
-
-    document.addEventListener("scroll", this.handleScroll, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("scroll", this.handleScroll, false);
-  }
-
-  componentDidUpdate() {
-    console.log("componentDidUpdate()");
-    this.loadImages();
-
-    if (this.props.selected && ((this.li.offsetTop + this.li.offsetHeight + 10) > (window.innerHeight + document.body.scrollTop) ||
-                                (this.li.offsetTop < document.body.scrollTop + 50))) {
-      //smoothScroll(this.li.offsetTop - 105 - (window.innerHeight / 2) + (this.li.offsetTop / 2));
-      //smoothScroll(this.li.offsetTop - ((window.innerHeight + 50) / 2) + (this.li.offsetHeight / 2));
-      smoothScroll(this.li.offsetTop - ((window.innerHeight + 50 - this.li.offsetHeight) / 2) + 16);
-    }
-  }
-
-  render() {
-    console.log("Movie#render()");
-
-    const group = this.props.group ? (
-      <h1>{this.props.group}</h1>
-    ) : null;
-
-    const stem = this.props.selected ? (
-      <div style={{position: "absolute", background: "hsl(0, 0%, 10%)", width: 13, height: 13, left: "50%", marginLeft: -7, bottom: -25,
-                   transform: "rotate(45deg)", borderLeft: "1px solid hsl(0, 0%, 20%)", borderTop: "1px solid hsl(0, 0%, 20%)"}}></div>
-    ) : null;
-
-    const details = this.props.selected ? (
-      <div className="details" style={{height: 70, marginTop: 20, marginBottom: 10}}>
-        <div style={{display: "flex", flexDirection: "column", justifyContent: "center", position: "absolute", left: 0, right: 0, padding: "0 0px",
-                     background: "hsl(0, 0%, 10%", height: 70, borderTop: "1px solid hsl(0, 0%, 20%)"}}>
-          <div style={{fontSize: 20, fontWeight: 700, display: "flex", justifyContent: "center", marginBottom: 8}}>{this.props.title}</div>
-          <div style={{fontSize: 15, fontWeight: 400, display: "flex", justifyContent: "center"}}>
-            {this.props.released}
-            &nbsp; &#9724;&#xfe0e; &nbsp;
-            {this.props.directors ? this.props.directors.map(id => directors.get(id)).join(", ") : "Unknown"}
-          </div>
-        </div>
-      </div>
-    ) : null;
-
-    return (
-      <li ref={li => this.li = li} className={this.props.selected ? "selected" : ""} data-index={this.props.index}>
-        <h1>{this.props.group}</h1>
-        <div className="image" data-title={this.props.title} data-released={this.props.released} onClick={this.handleClick}>
-          {stem}
-          <img src={this.state.imageURL} title={this.props.title} />
-          <div className="watched" style={{display: "flex", xjustifyContent: "space-around", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}>
-            <img src="/icons/numbered-items.svg" style={{flex: 1, xwidth: 30, height: 30}} />
-            <img src="/icons/verification-sign.svg" style={{flex: 1, xwidth: 30, height: 30}} />
-            <img src="/icons/heart.svg" style={{flex: 1, xwidth: 30, height: 30}} />
-          </div>
-        </div>
-        {details}
-      </li>
-    );
-  }
-
-}
 
 class ListReducer {
 
@@ -163,10 +69,17 @@ const byTitle = (secondary = always(0)) => (a, b) => {
   return secondary(a, b);
 }
 
+const byReleased2 = order => (secondary = always(0)) => () => order((a, b) => {
+  if (a.released > b.released) return -1;
+  if (a.released < b.released) return +1;
+
+  return secondary(a, b);
+});
+
 const title = movie => movie.title;
 
 const index = (movie, index) => {
-  return { index: index, title: movie.title, image: movie.image, released: movie.released, directors: movie.directors, categories: movie.categories };
+  return { index: index, id: movie.id, title: movie.title, image: movie.image, released: movie.released, directors: movie.directors, categories: movie.categories };
 };
 
 const range = movie => {
@@ -174,33 +87,6 @@ const range = movie => {
 
   return Math.floor(movie.released / scale) * scale;
 };
-
-
-class MovieList extends React.PureComponent {
-
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    if (this.props.movies.isEmpty()) {
-      return (
-        <div style={{marginTop: 50, flex: 1, display: "flex", justifyContent: "center", alignItems: "center", fontSize: 30}}>No Matches</div>
-      );
-    }
-
-    return (
-      <ul className="movies">
-        {this.props.movies.reduce(([released, list], movie) => {
-          const element = <Movie key={movie.title} index={movie.index} title={movie.title} released={movie.released} directors={movie.directors} categories={movie.categories} image={movie.image}
-                                 selected={movie.index === this.props.selectedIndex} group={released !== movie.released ? movie.released : ""} onSelectIndex={this.props.onSelectIndex} />;
-
-          return [movie.released, list.concat(element)];
-        }, [0, []])[1]}
-      </ul>
-    );
-  }
-}
 
 
 class App extends React.PureComponent {
@@ -214,22 +100,17 @@ class App extends React.PureComponent {
       selectedIndex: 0,
       categoryIds: Immutable.Set(),
       sortOrder: descending,
-      showMenu: false
+      favoriteIds: Immutable.Set(),
+      showMenu: false,
+      showFavorites: false
     };
-
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleSelectIndex = this.handleSelectIndex.bind(this);
-    this.handleSortYearDescending = this.handleSortYearDescending.bind(this);
-    this.handleSortYearAscending = this.handleSortYearAscending.bind(this);
-    this.handleShowMenu = this.handleShowMenu.bind(this);
-    this.handleMouseDown = this.handleMouseDown.bind(this);
   }
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown, false);
   }
 
-  handleKeyDown(event) {
+  handleKeyDown = (event) => {
     console.log(KeyboardEvent);
 
     const offset = (() => {
@@ -241,8 +122,8 @@ class App extends React.PureComponent {
         event.stopPropagation();
         event.preventDefault();
 
-        const selectedItem = document.querySelector(".movies li.selected");
-        const allItems = Immutable.List(document.querySelectorAll(".movies li"));
+        const selectedItem = document.querySelector(".movies > li.selected");
+        const allItems = Immutable.List(document.querySelectorAll(".movies > li"));
         const firstItem = allItems.first();
 
         const nextRowItems = new ListReducer(allItems.toSeq())
@@ -266,7 +147,7 @@ class App extends React.PureComponent {
     }
   }
 
-  handleSelectIndex(index) {
+  handleSelectIndex = (index) => {
     this.setState({
       selectedIndex: index
     });
@@ -274,6 +155,7 @@ class App extends React.PureComponent {
 
   buildData() {
     this.indexed = this.props.movies.sort(byReleased(descending, byTitle())).map(index);
+    //this.indexed = this.props.movies.sort(byReleased2(descending)(byTitle())).map(index);
 
     this.directors2 = this.props.movies.reduce((map, movie) => {
       return map.update(movie.directors ? directors.get(movie.directors[0]) : "Unknown", (count = 0) => count + 1)
@@ -290,7 +172,7 @@ class App extends React.PureComponent {
     smoothScroll(0);
   }
 
-  handleSortYearAscending(event) {
+  handleSortYearAscending = (event) => {
     this.setState(state => ({
       sortOrder: ascending
     }));
@@ -299,7 +181,7 @@ class App extends React.PureComponent {
     this.refreshList();
   }
 
-  handleSortYearDescending(event) {
+  handleSortYearDescending = (event) => {
     this.setState(state => ({
       sortOrder: descending
     }));
@@ -311,7 +193,7 @@ class App extends React.PureComponent {
   handleChangeCategory(categoryId) {
     return event => {
       const categoryIds = this.state.categoryIds.includes(categoryId) ? this.state.categoryIds.delete(categoryId) : this.state.categoryIds.add(categoryId);
-      console.log(categoryIds);
+      //console.log(categoryIds);
 
       this.setState(state => ({
         categoryIds: categoryIds
@@ -328,25 +210,47 @@ class App extends React.PureComponent {
     };
   }
 
-  handleShowMenu(event) {
+  handleShowMenu = (event) => {
     this.setState(state => ({
       showMenu: !state.showMenu
     }));
   }
 
-  handleMouseDown(event) {
+  handleMouseDown = (event) => {
+    // this.setState(state => ({
+    //   showMenu: false
+    // }));
+  }
+
+  handleAddFavorite = (movieId) => {
+    console.log("here");
+
     this.setState(state => ({
-      showMenu: false
+      favoriteIds: state.favoriteIds.includes(movieId) ? state.favoriteIds.remove(movieId) : state.favoriteIds.add(movieId)
     }));
   }
 
+  handleShowFavorites = () => {
+      this.setState(state => ({
+        showFavorites: !state.showFavorites
+      }));
+
+      if (!!this.state.showFavorites) {
+        this.indexed = this.props.movies.sort(byReleased(descending, byTitle())).map(index);
+      } else {
+        this.indexed = this.props.movies.filter(movie => this.state.favoriteIds.includes(movie.id)).sort(byReleased(descending, byTitle())).map(index);
+      }
+
+      this.refreshList();
+  }
+
   render() {
-    console.log("App#render()");
+    //console.log("App#render()");
 
     const selectedMovie = this.indexed.find(movie => movie.index === this.state.selectedIndex);
 
     return (
-      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} xonMouseDown={this.handleMouseDown}>
+      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} onMouseDown={this.handleMouseDown}>
         <div className={"menu" + (this.state.showMenu ? " open" : "")} style={{display: "flex", flexDirection: "column", position: "fixed", bottom: 0, left: 0, top: 0, xwidth: "156px", padding: "73px 20px 0 20px", background: "hsla(0, 0%, 0%, 0.9)", zIndex: 1000}}>
           <div style={{position: "fixed", top: 0, zIndex: 1000001}}>Genres</div>
 
@@ -358,7 +262,7 @@ class App extends React.PureComponent {
           <h1>Show</h1>
           <ul style={{columnCount: 2, columnGap: 20}}>
             <li className={this.state.categoryIds.includes(0) ? "selected" : ""} style={{breakBefore: "column"}} onClick={this.handleChangeCategory(0)}>&#9634; &nbsp;Wishlist</li>
-            <li className={this.state.categoryIds.includes(0) ? "selected" : ""} style={{breakBefore: "column"}} onClick={this.handleChangeCategory(0)}>&#9634; &nbsp;Unseen</li>
+            <li className={this.state.showFavorites ? "selected" : ""} style={{breakBefore: "column"}} onClick={this.handleShowFavorites}>&#9634; &nbsp;Favorites</li>
           </ul>
           <h1>Genres</h1>
           <ul style={{columnCount: 2, columnGap: 20}}>
@@ -401,7 +305,8 @@ class App extends React.PureComponent {
             </div>
           </div>
         </div>
-        <MovieList movies={this.indexed} selectedIndex={this.state.selectedIndex} onSelectIndex={this.handleSelectIndex} />
+        <MovieList movies={this.indexed} directors={directors} favoriteIds={this.state.favoriteIds} selectedIndex={this.state.selectedIndex}
+                   onSelectIndex={this.handleSelectIndex} onAddFavorite={this.handleAddFavorite} />
       </div>
     );
   }

@@ -177,32 +177,61 @@ ul.movies > li .image > img {
 }
 
 
-ul.movies > li .watched {
-  xpadding-left: 15px;
+ul.movies > li ul.actions {
   padding: 5px 5px;
   visibility: hidden;
-  xbackground: hsla(0, 0%, 0%, 0.7);
   background: linear-gradient(hsla(0, 0%, 0%, 0.0), hsla(0, 0%, 0%, 0.9));
 }
 
-ul.movies > li .watched img {
-  padding: 5px 0;
+@media screen and (min-width: 1280px) {
+  ul.movies > li:hover ul.actions {
+    visibility: visible;
+  }
 }
 
-ul.movies > li .watched img:hover {
-  background: hsla(0, 0%, 100%, 0.25);
+ul.movies > li.selected ul.actions {
+  visibility: visible;
+}
+
+ul.movies > li ul.actions li {
+  flex: 1;
+  height: 30px;
+  background: center center/20px 20px no-repeat;
   border-radius: 2px;
+}
+
+ul.movies > li ul.actions li:hover {
+  background-color: hsla(0, 0%, 100%, 0.25);
   box-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
 }
 
-ul.movies > li:hover .watched {
-  visibility: visible;
-  xbox-shadow: 0 0 1px hsla(0, 0%, 100%, 0.5);
-  xbackground: hsla(0, 0%, 50%, 0.9);
-  xbox-shadow: 0 0 1px hsla(0, 0%, 0%, 1.0);
-  color: hsl(0, 0%, 20%);
-  font-size: 20px;
-  position: relative;
+/*ul.movies > li ul.actions li:active {
+  background-color: hsla(0, 0%, 100%, 0.30);
+}
+*/
+
+ul.movies > li ul.actions li.watchlist {
+  background-image: url(/icons/numbered-items.svg);
+}
+
+ul.movies > li ul.actions li.watched {
+  background-image: url(/icons/verification-sign.svg);
+}
+
+ul.movies > li ul.actions li.favorite {
+  background-image: url(/icons/heart.svg);
+}
+
+ul.movies > li ul.actions li.watchlist:active {
+  background-image: url(/icons/numbered-items-selected.svg);
+}
+
+ul.movies > li ul.actions li.watched:active {
+  background-image: url(/icons/verification-sign-selected.svg);
+}
+
+ul.movies > li ul.actions li.favorite.selected {
+  background-image: url(/icons/heart-selected.svg);
 }
 
 /*ul.movies > li .watched::before {
@@ -217,6 +246,7 @@ ul.movies > li:hover .watched {
   xbox-shadow: 0 0 1px hsla(0, 0%, 0%, 1.0);
 }
 */
+
 ul.movies > li:hover .watched::before {
   box-shadow: none;
   xbackground: hsla(0, 0%, 10%, 0.9);
@@ -226,30 +256,25 @@ ul.movies > li:hover .watched::before {
 
 
 @media screen and (max-width: 1024px) and (orientation: landscape) {
-  ul.movies > li img {
+  ul.movies > li .image img {
     width: 147px; height: 219px;
   }
 }
 
 @media screen and (max-width: 800px) and (orientation: landscape) {
-  ul.movies > li img {
+  ul.movies > li .image img {
     width: 21vw; height: 50vh;
   }
 }
 
 @media screen and (max-width: 768px) and (orientation: portrait) {
-  ul.movies > li img {
+  ul.movies > li .image img {
     width: 167px; height: 249px;
   }
 }
 
-
 @media screen and (max-width: 480px) and (orientation: portrait) {
-  ul.movies > li:hover .watched {
-    visibility: hidden;
-  }
-
-  ul.movies > li img {
+  ul.movies > li .image img {
     width: 42vw; height: 35vh;
   }
 }
