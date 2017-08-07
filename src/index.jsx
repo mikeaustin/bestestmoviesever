@@ -10,6 +10,8 @@ import categories from "./categories";
 
 import MovieList from "./MovieList";
 
+import { selectedClass } from "./utils";
+
 
 class ListReducer {
 
@@ -97,11 +99,14 @@ class App extends React.PureComponent {
     this.buildData();
 
     this.state = {
+      movies: this.props.movies.sort(byReleased(descending, byTitle())).map(index),
       selectedIndex: 0,
       categoryIds: Immutable.Set(),
       sortOrder: descending,
-      favoriteIds: Immutable.Set(),
+      favoriteIds: Immutable.Set(JSON.parse(localStorage.getItem("favoriteIds"))),
+      watchlistIds: Immutable.Set(JSON.parse(localStorage.getItem("watchlistIds"))),
       showMenu: false,
+      showWatchlist: false,
       showFavorites: false
     };
   }
@@ -153,8 +158,13 @@ class App extends React.PureComponent {
     });
   }
 
+  buildMovies() {
+    // categoryIds, favoriteIds, sortOrder
+    // const movies = this.props.movies.filter(and(onGenre, onFavorite)).sort(byReleased(sortOrder)(byTitle())).map(withIndex);
+  }
+
   buildData() {
-    this.indexed = this.props.movies.sort(byReleased(descending, byTitle())).map(index);
+    //this.indexed = this.props.movies.sort(byReleased(descending, byTitle())).map(index);
     //this.indexed = this.props.movies.sort(byReleased2(descending)(byTitle())).map(index);
 
     this.directors2 = this.props.movies.reduce((map, movie) => {
@@ -165,28 +175,28 @@ class App extends React.PureComponent {
   }
 
   refreshList() {
-    this.forceUpdate();
     this.setState({
       selectedIndex: 0
     });
+
     smoothScroll(0);
   }
 
   handleSortYearAscending = (event) => {
     this.setState(state => ({
+      movies: this.props.movies.sort(byReleased(ascending, byTitle())).map(index),
       sortOrder: ascending
     }));
 
-    this.indexed = this.props.movies.sort(byReleased(ascending, byTitle())).map(index);
     this.refreshList();
   }
 
   handleSortYearDescending = (event) => {
     this.setState(state => ({
+      movies: this.props.movies.sort(byReleased(descending, byTitle())).map(index),
       sortOrder: descending
     }));
 
-    this.indexed = this.props.movies.sort(byReleased(descending, byTitle())).map(index);
     this.refreshList();
   }
 
@@ -195,16 +205,17 @@ class App extends React.PureComponent {
       const categoryIds = this.state.categoryIds.includes(categoryId) ? this.state.categoryIds.delete(categoryId) : this.state.categoryIds.add(categoryId);
       //console.log(categoryIds);
 
-      this.setState(state => ({
-        categoryIds: categoryIds
-      }));
-
       if (categoryIds.isEmpty()) {
         this.indexed = this.props.movies.sort(byReleased(descending, byTitle())).map(index);
       } else {
         //this.indexed = this.props.movies.filter(movie => !Immutable.Set(movie.categories).intersect(categoryIds).isEmpty()).sort(byReleased(descending, byTitle())).map(index);
         this.indexed = this.props.movies.filter(movie => Immutable.Set(movie.categories).isSuperset(categoryIds)).sort(byReleased(descending, byTitle())).map(index);
       }
+
+      this.setState(state => ({
+        categoryIds: categoryIds,
+        movies: this.indexed
+      }));
 
       this.refreshList();
     };
@@ -222,24 +233,58 @@ class App extends React.PureComponent {
     // }));
   }
 
-  handleAddFavorite = (movieId) => {
-    console.log("here");
+  handleToggleFavorite = (movieId) => {
+    this.setState(state => {
+      const favoriteIds = state.favoriteIds.includes(movieId) ? state.favoriteIds.remove(movieId) : state.favoriteIds.add(movieId);
 
-    this.setState(state => ({
-      favoriteIds: state.favoriteIds.includes(movieId) ? state.favoriteIds.remove(movieId) : state.favoriteIds.add(movieId)
-    }));
+      localStorage.setItem("favoriteIds", JSON.stringify(favoriteIds.toArray()));
+
+      return {
+        favoriteIds: favoriteIds,
+        movies: state.showFavorites ? this.props.movies.filter(movie => favoriteIds.includes(movie.id)).sort(byReleased(descending, byTitle())).map(index) : state.movies
+      };
+    });
+    
+    if (this.state.showFavorites) {
+      this.refreshList();
+    }
+  }
+
+  handleToggleWatchlist = (movieId) => {
+    this.setState(state => {
+      const watchlistIds = state.watchlistIds.includes(movieId) ? state.watchlistIds.remove(movieId) : state.watchlistIds.add(movieId);
+
+      localStorage.setItem("watchlistIds", JSON.stringify(watchlistIds.toArray()));
+
+      return {
+        watchlistIds: watchlistIds,
+        movies: state.showWatchlist ? this.props.movies.filter(movie => watchlistIds.includes(movie.id)).sort(byReleased(descending, byTitle())).map(index) : state.movies
+      };
+    });
   }
 
   handleShowFavorites = () => {
-      this.setState(state => ({
-        showFavorites: !state.showFavorites
-      }));
+      this.setState(state => {
+        const showFavorites = !state.showFavorites;
 
-      if (!!this.state.showFavorites) {
-        this.indexed = this.props.movies.sort(byReleased(descending, byTitle())).map(index);
-      } else {
-        this.indexed = this.props.movies.filter(movie => this.state.favoriteIds.includes(movie.id)).sort(byReleased(descending, byTitle())).map(index);
-      }
+        return {
+          showFavorites: showFavorites,
+          movies: this.props.movies.filter(movie => !showFavorites || this.state.favoriteIds.includes(movie.id)).sort(byReleased(descending, byTitle())).map(index)
+        };
+      });
+
+      this.refreshList();
+  }
+
+  handleShowWatchlist = () => {
+      this.setState(state => {
+        const showWatchlist = !state.showWatchlist;
+
+        return {
+          showWatchlist: showWatchlist,
+          movies: this.props.movies.filter(movie => !showWatchlist || this.state.watchlistIds.includes(movie.id)).sort(byReleased(descending, byTitle())).map(index)
+        };
+      });
 
       this.refreshList();
   }
@@ -247,7 +292,9 @@ class App extends React.PureComponent {
   render() {
     //console.log("App#render()");
 
-    const selectedMovie = this.indexed.find(movie => movie.index === this.state.selectedIndex);
+    const selectedMovie = this.state.movies.find(movie => movie.index === this.state.selectedIndex);
+
+    const selectedCategory = selectedClass(arg => this.state.categoryIds.includes(arg));
 
     return (
       <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} onMouseDown={this.handleMouseDown}>
@@ -261,28 +308,28 @@ class App extends React.PureComponent {
           </ul>
           <h1>Show</h1>
           <ul style={{columnCount: 2, columnGap: 20}}>
-            <li className={this.state.categoryIds.includes(0) ? "selected" : ""} style={{breakBefore: "column"}} onClick={this.handleChangeCategory(0)}>&#9634; &nbsp;Wishlist</li>
+            <li className={this.state.showWatchlist ? "selected" : ""} style={{breakBefore: "column"}} onClick={this.handleShowWatchlist}>&#9634; &nbsp;Watchlist</li>
             <li className={this.state.showFavorites ? "selected" : ""} style={{breakBefore: "column"}} onClick={this.handleShowFavorites}>&#9634; &nbsp;Favorites</li>
           </ul>
           <h1>Genres</h1>
           <ul style={{columnCount: 2, columnGap: 20}}>
-            <li className={this.state.categoryIds.includes(0) ? "selected" : ""} onClick={this.handleChangeCategory(0)}>&#9634; &nbsp;Sci-Fi</li>
-            <li className={this.state.categoryIds.includes(1) ? "selected" : ""} onClick={this.handleChangeCategory(1)}>&#9634; &nbsp;Drama</li>
-            <li className={this.state.categoryIds.includes(2) ? "selected" : ""} onClick={this.handleChangeCategory(2)}>&#9634; &nbsp;Comedy</li>
-            <li className={this.state.categoryIds.includes(3) ? "selected" : ""} onClick={this.handleChangeCategory(3)}>&#9634; &nbsp;Crime</li>
-            <li className={this.state.categoryIds.includes(4) ? "selected" : ""} onClick={this.handleChangeCategory(4)}>&#9634; &nbsp;Action</li>
-            <li className={this.state.categoryIds.includes(5) ? "selected" : ""} onClick={this.handleChangeCategory(5)}>&#9634; &nbsp;Thriller</li>
-            <li className={this.state.categoryIds.includes(6) ? "selected" : ""} onClick={this.handleChangeCategory(6)}>&#9634; &nbsp;Adventure</li>
-            <li className={this.state.categoryIds.includes(7) ? "selected" : ""} onClick={this.handleChangeCategory(7)}>&#9634; &nbsp;Western</li>
-            <li className={this.state.categoryIds.includes(8) ? "selected" : ""} onClick={this.handleChangeCategory(8)}>&#9634; &nbsp;Horror</li>
-            <li className={this.state.categoryIds.includes(9) ? "selected" : ""} onClick={this.handleChangeCategory(9)}>&#9634; &nbsp;Music</li>
-            <li className={this.state.categoryIds.includes(10) ? "selected" : ""} onClick={this.handleChangeCategory(10)}>&#9634; &nbsp;Fantasy</li>
-            <li className={this.state.categoryIds.includes(11) ? "selected" : ""} onClick={this.handleChangeCategory(11)}>&#9634; &nbsp;Animation</li>
-            <li className={this.state.categoryIds.includes(12) ? "selected" : ""} onClick={this.handleChangeCategory(12)}>&#9634; &nbsp;Romance</li>
-            <li className={this.state.categoryIds.includes(13) ? "selected" : ""} onClick={this.handleChangeCategory(13)}>&#9634; &nbsp;Biography</li>
-            <li className={this.state.categoryIds.includes(14) ? "selected" : ""} onClick={this.handleChangeCategory(14)}>&#9634; &nbsp;Mystery</li>
-            <li className={this.state.categoryIds.includes(15) ? "selected" : ""} onClick={this.handleChangeCategory(15)}>&#9634; &nbsp;Family</li>
-            <li className={this.state.categoryIds.includes(16) ? "selected" : ""} onClick={this.handleChangeCategory(16)}>&#9634; &nbsp;Sport</li>
+            <li className={selectedCategory(0)} onClick={this.handleChangeCategory(0)}>&#9634; &nbsp;Sci-Fi</li>
+            <li className={selectedCategory(1)} onClick={this.handleChangeCategory(1)}>&#9634; &nbsp;Drama</li>
+            <li className={selectedCategory(2)} onClick={this.handleChangeCategory(2)}>&#9634; &nbsp;Comedy</li>
+            <li className={selectedCategory(3)} onClick={this.handleChangeCategory(3)}>&#9634; &nbsp;Crime</li>
+            <li className={selectedCategory(4)} onClick={this.handleChangeCategory(4)}>&#9634; &nbsp;Action</li>
+            <li className={selectedCategory(5)} onClick={this.handleChangeCategory(5)}>&#9634; &nbsp;Thriller</li>
+            <li className={selectedCategory(6)} onClick={this.handleChangeCategory(6)}>&#9634; &nbsp;Adventure</li>
+            <li className={selectedCategory(7)} onClick={this.handleChangeCategory(7)}>&#9634; &nbsp;Western</li>
+            <li className={selectedCategory(8)} onClick={this.handleChangeCategory(8)}>&#9634; &nbsp;Horror</li>
+            <li className={selectedCategory(9)} onClick={this.handleChangeCategory(9)}>&#9634; &nbsp;Music</li>
+            <li className={selectedCategory(10)} onClick={this.handleChangeCategory(10)}>&#9634; &nbsp;Fantasy</li>
+            <li className={selectedCategory(11)} onClick={this.handleChangeCategory(11)}>&#9634; &nbsp;Animation</li>
+            <li className={selectedCategory(12)} onClick={this.handleChangeCategory(12)}>&#9634; &nbsp;Romance</li>
+            <li className={selectedCategory(13)} onClick={this.handleChangeCategory(13)}>&#9634; &nbsp;Biography</li>
+            <li className={selectedCategory(14)} onClick={this.handleChangeCategory(14)}>&#9634; &nbsp;Mystery</li>
+            <li className={selectedCategory(15)} onClick={this.handleChangeCategory(15)}>&#9634; &nbsp;Family</li>
+            <li className={selectedCategory(16)} onClick={this.handleChangeCategory(16)}>&#9634; &nbsp;Sport</li>
             <li></li>
           </ul>
         </div>
@@ -301,12 +348,12 @@ class App extends React.PureComponent {
               </div>
             </div>*/}
             <div style={{fontSize: 30, xfontWeight: 700, paddingTop: 4}}>
-              <span style={{fontSize: 30, fontWeight: 800}}>Movies</span> ({this.indexed.size})
+              <span style={{fontSize: 30, fontWeight: 800}}>Movies</span> ({this.state.movies.size})
             </div>
           </div>
         </div>
-        <MovieList movies={this.indexed} directors={directors} favoriteIds={this.state.favoriteIds} selectedIndex={this.state.selectedIndex}
-                   onSelectIndex={this.handleSelectIndex} onAddFavorite={this.handleAddFavorite} />
+        <MovieList movies={this.state.movies} directors={directors} watchlistIds={this.state.watchlistIds} favoriteIds={this.state.favoriteIds} selectedIndex={this.state.selectedIndex}
+                   onSelectIndex={this.handleSelectIndex} onToggleWatchlist={this.handleToggleWatchlist} onToggleFavorite={this.handleToggleFavorite} />
       </div>
     );
   }

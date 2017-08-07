@@ -222,12 +222,16 @@ ul.movies > li ul.actions li.favorite {
   background-image: url(/icons/heart.svg);
 }
 
-ul.movies > li ul.actions li.watchlist:active {
+/*ul.movies > li ul.actions li.watchlist:active {
   background-image: url(/icons/numbered-items-selected.svg);
 }
-
+*/
 ul.movies > li ul.actions li.watched:active {
   background-image: url(/icons/verification-sign-selected.svg);
+}
+
+ul.movies > li ul.actions li.watchlist.selected {
+  background-image: url(/icons/numbered-items-selected.svg);
 }
 
 ul.movies > li ul.actions li.favorite.selected {

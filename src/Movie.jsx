@@ -4,6 +4,8 @@ import Immutable from "immutable";
 
 import smoothScroll from "smoothscroll";
 
+import { selectedClass } from "./utils";
+
 
 class ActionButton extends React.PureComponent {
 
@@ -55,10 +57,16 @@ class Movie extends React.PureComponent {
     this.props.onSelectIndex(this.props.index);
   }
 
-  handleAddFavorite = (movieId) => {
+  handleToggleWatchlist = (movieId) => {
     console.log(movieId);
 
-    this.props.onAddFavorite(movieId);
+    this.props.onToggleWatchlist(movieId);
+  }
+
+  handleToggleFavorite = (movieId) => {
+    console.log(movieId);
+
+    this.props.onToggleFavorite(movieId);
   }
 
   componentDidMount() {
@@ -109,16 +117,18 @@ class Movie extends React.PureComponent {
       </div>
     ) : null;
 
+    const selectedProperty = selectedClass(arg => this.props[arg]);
+
     return (
-      <li ref={li => this.li = li} className={this.props.selected ? "selected" : ""} data-index={this.props.index}>
+      <li ref={li => this.li = li} className={selectedProperty("selected")} data-index={this.props.index}>
         <h1>{this.props.group}</h1>
         <div className="image" data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
           {stem}
           <img src={this.state.imageURL} title={this.props.title} />
           <ul className="actions" style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}>
-            <ActionButton className="watchlist" id={this.props.id} onInvoke={this.handleAddFavorite} />
-            <ActionButton className="watched" id={this.props.id} onInvoke={this.handleAddFavorite} />
-            <ActionButton className={"favorite" + (this.props.favorite ? " selected" : "")} id={this.props.id} onInvoke={this.handleAddFavorite} />
+            <ActionButton className={"watchlist" + selectedProperty("watchlist")} id={this.props.id} onInvoke={this.handleToggleWatchlist} />
+            <ActionButton className="watched" id={this.props.id} onInvoke={this.handleToggleFavorite} />
+            <ActionButton className={"favorite" + selectedProperty("favorite")} id={this.props.id} onInvoke={this.handleToggleFavorite} />
           </ul>
         </div>
         {details}
