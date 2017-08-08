@@ -5,4 +5,3 @@ export const selectedClass = f => x => f(x) ? " selected" : "";
 export const combineEvery = fs => x => fs.every(f => f(x));
 
 //export selected;
-

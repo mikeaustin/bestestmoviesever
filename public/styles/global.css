@@ -174,6 +174,7 @@ ul.movies > li .image::before {
 ul.movies > li .image > img {
   display: block;
   width: 160px; height: 238px;
+  xwidth: 12.5vw; xheight: 18.75vw;
 }
 
 
@@ -262,23 +263,24 @@ ul.movies > li:hover .watched::before {
 @media screen and (max-width: 1024px) and (orientation: landscape) {
   ul.movies > li .image img {
     width: 147px; height: 219px;
+    width: 17.7vw; height: 26vw;
   }
 }
 
 @media screen and (max-width: 800px) and (orientation: landscape) {
   ul.movies > li .image img {
-    width: 21vw; height: 50vh;
+    width: 21vw; height: 31.5vw;
   }
 }
 
 @media screen and (max-width: 768px) and (orientation: portrait) {
   ul.movies > li .image img {
-    width: 167px; height: 249px;
+    width: 21.8vw; height: 31vw;
   }
 }
 
 @media screen and (max-width: 480px) and (orientation: portrait) {
   ul.movies > li .image img {
-    width: 42vw; height: 35vh;
+    width: 41vw; height: 61vw;
   }
 }
