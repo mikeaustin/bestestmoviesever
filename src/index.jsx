@@ -10,7 +10,7 @@ import categories from "./categories";
 
 import MovieList from "./MovieList";
 
-import { selectedClass } from "./utils";
+import { selectedClass, combineEvery } from "./utils";
 
 
 class ListReducer {
@@ -53,41 +53,14 @@ const KeyCode = {
   ARROW_DOWN: 40
 }
 
-const ascending  = f => (a, b) => f(b, a);
-const descending = f => (a, b) => f(a, b);
 const always     = x => (a, b) => x;
-
-const byReleased = (order, secondary = always(0)) => order((a, b) => {
-  if (a.released > b.released) return -1;
-  if (a.released < b.released) return +1;
-
-  return secondary(a, b);
-});
-
-const byTitle = (secondary = always(0)) => (a, b) => {
-  if (a.title < b.title) return -1;
-  if (a.title > b.title) return +1;
-
-  return secondary(a, b);
-}
-
-const byReleased2 = order => (secondary = always(0)) => () => order((a, b) => {
-  if (a.released > b.released) return -1;
-  if (a.released < b.released) return +1;
-
-  return secondary(a, b);
-});
-
-const title = movie => movie.title;
-
-const index = (movie, index) => {
+const comparator = f => (next = always(0), x, y) => (a, b) => f(a, b) ? -1 : f(b, a) ? 1 : next(x, y);
+const ascending  = (next, x, y) => comparator((a, b) => a < b)(next, x, y);
+const descending = (next, x, y) => comparator((a, b) => a > b)(next, x, y);
+const byReleased = order => next => (a, b) => order(next, a, b)(a.released, b.released);
+const byTitle    = next => (a, b) => ascending(next)(a.title, b.title);
+const withIndex  = (movie, index) => {
   return { index: index, id: movie.id, title: movie.title, image: movie.image, released: movie.released, directors: movie.directors, categories: movie.categories };
-};
-
-const range = movie => {
-  const scale = movie.released < 1980 ? 10 : 1;
-
-  return Math.floor(movie.released / scale) * scale;
 };
 
 
@@ -99,7 +72,7 @@ class App extends React.PureComponent {
     this.buildData();
 
     this.state = {
-      movies: this.props.movies.sort(byReleased(descending, byTitle())).map(index),
+      movies: this.props.movies.sort(byReleased(descending)(byTitle())).map(withIndex),
       selectedIndex: 0,
       categoryIds: Immutable.Set(),
       sortOrder: descending,
@@ -158,15 +131,7 @@ class App extends React.PureComponent {
     });
   }
 
-  buildMovies() {
-    // categoryIds, favoriteIds, sortOrder
-    // const movies = this.props.movies.filter(and(onGenre, onFavorite)).sort(byReleased(sortOrder)(byTitle())).map(withIndex);
-  }
-
   buildData() {
-    //this.indexed = this.props.movies.sort(byReleased(descending, byTitle())).map(index);
-    //this.indexed = this.props.movies.sort(byReleased2(descending)(byTitle())).map(index);
-
     this.directors2 = this.props.movies.reduce((map, movie) => {
       return map.update(movie.directors ? directors.get(movie.directors[0]) : "Unknown", (count = 0) => count + 1)
     }, Immutable.Map());
@@ -175,8 +140,13 @@ class App extends React.PureComponent {
   }
 
   refreshList() {
+    const onWatchlist  = movie => !this.state.showWatchlist || this.state.watchlistIds.includes(movie.id);
+    const onFavorites  = movie => !this.state.showFavorites || this.state.favoriteIds.includes(movie.id);
+    const onCategories = movie => this.state.categoryIds.isEmpty() || Immutable.Set(movie.categories).isSuperset(this.state.categoryIds)
+
     this.setState({
-      selectedIndex: 0
+      selectedIndex: 0,
+      movies: this.props.movies.filter(combineEvery([onWatchlist, onFavorites, onCategories])).sort(byReleased(this.state.sortOrder)(byTitle())).map(withIndex)
     });
 
     smoothScroll(0);
@@ -184,40 +154,23 @@ class App extends React.PureComponent {
 
   handleSortYearAscending = (event) => {
     this.setState(state => ({
-      movies: this.props.movies.sort(byReleased(ascending, byTitle())).map(index),
       sortOrder: ascending
-    }));
-
-    this.refreshList();
+    }), () => this.refreshList());
   }
 
   handleSortYearDescending = (event) => {
     this.setState(state => ({
-      movies: this.props.movies.sort(byReleased(descending, byTitle())).map(index),
       sortOrder: descending
-    }));
-
-    this.refreshList();
+    }), () => this.refreshList());
   }
 
   handleChangeCategory(categoryId) {
     return event => {
       const categoryIds = this.state.categoryIds.includes(categoryId) ? this.state.categoryIds.delete(categoryId) : this.state.categoryIds.add(categoryId);
-      //console.log(categoryIds);
-
-      if (categoryIds.isEmpty()) {
-        this.indexed = this.props.movies.sort(byReleased(descending, byTitle())).map(index);
-      } else {
-        //this.indexed = this.props.movies.filter(movie => !Immutable.Set(movie.categories).intersect(categoryIds).isEmpty()).sort(byReleased(descending, byTitle())).map(index);
-        this.indexed = this.props.movies.filter(movie => Immutable.Set(movie.categories).isSuperset(categoryIds)).sort(byReleased(descending, byTitle())).map(index);
-      }
 
       this.setState(state => ({
         categoryIds: categoryIds,
-        movies: this.indexed
-      }));
-
-      this.refreshList();
+      }), () => this.refreshList());
     };
   }
 
@@ -241,13 +194,8 @@ class App extends React.PureComponent {
 
       return {
         favoriteIds: favoriteIds,
-        movies: state.showFavorites ? this.props.movies.filter(movie => favoriteIds.includes(movie.id)).sort(byReleased(descending, byTitle())).map(index) : state.movies
       };
-    });
-    
-    if (this.state.showFavorites) {
-      this.refreshList();
-    }
+    }, () => this.state.showFavorites ? this.refreshList() : null);
   }
 
   handleToggleWatchlist = (movieId) => {
@@ -258,9 +206,8 @@ class App extends React.PureComponent {
 
       return {
         watchlistIds: watchlistIds,
-        movies: state.showWatchlist ? this.props.movies.filter(movie => watchlistIds.includes(movie.id)).sort(byReleased(descending, byTitle())).map(index) : state.movies
       };
-    });
+    }, () => this.state.showWatchlist ? this.refreshList() : null);
   }
 
   handleShowFavorites = () => {
@@ -269,11 +216,8 @@ class App extends React.PureComponent {
 
         return {
           showFavorites: showFavorites,
-          movies: this.props.movies.filter(movie => !showFavorites || this.state.favoriteIds.includes(movie.id)).sort(byReleased(descending, byTitle())).map(index)
         };
-      });
-
-      this.refreshList();
+      }, () => this.refreshList());
   }
 
   handleShowWatchlist = () => {
@@ -282,11 +226,8 @@ class App extends React.PureComponent {
 
         return {
           showWatchlist: showWatchlist,
-          movies: this.props.movies.filter(movie => !showWatchlist || this.state.watchlistIds.includes(movie.id)).sort(byReleased(descending, byTitle())).map(index)
         };
-      });
-
-      this.refreshList();
+      }, () => this.refreshList());
   }
 
   render() {
@@ -364,5 +305,3 @@ ReactDOM.render(
   <App movies={movies} />,
   document.getElementById("root")
 );
-
-//          {this.props.movies.map(movie => <Movie key={movie.title} title={movie.title} image={movie.image} />)}
