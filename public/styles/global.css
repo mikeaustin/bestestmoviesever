@@ -239,6 +239,25 @@ ul.movies > li ul.actions li.favorite.selected {
   background-image: url(/icons/heart-selected.svg);
 }
 
+
+ul.movies > li > .details {
+  height: 70px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+ul.movies > li > .details .bubble {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: absolute;
+  left: 0; right: 0;
+  padding: 0 0px;
+  background: hsl(0, 0%, 10%);
+  height: 70px;
+  border-top: 1px solid hsl(0, 0%, 20%);
+}
+
 /*ul.movies > li .watched::before {
   position: absolute;
   display: block;

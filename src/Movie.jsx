@@ -104,11 +104,10 @@ class Movie extends React.PureComponent {
     ) : null;
 
     const details = this.props.selected ? (
-      <div className="details" style={{height: 70, marginTop: 20, marginBottom: 10}}>
-        <div style={{display: "flex", flexDirection: "column", justifyContent: "center", position: "absolute", left: 0, right: 0, padding: "0 0px",
-                     background: "hsl(0, 0%, 10%", height: 70, borderTop: "1px solid hsl(0, 0%, 20%)"}}>
-          <div style={{fontSize: 20, fontWeight: 700, display: "flex", justifyContent: "center", marginBottom: 8}}>{this.props.title}</div>
-          <div style={{fontSize: 15, fontWeight: 400, display: "flex", justifyContent: "center"}}>
+      <div className="details">
+        <div className="bubble">
+          <div className="title" style={{fontSize: 20, fontWeight: 700, display: "flex", justifyContent: "center", marginBottom: 8}}>{this.props.title}</div>
+          <div className="extra" style={{fontSize: 15, fontWeight: 400, display: "flex", justifyContent: "center"}}>
             {this.props.released}
             &nbsp; &#9724;&#xfe0e; &nbsp;
             {this.props.directorIds ? this.props.directorIds.map(id => this.props.directors.get(id)).join(", ") : "Unknown"}
