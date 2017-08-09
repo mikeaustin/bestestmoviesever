@@ -348,8 +348,8 @@ ul.movies > li > .details .bubble {
 
   ul.movies > li .image img {
     xwidth: 41vw; xheight: 61vw;
-    width: calc((100vw / 2) - (20px * 1.5)); height: 61vw;
-    width: calc((100vw / 3) - (20px * 1.3)); height: calc(((100vw / 3) - (20px * 1.3)) * 1.5);
+    width: calc((100vw / 2) - (10px * 3));
+    height: calc(((100vw / 2) - (10px * 3)) * 1.5);
   }
 
   ul.movies > li > .details .bubble {
