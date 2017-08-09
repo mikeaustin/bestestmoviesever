@@ -87,6 +87,18 @@ class App extends React.PureComponent {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown, false);
+
+    this.selectedItem = document.querySelector(".movies > li.selected");
+    this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
+    this.firstItem = this.allItems.first();
+  }
+
+  componentDidUpdate() {
+    this.selectedItem = document.querySelector(".movies > li.selected");
+    this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
+    //this.firstItem = this.allItems.first();
+    this.minOffsetLeft = this.allItems.first().offsetLeft;
+    this.maxOffsetLeft = this.allItems.reduce((max, item) => Math.max(item.offsetLeft, max), 0);
   }
 
   handleKeyDown = (event) => {
@@ -108,15 +120,22 @@ class App extends React.PureComponent {
         event.stopPropagation();
         event.preventDefault();
 
-        const selectedItem = document.querySelector(".movies > li.selected");
-        const allItems = Immutable.List(document.querySelectorAll(".movies > li"));
-        const firstItem = allItems.first();
+        const nextRowItems = new ListReducer(this.allItems.toSeq())
+          .skipWhile(item => Number(item.dataset.index) !== this.state.selectedIndex)
+          .take(1).skipWhile(item => item.offsetLeft > this.selectedItem.offsetLeft)
+          .take(1).takeWhile(item => item.offsetLeft <= this.selectedItem.offsetLeft && item.offsetLeft !== this.minOffsetLeft);
 
-        const nextRowItems = new ListReducer(allItems.toSeq())
-          .skip(this.state.selectedIndex + 1)
-          .skipWhile(item => item.offsetLeft > selectedItem.offsetLeft)
-          .take(1)
-          .takeWhile(item => item.offsetLeft <= selectedItem.offsetLeft && item.offsetLeft !== firstItem.offsetLeft);
+        if (!nextRowItems.isEmpty()) {
+          return Number(nextRowItems.last().dataset.index);
+        }
+      } else if (event.keyCode === KeyCode.ARROW_UP) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        const nextRowItems = new ListReducer(this.allItems.toSeq().reverse())
+          .skipWhile(item => Number(item.dataset.index) !== this.state.selectedIndex)
+          .skip(1).skipWhile(item => item.offsetLeft < this.selectedItem.offsetLeft)
+          .take(1).takeWhile(item => item.offsetLeft >= this.selectedItem.offsetLeft && item.offsetLeft !== this.maxOffsetLeft);
 
         if (!nextRowItems.isEmpty()) {
           return Number(nextRowItems.last().dataset.index);
@@ -148,6 +167,8 @@ class App extends React.PureComponent {
   }
 
   refreshList() {
+    console.log("refreshList()");
+
     const onWatchlist  = movie => !this.state.showWatchlist || this.state.watchlistIds.includes(movie.id);
     const onFavorites  = movie => !this.state.showFavorites || this.state.favoriteIds.includes(movie.id);
     const onCategories = movie => this.state.categoryIds.isEmpty() || Immutable.Set(movie.categories).isSuperset(this.state.categoryIds)
@@ -198,15 +219,6 @@ class App extends React.PureComponent {
     this.setState(state => ({
       showMenu: !state.showMenu
     }));
-  }
-
-  handleMouseDown = (event) => {
-    // event.preventDefault();
-    // event.stopPropagation();
-
-    // this.setState(state => ({
-    //   showMenu: false
-    // }));
   }
 
   handleToggleFavorite = (movieId) => {
@@ -293,7 +305,7 @@ class App extends React.PureComponent {
     const oddCategories = categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 != 0).set(-1, null).entrySeq();
 
     return (
-      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} xonMouseDown={this.handleMouseDown}>
+      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}}>
         <div className={"menu" + (this.state.showMenu ? " open" : "")} style={{display: "flex", flexDirection: "column", position: "fixed", bottom: 0, left: 0, top: 0, padding: "72px 20px 0 20px", background: "hsla(0, 0%, 0%, 0.9)", zIndex: 1000}}
              onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}>
           <table>
