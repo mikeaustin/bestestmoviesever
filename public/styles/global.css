@@ -4,6 +4,7 @@
   margin: 0; padding: 0;
   color: hsl(0, 0%, 80%);
   border: none; outline: none;
+  border-spacing: 0;
 }
 
 html {
@@ -34,16 +35,6 @@ main {
 
 ul {
   list-style: none;
-}
-
-
-#categories th, td {
-  text-align: center;
-  padding: 0 5px 10px 5px;
-}
-
-#categories th {
-  width: 50px;
 }
 
 
@@ -89,6 +80,11 @@ ul.movies > li h1 {
   xtext-shadow: 0 0 5px hsla(0, 0%, 0%, 1.0);
 }
 
+/**********************************************************\
+**
+** Menu
+**
+\**********************************************************/
 
 .menu {
   border-right: 1px transparent;
@@ -96,45 +92,65 @@ ul.movies > li h1 {
   transition: all 0.125s ease-in;
 }
 
-.menu:hover, .menu.open {
+@media (any-hover) {
+  .menu:hover {
+    transform: translate(0, 0);
+    transition: all 0.0625s ease-out;
+    border-right: 1px solid hsl(0, 0%, 10%);
+    box-shadow: 0 -1px 10px hsl(0, 0%, 0%);
+  }
+}
+
+.menu.open {
   transform: translate(0, 0);
   transition: all 0.0625s ease-out;
   border-right: 1px solid hsl(0, 0%, 10%);
   box-shadow: 0 -1px 10px hsl(0, 0%, 0%);
 }
 
-.menu > h1 {
+.menu table th, .menu table td {
+  text-align: left;
+  xvertical-align: top;
+}
+
+.menu table th {
   font-weight: 800;
-  margin-top: 7px;
+  height: 20px;
+  padding-top: 15px;
+  padding-bottom: 7px;
 }
 
-.menu > h1:first-of-type {
-  margin-top: 0;
+.menu table tr:first-child th {
+  padding-top: 0;
 }
 
-.menu > h1, .menu > ul > li {
-  height: 35px;
-  line-height: 1.05em;
+.menu table th, .menu table td {
+  xline-height: 36px;
+  xline-height: 1.05em;
   font-size: 20px;
 }
 
-.menu > ul > li {
+.menu > table td {
+  height: 35px;
   cursor: pointer;
-  xcolor: hsl(0, 0%, 60%);
-  overflow: hidden; /* Fix for column cuttof */
 }
 
-.menu > ul > li.selected::before {
+.menu > table td.selected::before {
   position: absolute;
   content: '\2713';
   margin-left: 3px;
   font-size: 90%;
 }
 
-.menu > ul > li:hover {
+.menu > table td:hover {
   color: white;
 }
 
+/**********************************************************\
+**
+** Movies
+**
+\**********************************************************/
 
 ul.movies {
   display: flex;
@@ -144,16 +160,18 @@ ul.movies {
 
 ul.movies > li .image {
   position: relative;
-  margin: 10px 10px 10px 10px;
+  margin: 10px;
   xposition: relative;
   transition: all 0.125s ease-in;
   cursor: pointer;
 }
 
-ul.movies > li:hover .image {
-  transition: all 0.0625s ease-out;
-  z-index: 100;
-  box-shadow: 0 0 30px hsla(200, 100%, 50%, 1.0);
+@media (any-hover:hover) {
+  ul.movies > li:hover .image {
+    transition: all 0.0625s ease-out;
+    z-index: 100;
+    box-shadow: 0 0 30px hsla(200, 100%, 50%, 1.0);
+  }
 }
 
 ul.movies > li.selected .image {
@@ -184,7 +202,8 @@ ul.movies > li ul.actions {
   background: linear-gradient(hsla(0, 0%, 0%, 0.0), hsla(0, 0%, 0%, 0.9));
 }
 
-@media screen and (min-width: 1280px) {
+
+@media (any-hover:hover) {
   ul.movies > li:hover ul.actions {
     visibility: visible;
   }
@@ -201,9 +220,11 @@ ul.movies > li ul.actions li {
   border-radius: 2px;
 }
 
-ul.movies > li ul.actions li:hover {
-  background-color: hsla(0, 0%, 100%, 0.25);
-  box-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
+@media (any-hover:hover) {
+  ul.movies > li ul.actions li:hover {
+    background-color: hsla(0, 0%, 100%, 0.25);
+    box-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
+  }
 }
 
 /*ul.movies > li ul.actions li:active {
@@ -251,7 +272,7 @@ ul.movies > li > .details .bubble {
   flex-direction: column;
   justify-content: center;
   position: absolute;
-  left: 0; right: 0;
+  left: 20px; right: 20px;
   padding: 0 0px;
   background: hsl(0, 0%, 10%);
   height: 70px;
@@ -271,18 +292,31 @@ ul.movies > li > .details .bubble {
 }
 */
 
-ul.movies > li:hover .watched::before {
+/*ul.movies > li:hover .watched::before {
   box-shadow: none;
   xbackground: hsla(0, 0%, 10%, 0.9);
   background-image: url(/icons/checked-box-highlight.svg);
   color: hsl(0, 0%, 70%);
 }
+*/
+/**********************************************************\
+**
+** Mobile
+**
+\**********************************************************/
 
+@media screen and (max-width: 1024px) {
+  .menu > table td.selected::before {
+    margin-left: 0;
+    font-size: 100%;
+  }
+}
 
 @media screen and (max-width: 1024px) and (orientation: landscape) {
   ul.movies > li .image img {
     width: 147px; height: 219px;
     width: 17.7vw; height: 26vw;
+    width: 14.4vw; height: 21.6vw;
   }
 }
 
@@ -299,7 +333,26 @@ ul.movies > li:hover .watched::before {
 }
 
 @media screen and (max-width: 480px) and (orientation: portrait) {
+  header .title, header .count {
+    font-size: 25px !important;
+  }
+
+  .menu table th, .menu table td {
+    font-size: 15px;
+    height: 30px;
+  }
+
+  .movies > li > .details .bubble .title {
+    font-size: 15px !important;
+  }
+
   ul.movies > li .image img {
-    width: 41vw; height: 61vw;
+    xwidth: 41vw; xheight: 61vw;
+    width: calc((100vw / 2) - (20px * 1.5)); height: 61vw;
+    width: calc((100vw / 3) - (20px * 1.3)); height: calc(((100vw / 3) - (20px * 1.3)) * 1.5);
+  }
+
+  ul.movies > li > .details .bubble {
+    left: 0; right: 0;
   }
 }

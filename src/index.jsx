@@ -47,10 +47,11 @@ class ListReducer {
 }
 
 const KeyCode = {
-  ARROW_LEFT: 37,
-  ARROW_UP: 38,
+  ARROW_LEFT:  37,
+  ARROW_UP:    38,
   ARROW_RIGHT: 39,
-  ARROW_DOWN: 40
+  ARROW_DOWN:  40,
+  SPACE:       32
 }
 
 const always     = x => (a, b) => x;
@@ -89,13 +90,20 @@ class App extends React.PureComponent {
   }
 
   handleKeyDown = (event) => {
-    console.log(KeyboardEvent);
+    console.log(event.keyCode);
 
     const offset = (() => {
       if (event.keyCode === KeyCode.ARROW_RIGHT && this.state.selectedIndex < this.props.movies.size - 1) {
         return this.state.selectedIndex + 1;
       } else if (event.keyCode === KeyCode.ARROW_LEFT && this.state.selectedIndex > 0) {
         return this.state.selectedIndex - 1;
+      } else if (event.keyCode === KeyCode.SPACE) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        const selectedMovie = this.state.movies.find(movie => movie.index === this.state.selectedIndex);
+
+        this.handleToggleFavorite(selectedMovie.id);
       } else if (event.keyCode === KeyCode.ARROW_DOWN) {
         event.stopPropagation();
         event.preventDefault();
@@ -153,12 +161,18 @@ class App extends React.PureComponent {
   }
 
   handleSortYearAscending = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     this.setState(state => ({
       sortOrder: ascending
     }), () => this.refreshList());
   }
 
   handleSortYearDescending = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     this.setState(state => ({
       sortOrder: descending
     }), () => this.refreshList());
@@ -166,6 +180,9 @@ class App extends React.PureComponent {
 
   handleChangeCategory(categoryId) {
     return event => {
+      event.preventDefault();
+      event.stopPropagation();
+
       const categoryIds = this.state.categoryIds.includes(categoryId) ? this.state.categoryIds.delete(categoryId) : this.state.categoryIds.add(categoryId);
 
       this.setState(state => ({
@@ -175,12 +192,18 @@ class App extends React.PureComponent {
   }
 
   handleShowMenu = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     this.setState(state => ({
       showMenu: !state.showMenu
     }));
   }
 
   handleMouseDown = (event) => {
+    // event.preventDefault();
+    // event.stopPropagation();
+
     // this.setState(state => ({
     //   showMenu: false
     // }));
@@ -211,23 +234,52 @@ class App extends React.PureComponent {
   }
 
   handleShowFavorites = () => {
-      this.setState(state => {
-        const showFavorites = !state.showFavorites;
+    event.preventDefault();
+    event.stopPropagation();
 
-        return {
-          showFavorites: showFavorites,
-        };
-      }, () => this.refreshList());
+    this.setState(state => {
+      const showFavorites = !state.showFavorites;
+
+      return {
+        showFavorites: showFavorites,
+      };
+    }, () => this.refreshList());
   }
 
   handleShowWatchlist = () => {
-      this.setState(state => {
-        const showWatchlist = !state.showWatchlist;
+    event.preventDefault();
+    event.stopPropagation();
 
-        return {
-          showWatchlist: showWatchlist,
-        };
-      }, () => this.refreshList());
+    this.setState(state => {
+      const showWatchlist = !state.showWatchlist;
+
+      return {
+        showWatchlist: showWatchlist,
+      };
+    }, () => this.refreshList());
+  }
+
+  handleTouchStart = event => {
+    this.firstX = this.lastX = event.touches[0].clientX;
+  }
+
+  handleTouchMove = event => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    console.log(event.nativeEvent);
+
+    this.lastX = event.touches[0].clientX;
+  }
+
+  handleTouchEnd = event => {
+    console.log(event.nativeEvent);
+
+    if (this.lastX < this.firstX - 50) {
+      this.setState({
+        showMenu: false
+      });
+    }
   }
 
   render() {
@@ -237,64 +289,55 @@ class App extends React.PureComponent {
 
     const selectedCategory = selectedClass(arg => this.state.categoryIds.includes(arg));
 
-    return (
-      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} onMouseDown={this.handleMouseDown}>
-        <div className={"menu" + (this.state.showMenu ? " open" : "")} style={{display: "flex", flexDirection: "column", position: "fixed", bottom: 0, left: 0, top: 0, xwidth: "156px", padding: "73px 20px 0 20px", background: "hsla(0, 0%, 0%, 0.9)", zIndex: 1000}}>
-          <div style={{position: "fixed", top: 0, zIndex: 1000001}}>Genres</div>
+    const evenCategories = categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 == 0).entrySeq();
+    const oddCategories = categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 != 0).set(-1, null).entrySeq();
 
-          <h1>Sort By</h1>
-          <ul style={{columnCount: 2, columnGap: 20}}>
-            <li className={this.state.sortOrder === descending ? "selected" : ""} style={{breakBefore: "column"}} onClick={this.handleSortYearDescending}>&#9634; &nbsp;Year &nbsp;&#8595;</li>
-            <li className={this.state.sortOrder === ascending ? "selected" : ""} style={{breakBefore: "column"}} onClick={this.handleSortYearAscending}>&#9634; &nbsp;Year &nbsp;&#8593;</li>
-          </ul>
-          <h1>Show</h1>
-          <ul style={{columnCount: 2, columnGap: 20}}>
-            <li className={this.state.showWatchlist ? "selected" : ""} style={{breakBefore: "column"}} onClick={this.handleShowWatchlist}>&#9634; &nbsp;Watchlist</li>
-            <li className={this.state.showFavorites ? "selected" : ""} style={{breakBefore: "column"}} onClick={this.handleShowFavorites}>&#9634; &nbsp;Favorites</li>
-          </ul>
-          <h1>Genres</h1>
-          <ul style={{columnCount: 2, columnGap: 20}}>
-            <li className={selectedCategory(0)} onClick={this.handleChangeCategory(0)}>&#9634; &nbsp;Sci-Fi</li>
-            <li className={selectedCategory(1)} onClick={this.handleChangeCategory(1)}>&#9634; &nbsp;Drama</li>
-            <li className={selectedCategory(2)} onClick={this.handleChangeCategory(2)}>&#9634; &nbsp;Comedy</li>
-            <li className={selectedCategory(3)} onClick={this.handleChangeCategory(3)}>&#9634; &nbsp;Crime</li>
-            <li className={selectedCategory(4)} onClick={this.handleChangeCategory(4)}>&#9634; &nbsp;Action</li>
-            <li className={selectedCategory(5)} onClick={this.handleChangeCategory(5)}>&#9634; &nbsp;Thriller</li>
-            <li className={selectedCategory(6)} onClick={this.handleChangeCategory(6)}>&#9634; &nbsp;Adventure</li>
-            <li className={selectedCategory(7)} onClick={this.handleChangeCategory(7)}>&#9634; &nbsp;Western</li>
-            <li className={selectedCategory(8)} onClick={this.handleChangeCategory(8)}>&#9634; &nbsp;Horror</li>
-            <li className={selectedCategory(9)} onClick={this.handleChangeCategory(9)}>&#9634; &nbsp;Music</li>
-            <li className={selectedCategory(10)} onClick={this.handleChangeCategory(10)}>&#9634; &nbsp;Fantasy</li>
-            <li className={selectedCategory(11)} onClick={this.handleChangeCategory(11)}>&#9634; &nbsp;Animation</li>
-            <li className={selectedCategory(12)} onClick={this.handleChangeCategory(12)}>&#9634; &nbsp;Romance</li>
-            <li className={selectedCategory(13)} onClick={this.handleChangeCategory(13)}>&#9634; &nbsp;Biography</li>
-            <li className={selectedCategory(14)} onClick={this.handleChangeCategory(14)}>&#9634; &nbsp;Mystery</li>
-            <li className={selectedCategory(15)} onClick={this.handleChangeCategory(15)}>&#9634; &nbsp;Family</li>
-            <li className={selectedCategory(16)} onClick={this.handleChangeCategory(16)}>&#9634; &nbsp;Sport</li>
-            <li></li>
-          </ul>
+    return (
+      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} xonMouseDown={this.handleMouseDown}>
+        <div className={"menu" + (this.state.showMenu ? " open" : "")} style={{display: "flex", flexDirection: "column", position: "fixed", bottom: 0, left: 0, top: 0, padding: "72px 20px 0 20px", background: "hsla(0, 0%, 0%, 0.9)", zIndex: 1000}}
+             onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}>
+          <table>
+            <tbody>
+              <tr>
+                <th>Sort By</th>
+              </tr>
+              <tr>
+                <td className={this.state.sortOrder === descending ? "selected" : ""} onMouseDown={this.handleSortYearDescending}>&#9634; &nbsp;Year &nbsp;&#8595;</td>
+                <th style={{width: "20px"}}></th>
+                <td className={this.state.sortOrder === ascending ? "selected" : ""} onMouseDown={this.handleSortYearAscending}>&#9634; &nbsp;Year &nbsp;&#8593;</td>
+              </tr>
+              <tr>
+                <th>Show</th>
+              </tr>
+              <tr>
+                <td className={this.state.showWatchlist ? "selected" : ""} onMouseDown={this.handleShowWatchlist}>&#9634; &nbsp;Watchlist</td>
+                <th style={{width: "20px"}}></th>
+                <td className={this.state.showFavorites ? "selected" : ""} onMouseDown={this.handleShowFavorites}>&#9634; &nbsp;Favorites</td>
+              </tr>
+              <tr>
+                <th>Genres</th>
+              </tr>
+              {evenCategories.zipWith((a, b) => (
+                <tr key={a}>
+                  <td className={selectedCategory(a[0])} onMouseDown={this.handleChangeCategory(a[0])}>&#9634; &nbsp;{a[1]}</td>
+                  <th style={{width: "20px"}}></th>
+                  {b[1] !== null ? <td className={selectedCategory(b[0])} onMouseDown={this.handleChangeCategory(b[0])}>&#9634; &nbsp;{b[1]}</td> : null}
+                </tr>
+              ), oddCategories)}
+            </tbody>
+          </table>
         </div>
-        <div style={{display: "flex", justifyContent: "center", position: "fixed", top: 0, right: 0, left: 0, height: "50px", background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 20%, 1.0)", zIndex: 1000, boxShadow: "0 1px 10px hsl(0, 0%, 0%)"}}>
-        <div style={{display: "flex", justifyContent: "center", position: "fixed", bottom: -51, right: 0, left: 0, height: "50px", background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 20%, 1.0)", zIndex: 1000, boxShadow: "0 -1px 10px hsl(0, 0%, 0%)"}} />
-          <div style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", cursor: "pointer", zIndex: 1001}} onClick={this.handleShowMenu}>
+        <header style={{display: "flex", justifyContent: "center", alignItems: "center", position: "fixed", top: 0, right: 0, left: 0, height: 50, background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 20%, 1.0)", zIndex: 1000, boxShadow: "0 1px 10px hsl(0, 0%, 0%)"}}>
+          <div style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", cursor: "pointer", zIndex: 1001}} onMouseDown={this.handleShowMenu}>
             <img src="icons/menu-button.svg" height="25" />
           </div>
-          <div style={{display: "flex", justifyContent: "center", width: 1280, alignItems: "center", xpadding: "0 10px", xpaddingTop: 4, position: "relative"}}>
-            {/*<div style={{width: 0}}>
-              <div className="directors">
-                <h1 style={{fontSize: 25}}>Directors</h1>
-                <ul style={{position: "absolute"}}>
-                  {directorsSortedByCount.entrySeq().map(([director, count]) => <li key={director}>{director} ({count})</li>)}
-                </ul>
-              </div>
-            </div>*/}
-            <div style={{fontSize: 30, xfontWeight: 700, paddingTop: 4}}>
-              <span style={{fontSize: 30, fontWeight: 800}}>Movies</span> ({this.state.movies.size})
-            </div>
+          <div style={{paddingTop: 4}}>
+            <span className="title" style={{fontSize: 30, fontWeight: 800}}>Movies</span> <span className="count" style={{fontSize: 30}}>({this.state.movies.size})</span>
           </div>
-        </div>
+        </header>
         <MovieList movies={this.state.movies} directors={directors} watchlistIds={this.state.watchlistIds} favoriteIds={this.state.favoriteIds} selectedIndex={this.state.selectedIndex}
                    onSelectIndex={this.handleSelectIndex} onToggleWatchlist={this.handleToggleWatchlist} onToggleFavorite={this.handleToggleFavorite} />
+        <footer style={{display: "flex", justifyContent: "center", position: "fixed", bottom: -51, right: 0, left: 0, height: "50px", background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 20%, 1.0)", zIndex: 1000, boxShadow: "0 -1px 10px hsl(0, 0%, 0%)"}} />
       </div>
     );
   }
