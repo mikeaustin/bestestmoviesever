@@ -182,18 +182,12 @@ class App extends React.PureComponent {
   }
 
   handleSortYearAscending = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
     this.setState(state => ({
       sortOrder: ascending
     }), () => this.refreshList());
   }
 
   handleSortYearDescending = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
     this.setState(state => ({
       sortOrder: descending
     }), () => this.refreshList());
@@ -201,9 +195,6 @@ class App extends React.PureComponent {
 
   handleChangeCategory(categoryId) {
     return event => {
-      event.preventDefault();
-      event.stopPropagation();
-
       const categoryIds = this.state.categoryIds.includes(categoryId) ? this.state.categoryIds.delete(categoryId) : this.state.categoryIds.add(categoryId);
 
       this.setState(state => ({
@@ -245,10 +236,7 @@ class App extends React.PureComponent {
     }, () => this.state.showWatchlist ? this.refreshList() : null);
   }
 
-  handleShowFavorites = () => {
-    event.preventDefault();
-    event.stopPropagation();
-
+  handleShowFavorites = (event) => {
     this.setState(state => {
       const showFavorites = !state.showFavorites;
 
@@ -258,10 +246,7 @@ class App extends React.PureComponent {
     }, () => this.refreshList());
   }
 
-  handleShowWatchlist = () => {
-    event.preventDefault();
-    event.stopPropagation();
-
+  handleShowWatchlist = (event) => {
     this.setState(state => {
       const showWatchlist = !state.showWatchlist;
 
@@ -271,27 +256,32 @@ class App extends React.PureComponent {
     }, () => this.refreshList());
   }
 
-  handleTouchStart = event => {
+
+  handleMenuTouchStart = event => {
     this.firstX = this.lastX = event.touches[0].clientX;
   }
 
-  handleTouchMove = event => {
+  handleMenuTouchMove = event => {
     event.preventDefault();
     event.stopPropagation();
-
-    console.log(event.nativeEvent);
 
     this.lastX = event.touches[0].clientX;
   }
 
-  handleTouchEnd = event => {
-    console.log(event.nativeEvent);
+  handleMenuTouchEnd = event => {
+    event.stopPropagation();
 
     if (this.lastX < this.firstX - 50) {
       this.setState({
         showMenu: false
       });
     }
+  }
+
+  handleAppTouchEnd = event => {
+    // this.setState({
+    //   showMenu: false
+    // });
   }
 
   render() {
@@ -305,9 +295,9 @@ class App extends React.PureComponent {
     const oddCategories = categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 != 0).set(-1, null).entrySeq();
 
     return (
-      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}}>
+      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} onTouchMove={this.handleAppTouchEnd} onTouchEnd={this.handleAppTouchEnd}>
         <div className={"menu" + (this.state.showMenu ? " open" : "")} style={{display: "flex", flexDirection: "column", position: "fixed", bottom: 0, left: 0, top: 0, padding: "72px 20px 0 20px", background: "hsla(0, 0%, 0%, 0.9)", zIndex: 1000}}
-             onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}>
+             onTouchStart={this.handleMenuTouchStart} onTouchMove={this.handleMenuTouchMove} onTouchEnd={this.handleMenuTouchEnd}>
           <table>
             <tbody>
               <tr>
