@@ -108,8 +108,8 @@ export default class Movie extends React.PureComponent {
     ) : null;
 
     const stem = this.props.selected ? (
-      <div style={{position: "absolute", background: "hsl(0, 0%, 10%)", width: 13, height: 13, left: "50%", marginLeft: -7, bottom: -25,
-                   transform: "rotate(45deg)", borderLeft: "1px solid hsl(0, 0%, 20%)", borderTop: "1px solid hsl(0, 0%, 20%)"}}></div>
+      <div style={{position: "absolute", background: "hsl(0, 0%, 10%)", width: 13, height: 13, left: "50%", marginLeft: -7, bottom: -27,
+                   transform: "rotate(45deg)", borderLeft: "1px solid hsl(0, 0%, 20%)", borderTop: "1px solid hsl(0, 0%, 20%)", zIndex: 100}}></div>
     ) : null;
 
     const details = this.props.selected ? (
@@ -130,14 +130,16 @@ export default class Movie extends React.PureComponent {
     return (
       <li ref={li => this.li = li} className={selectedProperty("selected")} data-id={this.props.id} data-index={this.props.index}>
         <h1>{this.props.group}</h1>
-        <div className={"image" + (this.state.imageURL ? " loaded" : "")} data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
+        <div style={{position: "relative"}}>
           {stem}
-          <img src={this.state.imageURL} title={this.props.title} />
-          <ul className="actions" style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}>
-            <ActionButton className={"watchlist" + selectedProperty("watchlist")} id={this.props.id} onInvoke={this.handleToggleWatchlist} />
-            <ActionButton className="watched" id={this.props.id} />
-            <ActionButton className={"favorite" + selectedProperty("favorite")} id={this.props.id} onInvoke={this.handleToggleFavorite} />
-          </ul>
+          <div className={"image" + (this.state.imageURL ? " loaded" : "")} data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
+            <img src={this.state.imageURL} title={this.props.title} />
+            <ul className="actions" style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}>
+              <ActionButton className={"watchlist" + selectedProperty("watchlist")} id={this.props.id} onInvoke={this.handleToggleWatchlist} />
+              <ActionButton className="watched" id={this.props.id} />
+              <ActionButton className={"favorite" + selectedProperty("favorite")} id={this.props.id} onInvoke={this.handleToggleFavorite} />
+            </ul>
+          </div>
         </div>
         {details}
       </li>

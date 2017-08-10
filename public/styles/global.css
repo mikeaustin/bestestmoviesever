@@ -67,17 +67,11 @@ div.directors ul > li {
 
 ul.movies > li h1 {
   margin-top: 15px;
-  xmargin-bottom: 15px;
   margin-bottom: -3px;
   height: 20px;
-  padding: 0 20px;
-  xmargin-top: 25px;
-  xbackground: hsl(0, 0%, 95%);
-  xborder-bottom: 1px solid hsl(0, 0%, 80%);
+  xpadding: 0 20px;
   font-size: 20px;
   font-weight: 400;
-  xcolor: hsl(0, 0%, 100%);
-  xtext-shadow: 0 0 5px hsla(0, 0%, 0%, 1.0);
 }
 
 /**********************************************************\
@@ -158,9 +152,13 @@ ul.movies {
   padding: 60px 0 10px 10px;
 }
 
+ul.movies > li {
+  margin: 0 10px;
+}
+
 ul.movies > li .image {
   position: relative;
-  margin: 10px;
+  margin: 10px 0;
   xposition: relative;
   transition: all 0.125s ease-in;
   cursor: pointer;
@@ -174,7 +172,7 @@ ul.movies > li .image.loaded {
 @media (any-hover:hover) {
   ul.movies > li:hover .image {
     transition: all 0.0625s ease-out;
-    z-index: 100;
+    xz-index: 100;
     box-shadow: 0 0 30px hsla(200, 100%, 50%, 1.0);
   }
 }
@@ -182,7 +180,7 @@ ul.movies > li .image.loaded {
 ul.movies > li.selected .image {
   transform: translate(0, -15px) scale(1.125, 1.125);
   transition: all 0.0625s ease-out;
-  z-index: 100;
+  xz-index: 100;
   box-shadow: 0 0 30px hsla(200, 100%, 50%, 1.0);
 }
 
@@ -282,6 +280,8 @@ ul.movies > li > .details .bubble {
   background: hsl(0, 0%, 10%);
   height: 70px;
   border-top: 1px solid hsl(0, 0%, 20%);
+  xtransform: translate3d(0, 0, -10);
+  xz-index: 1000;
 }
 
 /*ul.movies > li .watched::before {

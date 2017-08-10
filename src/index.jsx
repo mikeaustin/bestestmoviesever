@@ -53,18 +53,6 @@ class App extends React.PureComponent {
   // Lifecycle
   //
 
-  refreshDOMCache() {
-    console.log("refreshDOMCache()");
-
-    this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
-
-    if (!this.allItems.isEmpty()) {
-      this.minOffsetLeft = this.allItems.first().offsetLeft;
-      this.maxOffsetLeft = this.allItems.skip(1).takeWhile(item => item.offsetLeft > this.allItems.first().offsetLeft)
-                                                .reduce((max, item) => Math.max(item.offsetLeft, max), this.allItems.first().offsetLeft);
-    }
-  }
-
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown, false);
 
@@ -80,6 +68,18 @@ class App extends React.PureComponent {
     if (!this.movies.equals(this.state.movies)) {
       this.refreshDOMCache();
       this.movies = this.state.movies;
+    }
+  }
+
+  refreshDOMCache() {
+    console.log("refreshDOMCache()");
+
+    this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
+
+    if (!this.allItems.isEmpty()) {
+      this.minOffsetLeft = this.allItems.first().offsetLeft;
+      this.maxOffsetLeft = this.allItems.skip(1).takeWhile(item => item.offsetLeft > this.allItems.first().offsetLeft)
+                                                .reduce((max, item) => Math.max(item.offsetLeft, max), this.allItems.first().offsetLeft);
     }
   }
 
