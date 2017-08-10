@@ -76,6 +76,12 @@ export default class Movie extends React.PureComponent {
     }
   }
 
+  handleImageLoad = event => {
+    this.setState({
+      loaded: true
+    });
+  }
+
   //
   // Handlers
   //
@@ -108,7 +114,7 @@ export default class Movie extends React.PureComponent {
     ) : null;
 
     const stem = this.props.selected ? (
-      <div style={{position: "absolute", background: "hsl(0, 0%, 10%)", width: 13, height: 13, left: "50%", marginLeft: -7, bottom: -27,
+      <div style={{position: "absolute", background: "hsl(0, 0%, 10%)", width: 15, height: 15, left: "50%", marginLeft: -7, bottom: -28,
                    transform: "rotate(45deg)", borderLeft: "1px solid hsl(0, 0%, 20%)", borderTop: "1px solid hsl(0, 0%, 20%)", zIndex: 100}}></div>
     ) : null;
 
@@ -132,8 +138,8 @@ export default class Movie extends React.PureComponent {
         <h1>{this.props.group}</h1>
         <div style={{position: "relative"}}>
           {stem}
-          <div className={"image" + (this.state.imageURL ? " loaded" : "")} data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
-            <img src={this.state.imageURL} title={this.props.title} />
+          <div className={"image" + (this.state.loaded ? " loaded" : "")} data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
+            <img src={this.state.imageURL} title={this.props.title} onLoad={this.handleImageLoad} />
             <ul className="actions" style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}>
               <ActionButton className={"watchlist" + selectedProperty("watchlist")} id={this.props.id} onInvoke={this.handleToggleWatchlist} />
               <ActionButton className="watched" id={this.props.id} />
