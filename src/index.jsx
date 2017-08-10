@@ -58,15 +58,21 @@ class App extends React.PureComponent {
 
     this.selectedItem = document.querySelector(".movies > li.selected");
     this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
-    this.minOffsetLeft = this.allItems.first().offsetLeft;
-    this.maxOffsetLeft = this.allItems.reduce((max, item) => Math.max(item.offsetLeft, max), 0);
+
+    if (!this.allItems.isEmpty()) {
+      this.minOffsetLeft = this.allItems.first().offsetLeft;
+      this.maxOffsetLeft = this.allItems.reduce((max, item) => Math.max(item.offsetLeft, max), 0);
+    }
   }
 
   componentDidUpdate() {
     this.selectedItem = document.querySelector(".movies > li.selected");
     this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
-    this.minOffsetLeft = this.allItems.first().offsetLeft;
-    this.maxOffsetLeft = this.allItems.reduce((max, item) => Math.max(item.offsetLeft, max), 0);
+
+    if (!this.allItems.isEmpty()) {
+      this.minOffsetLeft = this.allItems.first().offsetLeft;
+      this.maxOffsetLeft = this.allItems.reduce((max, item) => Math.max(item.offsetLeft, max), 0);
+    }
   }
 
   //
@@ -84,11 +90,11 @@ class App extends React.PureComponent {
     }
 
     switch (event.keyCode) {
-      case KeyCode.ARROW_LEFT: return this.refreshMovies(NavigationActions.moveLeft);
+      case KeyCode.ARROW_LEFT:  return this.refreshMovies(NavigationActions.moveLeft);
       case KeyCode.ARROW_RIGHT: return this.refreshMovies(NavigationActions.moveRight);
-      case KeyCode.ARROW_UP: return this.refreshMovies(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
-      case KeyCode.ARROW_DOWN: return this.refreshMovies(NavigationActions.moveDown(this.allItems, this.selectedItem, this.minOffsetLeft));
-      case KeyCode.SPACE: return this.handleToggleFavorite(Number(this.selectedItem.dataset.id));
+      case KeyCode.ARROW_UP:    return this.refreshMovies(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
+      case KeyCode.ARROW_DOWN:  return this.refreshMovies(NavigationActions.moveDown(this.allItems, this.selectedItem, this.minOffsetLeft));
+      case KeyCode.SPACE:       return this.handleToggleFavorite(Number(this.selectedItem.dataset.id));
     }
   }
 

@@ -40,7 +40,7 @@ class Movie extends React.PureComponent {
     };
   }
 
-  loadImages() {
+  loadImageIfNeeded() {
     if (this.li.offsetTop < window.innerHeight + window.scrollY && !this.state.imageURL) {
       const imageName = this.props.image ? this.props.image : this.props.title.replace(/ /g, "_");
       const baseURL = location.origin === "http://bestestmoviesever.com" ? "http://d1rus1jxo7361x.cloudfront.net" : "";
@@ -52,7 +52,7 @@ class Movie extends React.PureComponent {
   }
 
   handleScroll = (event) => {
-    this.loadImages();
+    this.loadImageIfNeeded();
   }
 
   handleClick = (event) => {
@@ -72,7 +72,7 @@ class Movie extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.loadImages();
+    this.loadImageIfNeeded();
 
     document.addEventListener("scroll", this.handleScroll, false);
   }
@@ -82,8 +82,7 @@ class Movie extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    //console.log("componentDidUpdate()");
-    this.loadImages();
+    this.loadImageIfNeeded();
 
     if (this.props.selected && ((this.li.offsetTop + this.li.offsetHeight + 10) > (window.innerHeight + document.body.scrollTop) ||
                                 (this.li.offsetTop < document.body.scrollTop + 50))) {
