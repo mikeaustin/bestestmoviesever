@@ -17,7 +17,9 @@ class ActionButton extends React.PureComponent {
     event.preventDefault();
     event.stopPropagation();
 
-    this.props.onInvoke(this.props.id);
+    if (this.props.onInvoke) {
+      this.props.onInvoke(this.props.id);
+    }
   }
 
   render() {
@@ -126,7 +128,7 @@ class Movie extends React.PureComponent {
           <img src={this.state.imageURL} title={this.props.title} />
           <ul className="actions" style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}>
             <ActionButton className={"watchlist" + selectedProperty("watchlist")} id={this.props.id} onInvoke={this.handleToggleWatchlist} />
-            <ActionButton className="watched" id={this.props.id} onInvoke={this.handleToggleFavorite} />
+            <ActionButton className="watched" id={this.props.id} />
             <ActionButton className={"favorite" + selectedProperty("favorite")} id={this.props.id} onInvoke={this.handleToggleFavorite} />
           </ul>
         </div>

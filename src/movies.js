@@ -1,7 +1,7 @@
 import Immutable from "immutable";
 
 
-const movies = Immutable.List([
+const movies = [
   { id: 0, title: "Close Encounters of the Third Kind", released: 1977, directors: [5], categories: [1, 0] },
   { id: 1, title: "Gangs of New York", released: 2002, directors: [10], categories: [3, 1] },
   { id: 2, title: "Prince of Darkness", released: 1987, directors: [41], categories: [5, 8] },
@@ -209,6 +209,6 @@ const movies = Immutable.List([
   { id: 204, title: "The Evil Dead", released: 1981, directors: [32], categories: [8] },
   { id: 205, title: "Event Horizon", released: 1997, directors: [31], categories: [8, 0, 5] },
   { id: 206, title: "Inglourious Bastards", released: 2009, directors: [7], categories: [4, 6, 17] }
-]);
+];
 
 export default movies;

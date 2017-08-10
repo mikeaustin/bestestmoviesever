@@ -1,58 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Immutable from "immutable";
-
 import smoothScroll from "smoothscroll";
 
 import movies from "./movies";
 import directors from "./directors";
 import categories from "./categories";
 
+import Menu from "./Menu";
 import MovieList from "./MovieList";
 
-import { selectedClass, combineEvery } from "./utils";
+import { ListReducer, FilterEventHelper, KeyCode, SortOrder, selectedClass, combineEvery } from "./utils";
 
-
-class ListReducer {
-
-  constructor(list, acc = Immutable.List()) {
-    this.list = list;
-    this.acc = acc;
-  }
-
-  skipWhile(func) {
-    return new ListReducer(this.list.skipWhile(func), this.acc);
-  }
-
-  takeWhile(func) {
-    return new ListReducer(this.list.skipWhile(func), this.acc.concat(this.list.takeWhile(func)));
-  }
-
-  skip(count) {
-    return new ListReducer(this.list.skip(count), this.acc);
-  }
-
-  take(count) {
-    return new ListReducer(this.list.skip(count), this.acc.concat(this.list.take(count)));
-  }
-
-  isEmpty() {
-    return this.acc.isEmpty();
-  }
-
-  last() {
-    return this.acc.last();
-  }
-
-}
-
-const KeyCode = {
-  ARROW_LEFT:  37,
-  ARROW_UP:    38,
-  ARROW_RIGHT: 39,
-  ARROW_DOWN:  40,
-  SPACE:       32
-}
 
 const always     = x => (a, b) => x;
 const comparator = f => (next = always(0), x, y) => (a, b) => f(a, b) ? -1 : f(b, a) ? 1 : next(x, y);
@@ -70,13 +29,20 @@ class App extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.buildData();
+    this.evenCategories = this.props.categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 == 0).entrySeq();
+    this.oddCategories = this.props.categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 != 0).set(-1, null).entrySeq();
+
+    this.directors2 = this.props.movies.reduce((map, movie) => {
+      return map.update(movie.directors ? directors.get(movie.directors[0]) : "Unknown", (count = 0) => count + 1)
+    }, Immutable.Map());
+
+    this.directorsSortedByCount = this.directors2.sortBy((count, director) => -count);
 
     this.state = {
       movies: this.props.movies.sort(byReleased(descending)(byTitle())).map(withIndex),
       selectedIndex: 0,
       categoryIds: Immutable.Set(),
-      sortOrder: descending,
+      sortOrder: SortOrder.DESCENDING,
       favoriteIds: Immutable.Set(JSON.parse(localStorage.getItem("favoriteIds"))),
       watchlistIds: Immutable.Set(JSON.parse(localStorage.getItem("watchlistIds"))),
       showMenu: false,
@@ -90,13 +56,13 @@ class App extends React.PureComponent {
 
     this.selectedItem = document.querySelector(".movies > li.selected");
     this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
-    this.firstItem = this.allItems.first();
+    this.minOffsetLeft = this.allItems.first().offsetLeft;
+    this.maxOffsetLeft = this.allItems.reduce((max, item) => Math.max(item.offsetLeft, max), 0);
   }
 
   componentDidUpdate() {
     this.selectedItem = document.querySelector(".movies > li.selected");
     this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
-    //this.firstItem = this.allItems.first();
     this.minOffsetLeft = this.allItems.first().offsetLeft;
     this.maxOffsetLeft = this.allItems.reduce((max, item) => Math.max(item.offsetLeft, max), 0);
   }
@@ -104,22 +70,23 @@ class App extends React.PureComponent {
   handleKeyDown = (event) => {
     console.log(event.keyCode);
 
+    for (var prop in KeyCode) {
+      if (KeyCode[prop] === event.keyCode) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }
+
     const offset = (() => {
       if (event.keyCode === KeyCode.ARROW_RIGHT && this.state.selectedIndex < this.props.movies.size - 1) {
         return this.state.selectedIndex + 1;
       } else if (event.keyCode === KeyCode.ARROW_LEFT && this.state.selectedIndex > 0) {
         return this.state.selectedIndex - 1;
       } else if (event.keyCode === KeyCode.SPACE) {
-        event.stopPropagation();
-        event.preventDefault();
-
         const selectedMovie = this.state.movies.find(movie => movie.index === this.state.selectedIndex);
 
         this.handleToggleFavorite(selectedMovie.id);
       } else if (event.keyCode === KeyCode.ARROW_DOWN) {
-        event.stopPropagation();
-        event.preventDefault();
-
         const nextRowItems = new ListReducer(this.allItems.toSeq())
           .skipWhile(item => Number(item.dataset.index) !== this.state.selectedIndex)
           .take(1).skipWhile(item => item.offsetLeft > this.selectedItem.offsetLeft)
@@ -129,9 +96,6 @@ class App extends React.PureComponent {
           return Number(nextRowItems.last().dataset.index);
         }
       } else if (event.keyCode === KeyCode.ARROW_UP) {
-        event.stopPropagation();
-        event.preventDefault();
-
         const nextRowItems = new ListReducer(this.allItems.toSeq().reverse())
           .skipWhile(item => Number(item.dataset.index) !== this.state.selectedIndex)
           .skip(1).skipWhile(item => item.offsetLeft < this.selectedItem.offsetLeft)
@@ -158,14 +122,6 @@ class App extends React.PureComponent {
     });
   }
 
-  buildData() {
-    this.directors2 = this.props.movies.reduce((map, movie) => {
-      return map.update(movie.directors ? directors.get(movie.directors[0]) : "Unknown", (count = 0) => count + 1)
-    }, Immutable.Map());
-
-    this.directorsSortedByCount = this.directors2.sortBy((count, director) => -count);
-  }
-
   refreshList() {
     console.log("refreshList()");
 
@@ -173,43 +129,30 @@ class App extends React.PureComponent {
     const onFavorites  = movie => !this.state.showFavorites || this.state.favoriteIds.includes(movie.id);
     const onCategories = movie => this.state.categoryIds.isEmpty() || Immutable.Set(movie.categories).isSuperset(this.state.categoryIds)
 
+    const sortOrder = this.state.sortOrder === SortOrder.ASCENDING ? ascending : descending;
+
     this.setState({
       selectedIndex: 0,
-      movies: this.props.movies.filter(combineEvery([onWatchlist, onFavorites, onCategories])).sort(byReleased(this.state.sortOrder)(byTitle())).map(withIndex)
+      movies: this.props.movies.filter(combineEvery([onWatchlist, onFavorites, onCategories])).sort(byReleased(sortOrder)(byTitle())).map(withIndex)
     });
 
     smoothScroll(0);
   }
 
-  handleSortYearAscending = (event) => {
-    this.setState(state => ({
-      sortOrder: ascending
-    }), () => this.refreshList());
-  }
 
-  handleSortYearDescending = (event) => {
-    this.setState(state => ({
-      sortOrder: descending
-    }), () => this.refreshList());
-  }
-
-  handleChangeCategory(categoryId) {
-    return event => {
-      const categoryIds = this.state.categoryIds.includes(categoryId) ? this.state.categoryIds.delete(categoryId) : this.state.categoryIds.add(categoryId);
-
-      this.setState(state => ({
-        categoryIds: categoryIds,
-      }), () => this.refreshList());
-    };
-  }
-
-  handleShowMenu = (event) => {
+  handleToggleMenu = event => {
     event.preventDefault();
     event.stopPropagation();
 
     this.setState(state => ({
       showMenu: !state.showMenu
     }));
+  }
+
+  handleHideMenu = () => {
+    this.setState({
+      showMenu: false
+    });
   }
 
   handleToggleFavorite = (movieId) => {
@@ -236,101 +179,36 @@ class App extends React.PureComponent {
     }, () => this.state.showWatchlist ? this.refreshList() : null);
   }
 
-  handleShowFavorites = (event) => {
-    this.setState(state => {
-      const showFavorites = !state.showFavorites;
-
-      return {
-        showFavorites: showFavorites,
-      };
-    }, () => this.refreshList());
-  }
-
-  handleShowWatchlist = (event) => {
-    this.setState(state => {
-      const showWatchlist = !state.showWatchlist;
-
-      return {
-        showWatchlist: showWatchlist,
-      };
-    }, () => this.refreshList());
-  }
-
-
-  handleMenuTouchStart = event => {
-    this.firstX = this.lastX = event.touches[0].clientX;
-  }
-
-  handleMenuTouchMove = event => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    this.lastX = event.touches[0].clientX;
-  }
-
-  handleMenuTouchEnd = event => {
-    event.stopPropagation();
-
-    if (this.lastX < this.firstX - 50) {
-      this.setState({
-        showMenu: false
-      });
-    }
-  }
-
   handleAppTouchEnd = event => {
     // this.setState({
     //   showMenu: false
     // });
   }
 
+  handleSortYearAscending = event => FilterEventHelper.handleSortYearAscending(this, event)
+  handleSortYearDescending = event => FilterEventHelper.handleSortYearDescending(this, event)
+  handleShowWatchlist = event => FilterEventHelper.handleShowWatchlist(this, event)
+  handleShowFavorites = event => FilterEventHelper.handleShowFavorites(this, event)
+  handleChangeCategory = categoryId => FilterEventHelper.handleChangeCategory(this, categoryId)
+
   render() {
-    //console.log("App#render()");
+    console.log("App#render()");
 
     const selectedMovie = this.state.movies.find(movie => movie.index === this.state.selectedIndex);
 
+    const selectedState = selectedClass(arg => this.state[arg]);
     const selectedCategory = selectedClass(arg => this.state.categoryIds.includes(arg));
-
-    const evenCategories = categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 == 0).entrySeq();
-    const oddCategories = categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 != 0).set(-1, null).entrySeq();
+    const selectedSortOrder = selectedClass(arg => this.state.sortOrder == arg);
 
     return (
       <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} onTouchMove={this.handleAppTouchEnd} onTouchEnd={this.handleAppTouchEnd}>
-        <div className={"menu" + (this.state.showMenu ? " open" : "")} style={{display: "flex", flexDirection: "column", position: "fixed", bottom: 0, left: 0, top: 0, padding: "72px 20px 0 20px", background: "hsla(0, 0%, 0%, 0.9)", zIndex: 1000}}
-             onTouchStart={this.handleMenuTouchStart} onTouchMove={this.handleMenuTouchMove} onTouchEnd={this.handleMenuTouchEnd}>
-          <table>
-            <tbody>
-              <tr>
-                <th>Sort By</th>
-              </tr>
-              <tr>
-                <td className={this.state.sortOrder === descending ? "selected" : ""} onMouseDown={this.handleSortYearDescending}>&#9634; &nbsp;Year &nbsp;&#8595;</td>
-                <th style={{width: "20px"}}></th>
-                <td className={this.state.sortOrder === ascending ? "selected" : ""} onMouseDown={this.handleSortYearAscending}>&#9634; &nbsp;Year &nbsp;&#8593;</td>
-              </tr>
-              <tr>
-                <th>Show</th>
-              </tr>
-              <tr>
-                <td className={this.state.showWatchlist ? "selected" : ""} onMouseDown={this.handleShowWatchlist}>&#9634; &nbsp;Watchlist</td>
-                <th style={{width: "20px"}}></th>
-                <td className={this.state.showFavorites ? "selected" : ""} onMouseDown={this.handleShowFavorites}>&#9634; &nbsp;Favorites</td>
-              </tr>
-              <tr>
-                <th>Genres</th>
-              </tr>
-              {evenCategories.zipWith((a, b) => (
-                <tr key={a}>
-                  <td className={selectedCategory(a[0])} onMouseDown={this.handleChangeCategory(a[0])}>&#9634; &nbsp;{a[1]}</td>
-                  <th style={{width: "20px"}}></th>
-                  {b[1] !== null ? <td className={selectedCategory(b[0])} onMouseDown={this.handleChangeCategory(b[0])}>&#9634; &nbsp;{b[1]}</td> : null}
-                </tr>
-              ), oddCategories)}
-            </tbody>
-          </table>
-        </div>
+        <Menu categories={this.props.categories} categoryIds={this.state.categoryIds} isOpen={this.state.showMenu}
+              sortOrder={this.state.sortOrder} showWatchlist={this.state.showWatchlist} showFavorites={this.state.showFavorites}
+              onSortYearAscending={this.handleSortYearAscending} onSortYearDescending={this.handleSortYearDescending}
+              onShowWatchlist={this.handleShowWatchlist} onShowFavorites={this.handleShowFavorites}
+              onChangeCategory={this.handleChangeCategory} onHideMenu={this.handleHideMenu} />
         <header style={{display: "flex", justifyContent: "center", alignItems: "center", position: "fixed", top: 0, right: 0, left: 0, height: 50, background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 20%, 1.0)", zIndex: 1000, boxShadow: "0 1px 10px hsl(0, 0%, 0%)"}}>
-          <div style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", cursor: "pointer", zIndex: 1001}} onMouseDown={this.handleShowMenu}>
+          <div style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", cursor: "pointer", zIndex: 1001}} onMouseDown={this.handleToggleMenu}>
             <img src="icons/menu-button.svg" height="25" />
           </div>
           <div style={{paddingTop: 4}}>
@@ -347,6 +225,6 @@ class App extends React.PureComponent {
 }
 
 ReactDOM.render(
-  <App movies={movies} />,
+  <App movies={Immutable.List(movies)} categories={categories} />,
   document.getElementById("root")
 );
