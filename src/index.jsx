@@ -86,7 +86,7 @@ class App extends React.PureComponent {
     }
 
     const offset = (() => {
-      if (event.keyCode === KeyCode.ARROW_RIGHT && this.state.selectedIndex < this.props.movies.size - 1) {
+      if (event.keyCode === KeyCode.ARROW_RIGHT && this.state.selectedIndex < this.state.movies.size - 1) {
         return this.state.selectedIndex + 1;
       } else if (event.keyCode === KeyCode.ARROW_LEFT && this.state.selectedIndex > 0) {
         return this.state.selectedIndex - 1;
