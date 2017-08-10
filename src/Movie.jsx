@@ -30,7 +30,7 @@ class ActionButton extends React.PureComponent {
 }
 
 
-class Movie extends React.PureComponent {
+export default class Movie extends React.PureComponent {
 
   constructor(props) {
     super(props);
@@ -40,36 +40,9 @@ class Movie extends React.PureComponent {
     };
   }
 
-  loadImageIfNeeded() {
-    if (this.li.offsetTop < window.innerHeight + window.scrollY && !this.state.imageURL) {
-      const imageName = this.props.image ? this.props.image : this.props.title.replace(/ /g, "_");
-      const baseURL = location.origin === "http://bestestmoviesever.com" ? "http://d1rus1jxo7361x.cloudfront.net" : "";
-
-      this.setState({
-        imageURL: baseURL + "/images/" + imageName + ".jpg"
-      });
-    }
-  }
-
-  handleScroll = (event) => {
-    this.loadImageIfNeeded();
-  }
-
-  handleClick = (event) => {
-    this.props.onSelectIndex(this.props.index);
-  }
-
-  handleToggleWatchlist = (movieId) => {
-    console.log(movieId);
-
-    this.props.onToggleWatchlist(movieId);
-  }
-
-  handleToggleFavorite = (movieId) => {
-    console.log(movieId);
-
-    this.props.onToggleFavorite(movieId);
-  }
+  //
+  // Lifecycle
+  //
 
   componentDidMount() {
     this.loadImageIfNeeded();
@@ -91,6 +64,41 @@ class Movie extends React.PureComponent {
       smoothScroll(this.li.offsetTop - ((window.innerHeight + 50 - this.li.offsetHeight) / 2) + 16);
     }
   }
+
+  loadImageIfNeeded() {
+    if (this.li.offsetTop < window.innerHeight + window.scrollY && !this.state.imageURL) {
+      const imageName = this.props.image ? this.props.image : this.props.title.replace(/ /g, "_");
+      const baseURL = location.origin === "http://bestestmoviesever.com" ? "http://d1rus1jxo7361x.cloudfront.net" : "";
+
+      this.setState({
+        imageURL: baseURL + "/images/" + imageName + ".jpg"
+      });
+    }
+  }
+
+  //
+  // Handlers
+  //
+
+  handleScroll = (event) => {
+    this.loadImageIfNeeded();
+  }
+
+  handleClick = (event) => {
+    this.props.onSelectIndex(this.props.index);
+  }
+
+  handleToggleWatchlist = (movieId) => {
+      this.props.onToggleWatchlist(movieId);
+  }
+
+  handleToggleFavorite = (movieId) => {
+    this.props.onToggleFavorite(movieId);
+  }
+
+  //
+  // Rendering
+  //
 
   render() {
     //console.log("Movie#render()");
@@ -137,5 +145,3 @@ class Movie extends React.PureComponent {
   }
 
 }
-
-export default Movie;

@@ -37,12 +37,12 @@ class App extends React.PureComponent {
     this.directorsSortedByCount = this.directors2.sortBy((count, director) => -count);
 
     this.state = {
-      movies: this.props.movies.sort(byReleased(descending)(byTitle())).map(withIndex),
-      sortOrder: SortOrder.DESCENDING,
-      watchlistIds: Immutable.Set(JSON.parse(localStorage.getItem("watchlistIds"))),
-      favoriteIds: Immutable.Set(JSON.parse(localStorage.getItem("favoriteIds"))),
-      categoryIds: Immutable.Set(),
-      showMenu: false,
+      movies:        this.props.movies.sort(byReleased(descending)(byTitle())).map(withIndex),
+      sortOrder:     SortOrder.DESCENDING,
+      watchlistIds:  Immutable.Set(JSON.parse(localStorage.getItem("watchlistIds"))),
+      favoriteIds:   Immutable.Set(JSON.parse(localStorage.getItem("favoriteIds"))),
+      categoryIds:   Immutable.Set(),
+      showMenu:      false,
       showWatchlist: false,
       showFavorites: false,
       selectedIndex: 0
@@ -53,25 +53,33 @@ class App extends React.PureComponent {
   // Lifecycle
   //
 
+  refreshDOMCache() {
+    console.log("refreshDOMCache()");
+
+    this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
+
+    if (!this.allItems.isEmpty()) {
+      this.minOffsetLeft = this.allItems.first().offsetLeft;
+      this.maxOffsetLeft = this.allItems.skip(1).takeWhile(item => item.offsetLeft > this.allItems.first().offsetLeft)
+                                                .reduce((max, item) => Math.max(item.offsetLeft, max), this.allItems.first().offsetLeft);
+    }
+  }
+
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown, false);
 
     this.selectedItem = document.querySelector(".movies > li.selected");
-    this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
 
-    if (!this.allItems.isEmpty()) {
-      this.minOffsetLeft = this.allItems.first().offsetLeft;
-      this.maxOffsetLeft = this.allItems.reduce((max, item) => Math.max(item.offsetLeft, max), 0);
-    }
+    this.refreshDOMCache();
+    this.movies = this.state.movies;
   }
 
   componentDidUpdate() {
     this.selectedItem = document.querySelector(".movies > li.selected");
-    this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
 
-    if (!this.allItems.isEmpty()) {
-      this.minOffsetLeft = this.allItems.first().offsetLeft;
-      this.maxOffsetLeft = this.allItems.reduce((max, item) => Math.max(item.offsetLeft, max), 0);
+    if (!this.movies.equals(this.state.movies)) {
+      this.refreshDOMCache();
+      this.movies = this.state.movies;
     }
   }
 
@@ -90,10 +98,10 @@ class App extends React.PureComponent {
     }
 
     switch (event.keyCode) {
-      case KeyCode.ARROW_LEFT:  return this.refreshMovies(NavigationActions.moveLeft);
-      case KeyCode.ARROW_RIGHT: return this.refreshMovies(NavigationActions.moveRight);
-      case KeyCode.ARROW_UP:    return this.refreshMovies(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
-      case KeyCode.ARROW_DOWN:  return this.refreshMovies(NavigationActions.moveDown(this.allItems, this.selectedItem, this.minOffsetLeft));
+      case KeyCode.ARROW_LEFT:  return this.updateState(NavigationActions.moveLeft);
+      case KeyCode.ARROW_RIGHT: return this.updateState(NavigationActions.moveRight);
+      case KeyCode.ARROW_UP:    return this.updateState(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
+      case KeyCode.ARROW_DOWN:  return this.updateState(NavigationActions.moveDown(this.allItems, this.selectedItem, this.minOffsetLeft));
       case KeyCode.SPACE:       return this.handleToggleFavorite(Number(this.selectedItem.dataset.id));
     }
   }
@@ -127,18 +135,18 @@ class App extends React.PureComponent {
   // Toggle Handlers
   //
 
-  handleToggleWatchlist = movieId => this.refreshMovies(ToggleActions.toggleWatchlist(movieId))
-  handleToggleFavorite = movieId => this.refreshMovies(ToggleActions.toggleFavorite(movieId))
+  handleToggleWatchlist = movieId => this.updateState(ToggleActions.toggleWatchlist(movieId))
+  handleToggleFavorite = movieId => this.updateState(ToggleActions.toggleFavorite(movieId))
 
   //
   // Filter Handlers
   //
 
-  handleSortYearAscending = () => this.refreshMovies(FilterActions.sortYearAscending)
-  handleSortYearDescending = () => this.refreshMovies(FilterActions.sortYearDescending)
-  handleShowWatchlist = () => this.refreshMovies(FilterActions.showWatchlist)
-  handleShowFavorites = () => this.refreshMovies(FilterActions.showFavorites)
-  handleChangeCategory = categoryId => this.refreshMovies(FilterActions.changeCategory(categoryId))
+  handleSortYearAscending = () => this.updateState(FilterActions.sortYearAscending)
+  handleSortYearDescending = () => this.updateState(FilterActions.sortYearDescending)
+  handleShowWatchlist = () => this.updateState(FilterActions.showWatchlist)
+  handleShowFavorites = () => this.updateState(FilterActions.showFavorites)
+  handleChangeCategory = categoryId => this.updateState(FilterActions.changeCategory(categoryId))
 
   handleAppTouchEnd = event => {
     // this.setState({
@@ -150,27 +158,37 @@ class App extends React.PureComponent {
   // State Management
   //
 
-  refreshMovies(reducer) {
-    console.log("refreshMovies()");
-
+  updateState(reducer) {
     this.setState(state => {
       const newState = { ...state, ...reducer(state) };
 
-      const onWatchlist  = movie => !newState.showWatchlist || newState.watchlistIds.includes(movie.id);
-      const onFavorites  = movie => !newState.showFavorites || newState.favoriteIds.includes(movie.id);
-      const onCategories = movie => newState.categoryIds.isEmpty() || Immutable.Set(movie.categories).isSuperset(newState.categoryIds)
+      const shouldRefresh = (newState.showFavorites && !newState.favoriteIds.equals(state.favoriteIds)) || newState.showFavorites !== state.showFavorites ||
+                            (newState.showWatchlist && !newState.watchlistIds.equals(state.watchlistIds)) || newState.showWatchlist !== state.showWatchlist ||
+                            newState.sortOrder !== state.sortOrder || !newState.categoryIds.equals(state.categoryIds);
 
-      const sortOrder = newState.sortOrder === SortOrder.ASCENDING ? ascending : descending;
+      const movies = shouldRefresh ? this.refreshMovies(newState) : state.movies;
 
       return {
         ...newState,
-        movies: this.props.movies.filter(combineEvery([onWatchlist, onFavorites, onCategories])).sort(byReleased(sortOrder)(byTitle())).map(withIndex)
-      }
+        movies: movies,
+      };
     }, () => {
       if (this.state.selectedIndex === 0) {
         smoothScroll(0);
       }
     });
+  }
+
+  refreshMovies(state) {
+    console.log("refreshMovies()");
+
+    const onWatchlist  = movie => !state.showWatchlist || state.watchlistIds.includes(movie.id);
+    const onFavorites  = movie => !state.showFavorites || state.favoriteIds.includes(movie.id);
+    const onCategories = movie => state.categoryIds.isEmpty() || Immutable.Set(movie.categories).isSuperset(state.categoryIds)
+
+    const sortOrder = state.sortOrder === SortOrder.ASCENDING ? ascending : descending;
+
+    return this.props.movies.filter(combineEvery([onWatchlist, onFavorites, onCategories])).sort(byReleased(sortOrder)(byTitle())).map(withIndex);
   }
 
   //
