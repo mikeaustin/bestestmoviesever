@@ -208,7 +208,15 @@ const movies = [
   { id: 203, title: "Daft Punk's Electroma", released: 2006, categories: [1, 0, 9] },
   { id: 204, title: "The Evil Dead", released: 1981, directors: [32], categories: [8] },
   { id: 205, title: "Event Horizon", released: 1997, directors: [31], categories: [8, 0, 5] },
-  { id: 206, title: "Inglourious Bastards", released: 2009, directors: [7], categories: [4, 6, 17] }
+  { id: 206, title: "Inglourious Bastards", released: 2009, directors: [7], categories: [4, 6, 17] },
+  { id: 207, title: "FAQ About Time Travel", released: 2009, directors: [132], categories: [2, 0] },
+  { id: 208, title: "Limitless", released: 2011, directors: [133], categories: [14, 0, 5] },
+  { id: 209, title: "Unbreakable", released: 2000, directors: [134], categories: [1, 14, 0, 5] },
+  { id: 210, title: "American Psycho", released: 2000, directors: [135], categories: [3, 1] },
+  { id: 211, title: "The Dark Knight", released: 2008, directors: [9], categories: [4, 3, 1, 5] },
+  { id: 212, title: "The Hitchhiker's Guide to the Galaxy", released: 2005, directors: [136], categories: [6, 2, 0] },
+  { id: 213, title: "Children of Men", released: 2006, directors: [137], categories: [1, 0, 5] },
+  { id: 214, title: "Gattaca", released: 1997, directors: [138], categories: [1, 0, 5] }
 ];
 
 export default movies;

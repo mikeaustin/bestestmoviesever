@@ -68,7 +68,7 @@ class App extends React.PureComponent {
   }
 
   handleKeyDown = (event) => {
-    console.log(event.keyCode);
+    //console.log(event.keyCode);
 
     for (var prop in KeyCode) {
       if (KeyCode[prop] === event.keyCode) {
@@ -155,18 +155,6 @@ class App extends React.PureComponent {
     });
   }
 
-  handleToggleFavorite = (movieId) => {
-    this.setState(state => {
-      const favoriteIds = state.favoriteIds.includes(movieId) ? state.favoriteIds.remove(movieId) : state.favoriteIds.add(movieId);
-
-      localStorage.setItem("favoriteIds", JSON.stringify(favoriteIds.toArray()));
-
-      return {
-        favoriteIds: favoriteIds,
-      };
-    }, () => this.state.showFavorites ? this.refreshList() : null);
-  }
-
   handleToggleWatchlist = (movieId) => {
     this.setState(state => {
       const watchlistIds = state.watchlistIds.includes(movieId) ? state.watchlistIds.remove(movieId) : state.watchlistIds.add(movieId);
@@ -177,6 +165,18 @@ class App extends React.PureComponent {
         watchlistIds: watchlistIds,
       };
     }, () => this.state.showWatchlist ? this.refreshList() : null);
+  }
+
+  handleToggleFavorite = (movieId) => {
+    this.setState(state => {
+      const favoriteIds = state.favoriteIds.includes(movieId) ? state.favoriteIds.remove(movieId) : state.favoriteIds.add(movieId);
+
+      localStorage.setItem("favoriteIds", JSON.stringify(favoriteIds.toArray()));
+
+      return {
+        favoriteIds: favoriteIds,
+      };
+    }, () => this.state.showFavorites ? this.refreshList() : null);
   }
 
   handleAppTouchEnd = event => {
@@ -212,7 +212,7 @@ class App extends React.PureComponent {
             <img src="icons/menu-button.svg" height="25" />
           </div>
           <div style={{paddingTop: 4}}>
-            <span className="title" style={{fontSize: 30, fontWeight: 800}}>Movies</span> <span className="count" style={{fontSize: 30}}>({this.state.movies.size})</span>
+            <span className="title" style={{fontSize: 25, fontWeight: 800}}>Movies</span> <span className="count" style={{fontSize: 25}}>({this.state.movies.size})</span>
           </div>
         </header>
         <MovieList movies={this.state.movies} directors={directors} watchlistIds={this.state.watchlistIds} favoriteIds={this.state.favoriteIds} selectedIndex={this.state.selectedIndex}

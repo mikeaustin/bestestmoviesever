@@ -123,7 +123,7 @@ class Movie extends React.PureComponent {
     return (
       <li ref={li => this.li = li} className={selectedProperty("selected")} data-index={this.props.index}>
         <h1>{this.props.group}</h1>
-        <div className="image" data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
+        <div className={"image" + (this.state.imageURL ? " loaded" : "")} data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
           {stem}
           <img src={this.state.imageURL} title={this.props.title} />
           <ul className="actions" style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}>
