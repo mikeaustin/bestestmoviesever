@@ -10,7 +10,7 @@ import categories from "./categories";
 import Menu from "./Menu";
 import MovieList from "./MovieList";
 
-import { ListReducer, FilterActions, KeyCode, SortOrder, selectedClass, combineEvery } from "./utils";
+import { ListReducer, FilterActions, ToggleActions, KeyCode, SortOrder, selectedClass, combineEvery } from "./utils";
 
 
 const always     = x => (a, b) => x;
@@ -19,9 +19,7 @@ const ascending  = (next, x, y) => comparator((a, b) => a < b)(next, x, y);
 const descending = (next, x, y) => comparator((a, b) => a > b)(next, x, y);
 const byReleased = order => next => (a, b) => order(next, a, b)(a.released, b.released);
 const byTitle    = next => (a, b) => ascending(next)(a.title, b.title);
-const withIndex  = (movie, index) => {
-  return { index: index, id: movie.id, title: movie.title, image: movie.image, released: movie.released, directors: movie.directors, categories: movie.categories };
-};
+const withIndex  = (movie, index) => ({ ...movie, index: index });
 
 
 class App extends React.PureComponent {
@@ -40,14 +38,14 @@ class App extends React.PureComponent {
 
     this.state = {
       movies: this.props.movies.sort(byReleased(descending)(byTitle())).map(withIndex),
-      selectedIndex: 0,
-      categoryIds: Immutable.Set(),
       sortOrder: SortOrder.DESCENDING,
-      favoriteIds: Immutable.Set(JSON.parse(localStorage.getItem("favoriteIds"))),
       watchlistIds: Immutable.Set(JSON.parse(localStorage.getItem("watchlistIds"))),
+      favoriteIds: Immutable.Set(JSON.parse(localStorage.getItem("favoriteIds"))),
+      categoryIds: Immutable.Set(),
       showMenu: false,
       showWatchlist: false,
-      showFavorites: false
+      showFavorites: false,
+      selectedIndex: 0
     };
   }
 
@@ -75,7 +73,7 @@ class App extends React.PureComponent {
   // Navigation Handlers
   //
 
-  handleKeyDown = (event) => {
+  handleKeyDown = event => {
     //console.log(event.keyCode);
 
     for (var prop in KeyCode) {
@@ -124,7 +122,7 @@ class App extends React.PureComponent {
     }
   }
 
-  handleSelectIndex = (index) => {
+  handleSelectIndex = index => {
     this.setState({
       selectedIndex: index
     });
@@ -153,29 +151,18 @@ class App extends React.PureComponent {
   // Toggle Handlers
   //
 
-  handleToggleWatchlist = movieId => {
-    this.refreshList(state => {
-      const watchlistIds = state.watchlistIds.includes(movieId) ? state.watchlistIds.remove(movieId) : state.watchlistIds.add(movieId);
+  handleToggleWatchlist = movieId => this.refreshMovies(ToggleActions.toggleWatchlist(movieId))
+  handleToggleFavorite = movieId => this.refreshMovies(ToggleActions.toggleFavorite(movieId))
 
-      localStorage.setItem("watchlistIds", JSON.stringify(watchlistIds.toArray()));
+  //
+  // Filter Handlers
+  //
 
-      return {
-        watchlistIds: watchlistIds,
-      };
-    });
-  }
-
-  handleToggleFavorite = movieId => {
-    this.refreshList(state => {
-      const favoriteIds = state.favoriteIds.includes(movieId) ? state.favoriteIds.remove(movieId) : state.favoriteIds.add(movieId);
-
-      localStorage.setItem("favoriteIds", JSON.stringify(favoriteIds.toArray()));
-
-      return {
-        favoriteIds: favoriteIds,
-      };
-    });
-  }
+  handleSortYearAscending = () => this.refreshMovies(FilterActions.sortYearAscending)
+  handleSortYearDescending = () => this.refreshMovies(FilterActions.sortYearDescending)
+  handleShowWatchlist = () => this.refreshMovies(FilterActions.showWatchlist)
+  handleShowFavorites = () => this.refreshMovies(FilterActions.showFavorites)
+  handleChangeCategory = categoryId => this.refreshMovies(FilterActions.changeCategory(categoryId))
 
   handleAppTouchEnd = event => {
     // this.setState({
@@ -184,21 +171,11 @@ class App extends React.PureComponent {
   }
 
   //
-  // Filter Handlers
-  //
-
-  handleSortYearAscending = () => this.refreshList(FilterActions.sortYearAscending)
-  handleSortYearDescending = () => this.refreshList(FilterActions.sortYearDescending)
-  handleShowWatchlist = () => this.refreshList(FilterActions.showWatchlist)
-  handleShowFavorites = () => this.refreshList(FilterActions.showFavorites)
-  handleChangeCategory = categoryId => this.refreshList(FilterActions.changeCategory(categoryId))
-
-  //
   // State Management
   //
 
-  refreshList(reducer) {
-    console.log("refreshList()");
+  refreshMovies(reducer) {
+    console.log("refreshMovies()");
 
     this.setState(state => {
       const newState = { ...state, ...reducer(state) };
