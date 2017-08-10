@@ -12,6 +12,34 @@ export default class Menu extends React.PureComponent {
     this.oddCategories = this.props.categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 != 0).set(-1, null).entrySeq();
   }
 
+  //
+  // Handlers
+  //
+
+  handleSortYearDescending = event => {
+    this.props.onSortYearDescending();
+  }
+
+  handleSortYearAscending = event => {
+    this.props.onSortYearAscending();
+  }
+
+  handleShowWatchlist = event => {
+    this.props.onShowWatchlist();
+  }
+
+  handleShowFavorites = event => {
+    this.props.onShowFavorites();
+  }
+
+  handleChangeCategory = categoryId => event => {
+    this.props.onChangeCategory(categoryId);
+  }
+
+  //
+  // Swiping
+  //
+
   handleTouchStart = event => {
     this.firstX = this.lastX = event.touches[0].clientX;
   }
@@ -35,6 +63,10 @@ export default class Menu extends React.PureComponent {
     }
   }
 
+  //
+  // Rendering
+  //
+
   render() {
     const selectedProp = selectedClass(arg => this.props[arg]);
     const selectedCategory = selectedClass(arg => this.props.categoryIds.includes(arg));
@@ -49,26 +81,26 @@ export default class Menu extends React.PureComponent {
               <th>Sort By</th>
             </tr>
             <tr>
-              <td className={selectedSortOrder(SortOrder.DESCENDING)} onMouseDown={this.props.onSortYearDescending}>&#9634; &nbsp;Year &nbsp;&#8595;</td>
+              <td className={selectedSortOrder(SortOrder.DESCENDING)} onMouseDown={this.handleSortYearDescending}>&#9634; &nbsp;Year &nbsp;&#8595;</td>
               <th style={{width: "20px"}}></th>
-              <td className={selectedSortOrder(SortOrder.ASCENDING)} onMouseDown={this.props.onSortYearAscending}>&#9634; &nbsp;Year &nbsp;&#8593;</td>
+              <td className={selectedSortOrder(SortOrder.ASCENDING)} onMouseDown={this.handleSortYearAscending}>&#9634; &nbsp;Year &nbsp;&#8593;</td>
             </tr>
             <tr>
               <th>Show</th>
             </tr>
             <tr>
-              <td className={selectedProp("showWatchlist")} onMouseDown={this.props.onShowWatchlist}>&#9634; &nbsp;Watchlist</td>
+              <td className={selectedProp("showWatchlist")} onMouseDown={this.handleShowWatchlist}>&#9634; &nbsp;Watchlist</td>
               <th style={{width: "20px"}}></th>
-              <td className={selectedProp("showFavorites")} onMouseDown={this.props.onShowFavorites}>&#9634; &nbsp;Favorites</td>
+              <td className={selectedProp("showFavorites")} onMouseDown={this.handleShowFavorites}>&#9634; &nbsp;Favorites</td>
             </tr>
             <tr>
               <th>Genres</th>
             </tr>
             {this.evenCategories.zipWith((even, odd) => (
               <tr key={even}>
-                <td className={selectedCategory(even[0])} onMouseDown={this.props.onChangeCategory(even[0])}>&#9634; &nbsp;{even[1]}</td>
+                <td className={selectedCategory(even[0])} onMouseDown={this.handleChangeCategory(even[0])}>&#9634; &nbsp;{even[1]}</td>
                 <th style={{width: "20px"}}></th>
-                {odd[1] !== null ? <td className={selectedCategory(odd[0])} onMouseDown={this.props.onChangeCategory(odd[0])}>&#9634; &nbsp;{odd[1]}</td> : null}
+                {odd[1] !== null ? <td className={selectedCategory(odd[0])} onMouseDown={this.handleChangeCategory(odd[0])}>&#9634; &nbsp;{odd[1]}</td> : null}
               </tr>
             ), this.oddCategories)}
           </tbody>

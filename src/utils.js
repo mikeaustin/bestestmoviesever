@@ -63,50 +63,57 @@ const withIndex  = (movie, index) => {
 };
 
 
-export const FilterEventHelper = {
-
-  handleSortYearAscending(app, event) {
-    app.setState(state => ({
+export const FilterActions = (() => {
+  const sortYearAscending = state => {
+    return {
+      selectedIndex: 0,
       sortOrder: SortOrder.ASCENDING
-    }), () => app.refreshList());
-  },
-
-  handleSortYearDescending(app, event) {
-    app.setState(state => ({
-      sortOrder: SortOrder.DESCENDING
-    }), () => app.refreshList());
-  },
-
-  handleShowWatchlist: (app, event) => {
-    app.setState(state => {
-      const showWatchlist = !state.showWatchlist;
-
-      return {
-        showWatchlist: showWatchlist,
-        showFavorites: false
-      };
-    }, () => app.refreshList());
-  },
-
-  handleShowFavorites: (app, event) => {
-    app.setState(state => {
-      const showFavorites = !state.showFavorites;
-
-      return {
-        showFavorites: showFavorites,
-        showWatchlist: false
-      };
-    }, () => app.refreshList());
-  },
-
-  handleChangeCategory(app, categoryId) {
-    return event => {
-      const categoryIds = app.state.categoryIds.includes(categoryId) ? app.state.categoryIds.delete(categoryId) : app.state.categoryIds.add(categoryId);
-
-      app.setState(state => ({
-        categoryIds: categoryIds,
-      }), () => app.refreshList());
     };
   }
 
-}
+  const sortYearDescending = state => {
+    return {
+      selectedIndex: 0,
+      sortOrder: SortOrder.DESCENDING
+    };
+  }
+
+  const showWatchlist = state => {
+    const showWatchlist = !state.showWatchlist;
+
+    return {
+      selectedIndex: 0,
+      showWatchlist: showWatchlist,
+      showFavorites: false
+    };
+  }
+
+  const showFavorites = state => {
+    const showFavorites = !state.showFavorites;
+
+    return {
+      selectedIndex: 0,
+      showFavorites: showFavorites,
+      showWatchlist: false
+    };
+  }
+
+  const changeCategory = categoryId => {
+    return state => {
+      const categoryIds = state.categoryIds.includes(categoryId) ? state.categoryIds.delete(categoryId) : state.categoryIds.add(categoryId);
+
+      return {
+        selectedIndex: 0,
+        categoryIds: categoryIds
+      };
+    };
+  }
+
+  return {
+    sortYearAscending,
+    sortYearDescending,
+    showWatchlist,
+    showFavorites,
+    changeCategory
+  };
+})();

@@ -21,5 +21,8 @@
     "smoothscroll": "^0.3.0",
     "webpack": "^3.3.0",
     "webpack-dev-server": "^2.5.1"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.23.0"
   }
 }

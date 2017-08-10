@@ -10,7 +10,7 @@ import categories from "./categories";
 import Menu from "./Menu";
 import MovieList from "./MovieList";
 
-import { ListReducer, FilterEventHelper, KeyCode, SortOrder, selectedClass, combineEvery } from "./utils";
+import { ListReducer, FilterActions, KeyCode, SortOrder, selectedClass, combineEvery } from "./utils";
 
 
 const always     = x => (a, b) => x;
@@ -51,6 +51,10 @@ class App extends React.PureComponent {
     };
   }
 
+  //
+  // Lifecycle
+  //
+
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown, false);
 
@@ -66,6 +70,10 @@ class App extends React.PureComponent {
     this.minOffsetLeft = this.allItems.first().offsetLeft;
     this.maxOffsetLeft = this.allItems.reduce((max, item) => Math.max(item.offsetLeft, max), 0);
   }
+
+  //
+  // Navigation Handlers
+  //
 
   handleKeyDown = (event) => {
     //console.log(event.keyCode);
@@ -122,23 +130,9 @@ class App extends React.PureComponent {
     });
   }
 
-  refreshList() {
-    console.log("refreshList()");
-
-    const onWatchlist  = movie => !this.state.showWatchlist || this.state.watchlistIds.includes(movie.id);
-    const onFavorites  = movie => !this.state.showFavorites || this.state.favoriteIds.includes(movie.id);
-    const onCategories = movie => this.state.categoryIds.isEmpty() || Immutable.Set(movie.categories).isSuperset(this.state.categoryIds)
-
-    const sortOrder = this.state.sortOrder === SortOrder.ASCENDING ? ascending : descending;
-
-    this.setState({
-      selectedIndex: 0,
-      movies: this.props.movies.filter(combineEvery([onWatchlist, onFavorites, onCategories])).sort(byReleased(sortOrder)(byTitle())).map(withIndex)
-    });
-
-    smoothScroll(0);
-  }
-
+  //
+  // Menu Handlers
+  //
 
   handleToggleMenu = event => {
     event.preventDefault();
@@ -155,8 +149,12 @@ class App extends React.PureComponent {
     });
   }
 
-  handleToggleWatchlist = (movieId) => {
-    this.setState(state => {
+  //
+  // Toggle Handlers
+  //
+
+  handleToggleWatchlist = movieId => {
+    this.refreshList(state => {
       const watchlistIds = state.watchlistIds.includes(movieId) ? state.watchlistIds.remove(movieId) : state.watchlistIds.add(movieId);
 
       localStorage.setItem("watchlistIds", JSON.stringify(watchlistIds.toArray()));
@@ -164,11 +162,11 @@ class App extends React.PureComponent {
       return {
         watchlistIds: watchlistIds,
       };
-    }, () => this.state.showWatchlist ? this.refreshList() : null);
+    });
   }
 
-  handleToggleFavorite = (movieId) => {
-    this.setState(state => {
+  handleToggleFavorite = movieId => {
+    this.refreshList(state => {
       const favoriteIds = state.favoriteIds.includes(movieId) ? state.favoriteIds.remove(movieId) : state.favoriteIds.add(movieId);
 
       localStorage.setItem("favoriteIds", JSON.stringify(favoriteIds.toArray()));
@@ -176,7 +174,7 @@ class App extends React.PureComponent {
       return {
         favoriteIds: favoriteIds,
       };
-    }, () => this.state.showFavorites ? this.refreshList() : null);
+    });
   }
 
   handleAppTouchEnd = event => {
@@ -185,11 +183,46 @@ class App extends React.PureComponent {
     // });
   }
 
-  handleSortYearAscending = event => FilterEventHelper.handleSortYearAscending(this, event)
-  handleSortYearDescending = event => FilterEventHelper.handleSortYearDescending(this, event)
-  handleShowWatchlist = event => FilterEventHelper.handleShowWatchlist(this, event)
-  handleShowFavorites = event => FilterEventHelper.handleShowFavorites(this, event)
-  handleChangeCategory = categoryId => FilterEventHelper.handleChangeCategory(this, categoryId)
+  //
+  // Filter Handlers
+  //
+
+  handleSortYearAscending = () => this.refreshList(FilterActions.sortYearAscending)
+  handleSortYearDescending = () => this.refreshList(FilterActions.sortYearDescending)
+  handleShowWatchlist = () => this.refreshList(FilterActions.showWatchlist)
+  handleShowFavorites = () => this.refreshList(FilterActions.showFavorites)
+  handleChangeCategory = categoryId => this.refreshList(FilterActions.changeCategory(categoryId))
+
+  //
+  // State Management
+  //
+
+  refreshList(reducer) {
+    console.log("refreshList()");
+
+    this.setState(state => {
+      const newState = { ...state, ...reducer(state) };
+
+      const onWatchlist  = movie => !newState.showWatchlist || newState.watchlistIds.includes(movie.id);
+      const onFavorites  = movie => !newState.showFavorites || newState.favoriteIds.includes(movie.id);
+      const onCategories = movie => newState.categoryIds.isEmpty() || Immutable.Set(movie.categories).isSuperset(newState.categoryIds)
+
+      const sortOrder = newState.sortOrder === SortOrder.ASCENDING ? ascending : descending;
+
+      return {
+        ...newState,
+        movies: this.props.movies.filter(combineEvery([onWatchlist, onFavorites, onCategories])).sort(byReleased(sortOrder)(byTitle())).map(withIndex)
+      }
+    }, () => {
+      if (this.state.selectedIndex === 0) {
+        smoothScroll(0);
+      }
+    });
+  }
+
+  //
+  // Rendering
+  //
 
   render() {
     console.log("App#render()");

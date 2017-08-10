@@ -169,7 +169,6 @@ ul.movies > li .image {
 
 ul.movies > li .image.loaded {
   opacity: 1.0;
-  transition: opacity 0.5 ease-in;
 }
 
 @media (any-hover:hover) {
