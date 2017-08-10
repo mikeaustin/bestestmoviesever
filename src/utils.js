@@ -64,19 +64,20 @@ export class ListReducer {
 
 
 export const FilterActions = (() => {
+
   const sortYearAscending = state => {
     return {
       selectedIndex: 0,
       sortOrder: SortOrder.ASCENDING
     };
-  }
+  };
 
   const sortYearDescending = state => {
     return {
       selectedIndex: 0,
       sortOrder: SortOrder.DESCENDING
     };
-  }
+  };
 
   const showWatchlist = state => {
     const showWatchlist = !state.showWatchlist;
@@ -86,7 +87,7 @@ export const FilterActions = (() => {
       showWatchlist: showWatchlist,
       showFavorites: false
     };
-  }
+  };
 
   const showFavorites = state => {
     const showFavorites = !state.showFavorites;
@@ -96,7 +97,7 @@ export const FilterActions = (() => {
       showFavorites: showFavorites,
       showWatchlist: false
     };
-  }
+  };
 
   const changeCategory = categoryId => {
     return state => {
@@ -107,7 +108,7 @@ export const FilterActions = (() => {
         categoryIds: categoryIds
       };
     };
-  }
+  };
 
   return {
     sortYearAscending,
@@ -116,9 +117,8 @@ export const FilterActions = (() => {
     showFavorites,
     changeCategory
   };
+
 })();
-
-
 
 export const ToggleActions = (() => {
 
@@ -145,5 +145,63 @@ export const ToggleActions = (() => {
   return {
     toggleWatchlist,
     toggleFavorite
+  };
+
+})();
+
+export const NavigationActions = (() => {
+
+  const moveLeft = state => {
+    if (state.selectedIndex > 0) {
+      return {
+        selectedIndex: state.selectedIndex - 1
+      };
+    }
+  };
+
+  const moveRight = state => {
+    if (state.selectedIndex < state.movies.size - 1) {
+      return {
+        selectedIndex: state.selectedIndex + 1
+      };
+    }
+  };
+
+  const moveUp = (allItems, selectedItem, maxOffsetLeft) => state => {
+    const nextRowItems = new ListReducer(allItems.toSeq().reverse())
+      .skipWhile(item => Number(item.dataset.index) !== state.selectedIndex)
+      .skip(1).skipWhile(item => item.offsetLeft < selectedItem.offsetLeft)
+      .take(1).takeWhile(item => item.offsetLeft >= selectedItem.offsetLeft && item.offsetLeft !== maxOffsetLeft);
+
+    if (!nextRowItems.isEmpty()) {
+      return {
+        selectedIndex: Number(nextRowItems.last().dataset.index)
+      };
+    } else {
+      return state;
+    }
+  };
+
+  const moveDown = (allItems, selectedItem, minOffsetLeft) => state => {
+    const nextRowItems = new ListReducer(allItems.toSeq())
+      .skipWhile(item => Number(item.dataset.index) !== state.selectedIndex)
+      .take(1).skipWhile(item => item.offsetLeft > selectedItem.offsetLeft)
+      .take(1).takeWhile(item => item.offsetLeft <= selectedItem.offsetLeft && item.offsetLeft !== minOffsetLeft);
+
+    if (!nextRowItems.isEmpty()) {
+      return {
+        selectedIndex: Number(nextRowItems.last().dataset.index)
+      };
+    } else {
+      return state;
+    }
+  };
+
+  return {
+    moveLeft,
+    moveRight,
+    moveUp,
+    moveDown
   }
+
 })();

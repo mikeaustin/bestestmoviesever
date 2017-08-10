@@ -10,7 +10,7 @@ import categories from "./categories";
 import Menu from "./Menu";
 import MovieList from "./MovieList";
 
-import { ListReducer, FilterActions, ToggleActions, KeyCode, SortOrder, selectedClass, combineEvery } from "./utils";
+import { ListReducer, NavigationActions, FilterActions, ToggleActions, KeyCode, SortOrder, selectedClass, combineEvery } from "./utils";
 
 
 const always     = x => (a, b) => x;
@@ -83,42 +83,12 @@ class App extends React.PureComponent {
       }
     }
 
-    const offset = (() => {
-      if (event.keyCode === KeyCode.ARROW_RIGHT && this.state.selectedIndex < this.state.movies.size - 1) {
-        return this.state.selectedIndex + 1;
-      } else if (event.keyCode === KeyCode.ARROW_LEFT && this.state.selectedIndex > 0) {
-        return this.state.selectedIndex - 1;
-      } else if (event.keyCode === KeyCode.SPACE) {
-        const selectedMovie = this.state.movies.find(movie => movie.index === this.state.selectedIndex);
-
-        this.handleToggleFavorite(selectedMovie.id);
-      } else if (event.keyCode === KeyCode.ARROW_DOWN) {
-        const nextRowItems = new ListReducer(this.allItems.toSeq())
-          .skipWhile(item => Number(item.dataset.index) !== this.state.selectedIndex)
-          .take(1).skipWhile(item => item.offsetLeft > this.selectedItem.offsetLeft)
-          .take(1).takeWhile(item => item.offsetLeft <= this.selectedItem.offsetLeft && item.offsetLeft !== this.minOffsetLeft);
-
-        if (!nextRowItems.isEmpty()) {
-          return Number(nextRowItems.last().dataset.index);
-        }
-      } else if (event.keyCode === KeyCode.ARROW_UP) {
-        const nextRowItems = new ListReducer(this.allItems.toSeq().reverse())
-          .skipWhile(item => Number(item.dataset.index) !== this.state.selectedIndex)
-          .skip(1).skipWhile(item => item.offsetLeft < this.selectedItem.offsetLeft)
-          .take(1).takeWhile(item => item.offsetLeft >= this.selectedItem.offsetLeft && item.offsetLeft !== this.maxOffsetLeft);
-
-        if (!nextRowItems.isEmpty()) {
-          return Number(nextRowItems.last().dataset.index);
-        }
-      }
-
-      return null;
-    })();
-
-    if (offset !== null) {
-      this.setState({
-        selectedIndex: offset
-      });
+    switch (event.keyCode) {
+      case KeyCode.ARROW_LEFT: return this.refreshMovies(NavigationActions.moveLeft);
+      case KeyCode.ARROW_RIGHT: return this.refreshMovies(NavigationActions.moveRight);
+      case KeyCode.ARROW_UP: return this.refreshMovies(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
+      case KeyCode.ARROW_DOWN: return this.refreshMovies(NavigationActions.moveDown(this.allItems, this.selectedItem, this.minOffsetLeft));
+      case KeyCode.SPACE: return this.handleToggleFavorite(Number(this.selectedItem.dataset.id));
     }
   }
 
@@ -203,8 +173,6 @@ class App extends React.PureComponent {
 
   render() {
     console.log("App#render()");
-
-    const selectedMovie = this.state.movies.find(movie => movie.index === this.state.selectedIndex);
 
     const selectedState = selectedClass(arg => this.state[arg]);
     const selectedCategory = selectedClass(arg => this.state.categoryIds.includes(arg));

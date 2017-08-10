@@ -121,7 +121,7 @@ class Movie extends React.PureComponent {
     const selectedProperty = selectedClass(arg => this.props[arg]);
 
     return (
-      <li ref={li => this.li = li} className={selectedProperty("selected")} data-index={this.props.index}>
+      <li ref={li => this.li = li} className={selectedProperty("selected")} data-id={this.props.id} data-index={this.props.index}>
         <h1>{this.props.group}</h1>
         <div className={"image" + (this.state.imageURL ? " loaded" : "")} data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
           {stem}
