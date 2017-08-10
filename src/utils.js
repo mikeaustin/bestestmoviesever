@@ -77,17 +77,6 @@ export const FilterEventHelper = {
     }), () => app.refreshList());
   },
 
-  handleShowFavorites: (app, event) => {
-    app.setState(state => {
-      const showFavorites = !state.showFavorites;
-
-      return {
-        showFavorites: showFavorites,
-        showWatchlist: false
-      };
-    }, () => app.refreshList());
-  },
-
   handleShowWatchlist: (app, event) => {
     app.setState(state => {
       const showWatchlist = !state.showWatchlist;
@@ -95,6 +84,17 @@ export const FilterEventHelper = {
       return {
         showWatchlist: showWatchlist,
         showFavorites: false
+      };
+    }, () => app.refreshList());
+  },
+
+  handleShowFavorites: (app, event) => {
+    app.setState(state => {
+      const showFavorites = !state.showFavorites;
+
+      return {
+        showFavorites: showFavorites,
+        showWatchlist: false
       };
     }, () => app.refreshList());
   },
