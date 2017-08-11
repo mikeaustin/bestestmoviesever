@@ -19,7 +19,7 @@ const ascending  = (next, x, y) => comparator((a, b) => a < b)(next, x, y);
 const descending = (next, x, y) => comparator((a, b) => a > b)(next, x, y);
 const byReleased = order => next => (a, b) => order(next, a, b)(a.get("released"), b.get("released"));
 const byTitle    = next => (a, b) => ascending(next)(a.get("title"), b.get("title"));
-const withIndex  = (movie, index) => movie.set("index", index); //({ ...movie, index: index });
+const withIndex  = (movie, index) => movie.set("index", index);
 
 
 class App extends React.PureComponent {
@@ -184,7 +184,7 @@ class App extends React.PureComponent {
 
     const onWatchlist  = movie => !state.showWatchlist || state.watchlistIds.includes(movie.get("id"));
     const onFavorites  = movie => !state.showFavorites || state.favoriteIds.includes(movie.get("id"));
-    const onCategories = movie => state.categoryIds.isEmpty() || Immutable.Set(movie.get("categories")).isSuperset(state.categoryIds)
+    const onCategories = movie => state.categoryIds.isEmpty() || movie.get("categories").isSuperset(state.categoryIds)
 
     const sortOrder = state.sortOrder === SortOrder.ASCENDING ? ascending : descending;
 
