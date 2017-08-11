@@ -37,6 +37,30 @@ ul {
   list-style: none;
 }
 
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: -1px; right: -1px; left: -1px; height: 50px;
+  background: hsl(0, 0%, 10%);
+  outline: 1px solid hsla(0, 0%, 20%, 1.0);
+  z-index: 1000;
+  box-shadow: 0 1px 10px hsl(0, 0%, 0%);
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: -51px;
+  right: 0px; left: 0;
+  height: 50px;
+  background: hsl(0, 0%, 10%);
+  outline: 1px solid hsla(0, 0%, 20%, 1.0);
+  z-index: 1000;
+  box-shadow: 0 -1px 10px hsl(0, 0%, 0%);
+}
 
 div.directors h1 {
   padding: 0 20px;
@@ -64,16 +88,6 @@ div.directors ul > li {
   padding: 5px 10px;
 }
 
-
-ul.movies > li h1 {
-  margin-top: 15px;
-  margin-bottom: -3px;
-  height: 20px;
-  xpadding: 0 20px;
-  font-size: 20px;
-  font-weight: 400;
-}
-
 /**********************************************************\
 **
 ** Menu
@@ -82,7 +96,7 @@ ul.movies > li h1 {
 
 .menu {
   border-right: 1px transparent;
-  transform: translate(-99%, 0);
+  transform: translate(calc(-100% + 1px), 0);
   transition: all 0.125s ease-in;
 }
 
@@ -154,6 +168,15 @@ ul.movies {
 
 ul.movies > li {
   margin: 0 10px;
+}
+
+ul.movies > li h1 {
+  margin-top: 15px;
+  margin-bottom: -3px;
+  height: 20px;
+  xpadding: 0 20px;
+  font-size: 20px;
+  font-weight: 400;
 }
 
 ul.movies > li .image {

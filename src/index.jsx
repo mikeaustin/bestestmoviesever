@@ -3,9 +3,9 @@ import ReactDOM from "react-dom";
 import Immutable from "immutable";
 import smoothScroll from "smoothscroll";
 
-import movies from "./movies";
+import rawMovies from "./movies";
 import directors from "./directors";
-import categories from "./categories";
+import rawCategories from "./categories";
 
 import Menu from "./Menu";
 import MovieList from "./MovieList";
@@ -17,9 +17,9 @@ const always     = x => (a, b) => x;
 const comparator = f => (next = always(0), x, y) => (a, b) => f(a, b) ? -1 : f(b, a) ? 1 : next(x, y);
 const ascending  = (next, x, y) => comparator((a, b) => a < b)(next, x, y);
 const descending = (next, x, y) => comparator((a, b) => a > b)(next, x, y);
-const byReleased = order => next => (a, b) => order(next, a, b)(a.released, b.released);
-const byTitle    = next => (a, b) => ascending(next)(a.title, b.title);
-const withIndex  = (movie, index) => ({ ...movie, index: index });
+const byReleased = order => next => (a, b) => order(next, a, b)(a.get("released"), b.get("released"));
+const byTitle    = next => (a, b) => ascending(next)(a.get("title"), b.get("title"));
+const withIndex  = (movie, index) => movie.set("index", index); //({ ...movie, index: index });
 
 
 class App extends React.PureComponent {
@@ -168,23 +168,23 @@ class App extends React.PureComponent {
 
       const movies = shouldRefresh ? this.refreshMovies(newState) : state.movies;
 
+      if (shouldRefresh) {
+        smoothScroll(0);
+      }
+
       return {
         ...newState,
         movies: movies,
       };
-    }, () => {
-      if (this.state.selectedIndex === 0) {
-        smoothScroll(0);
-      }
     });
   }
 
   refreshMovies(state) {
     console.log("refreshMovies()");
 
-    const onWatchlist  = movie => !state.showWatchlist || state.watchlistIds.includes(movie.id);
-    const onFavorites  = movie => !state.showFavorites || state.favoriteIds.includes(movie.id);
-    const onCategories = movie => state.categoryIds.isEmpty() || Immutable.Set(movie.categories).isSuperset(state.categoryIds)
+    const onWatchlist  = movie => !state.showWatchlist || state.watchlistIds.includes(movie.get("id"));
+    const onFavorites  = movie => !state.showFavorites || state.favoriteIds.includes(movie.get("id"));
+    const onCategories = movie => state.categoryIds.isEmpty() || Immutable.Set(movie.get("categories")).isSuperset(state.categoryIds)
 
     const sortOrder = state.sortOrder === SortOrder.ASCENDING ? ascending : descending;
 
@@ -209,8 +209,8 @@ class App extends React.PureComponent {
               onSortYearAscending={this.handleSortYearAscending} onSortYearDescending={this.handleSortYearDescending}
               onShowWatchlist={this.handleShowWatchlist} onShowFavorites={this.handleShowFavorites}
               onChangeCategory={this.handleChangeCategory} onHideMenu={this.handleHideMenu} />
-        <header style={{display: "flex", justifyContent: "center", alignItems: "center", position: "fixed", top: 0, right: 0, left: 0, height: 50, background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 20%, 1.0)", zIndex: 1000, boxShadow: "0 1px 10px hsl(0, 0%, 0%)"}}>
-          <div style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", cursor: "pointer", zIndex: 1001}} onMouseDown={this.handleToggleMenu}>
+        <header>
+          <div style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer", zIndex: 1001}} onMouseDown={this.handleToggleMenu}>
             <img src="icons/menu-button.svg" height="25" />
           </div>
           <div style={{paddingTop: 4}}>
@@ -219,14 +219,17 @@ class App extends React.PureComponent {
         </header>
         <MovieList movies={this.state.movies} directors={directors} watchlistIds={this.state.watchlistIds} favoriteIds={this.state.favoriteIds} selectedIndex={this.state.selectedIndex}
                    onSelectIndex={this.handleSelectIndex} onToggleWatchlist={this.handleToggleWatchlist} onToggleFavorite={this.handleToggleFavorite} />
-        <footer style={{display: "flex", justifyContent: "center", position: "fixed", bottom: -51, right: 0, left: 0, height: "50px", background: "hsl(0, 0%, 10%)", outline: "1px solid hsla(0, 0%, 20%, 1.0)", zIndex: 1000, boxShadow: "0 -1px 10px hsl(0, 0%, 0%)"}} />
+        <footer />
       </div>
     );
   }
 
 }
 
+const categories = Immutable.fromJS(rawCategories).reduce((map, item) => map.set(item.get("id"), item.get("name")), Immutable.Map());
+const movies = Immutable.fromJS(rawMovies);
+
 ReactDOM.render(
-  <App movies={Immutable.List(movies)} categories={categories} />,
+  <App movies={movies} categories={categories} />,
   document.getElementById("root")
 );

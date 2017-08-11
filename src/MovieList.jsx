@@ -21,18 +21,19 @@ class MovieList extends React.PureComponent {
     return (
       <ul className="movies">
         {this.props.movies.reduce(([released, list], movie) => {
-          const element = <Movie key={movie.title}
-                                 index={movie.index}
-                                 id={movie.id} title={movie.title}
-                                 released={movie.released}
-                                 directorIds={movie.directors}
+          const element = <Movie key={movie.get("id")}
+                                 index={movie.get("index")}
+                                 id={movie.get("id")}
+                                 title={movie.get("title")}
+                                 released={movie.get("released")}
+                                 directorIds={movie.get("directors")}
                                  directors={this.props.directors}
-                                 categories={movie.categories}
-                                 image={movie.image}
-                                 selected={movie.index === this.props.selectedIndex}
-                                 watchlist={this.props.watchlistIds.includes(movie.id)}
-                                 favorite={this.props.favoriteIds.includes(movie.id)}
-                                 group={released !== movie.released ? movie.released : ""}
+                                 categories={movie.get("categories")}
+                                 image={movie.get("image")}
+                                 selected={movie.get("index") === this.props.selectedIndex}
+                                 watchlist={this.props.watchlistIds.includes(movie.get("id"))}
+                                 favorite={this.props.favoriteIds.includes(movie.get("id"))}
+                                 group={released !== movie.get("released") ? movie.get("released") : ""}
                                  onSelectIndex={this.props.onSelectIndex}
                                  onToggleFavorite={this.props.onToggleFavorite}
                                  onToggleWatchlist={this.props.onToggleWatchlist} />;

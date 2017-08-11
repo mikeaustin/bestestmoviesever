@@ -1,26 +1,25 @@
 import Immutable from "immutable";
 
 
-const categories = Immutable.Map([
-  [0, "Sci-Fi"],
-  [1, "Drama"],
-  [2, "Comedy"],
-  [3, "Crime"],
-  [4, "Action"],
-  [5, "Thriller"],
-  [6, "Adventure"],
-  [7, "Western"],
-  [8, "Horror"],
-  [9, "Music"],
-  [10, "Fantasy"],
-  [11, "Animation"],
-  [12, "Romance"],
-  [13, "History"],
-  [13, "Biography"],
-  [14, "Mystery"],
-  [15, "Family"],
-  [16, "Sport"],
-  [17, "War"]
-]);
+const categories = [
+  { id: 0, name: "Sci-Fi" },
+  { id: 1, name: "Drama" },
+  { id: 2, name: "Comedy" },
+  { id: 3, name: "Crime" },
+  { id: 4, name: "Action" },
+  { id: 5, name: "Thriller" },
+  { id: 6, name: "Adventure" },
+  { id: 7, name: "Western" },
+  { id: 8, name: "Horror" },
+  { id: 9, name: "Music" },
+  { id: 10, name: "Fantasy" },
+  { id: 11, name: "Animation" },
+  { id: 12, name: "Romance" },
+  { id: 13, name: "History" },
+  { id: 14, name: "Mystery" },
+  { id: 15, name: "Family" },
+  { id: 16, name: "Sport" },
+  { id: 17, name: "War" }
+];
 
 export default categories;
