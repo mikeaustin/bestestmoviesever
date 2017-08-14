@@ -38,7 +38,7 @@ class MovieList extends React.PureComponent {
                                  onToggleFavorite={this.props.onToggleFavorite}
                                  onToggleWatchlist={this.props.onToggleWatchlist} />;
 
-          return [movie.released, list.concat(element)];
+          return [movie.get("released"), list.concat(element)];
         }, [0, []])[1]}
       </ul>
     );
