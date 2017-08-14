@@ -53,9 +53,6 @@ export default class Movie extends React.PureComponent {
     document.removeEventListener("scroll", this.handleScroll, false);
   }
 
-  xshouldComponentUpdate(nextProps) {
-  }
-
   componentDidUpdate() {
     console.log("Movie#componentDidUpdate()");
 
@@ -74,9 +71,7 @@ export default class Movie extends React.PureComponent {
       const imageName = this.props.image ? this.props.image : this.props.title.replace(/ /g, "_");
       const baseURL = location.origin === "http://bestestmoviesever.com" ? "http://d1rus1jxo7361x.cloudfront.net" : "";
 
-      this.setState({
-        imageURL: baseURL + "/images/" + imageName + ".jpg"
-      });
+      this.img.src = baseURL + "/images/" + imageName + ".jpg";
     }
   }
 
@@ -139,7 +134,7 @@ export default class Movie extends React.PureComponent {
         <div style={{position: "relative"}}>
           {stem}
           <div className={"image" + (this.state.loaded ? " loaded" : "")} data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
-            <img src={this.state.imageURL} title={this.props.title} onLoad={this.handleImageLoad} />
+            <img ref={img => this.img = img} src={this.imageURL} title={this.props.title} onLoad={this.handleImageLoad} />
             <ul className="actions" style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}>
               <ActionButton className={"watchlist" + selectedProperty("watchlist")} id={this.props.id} onInvoke={this.handleToggleWatchlist} />
               <ActionButton className="watched" id={this.props.id} />
