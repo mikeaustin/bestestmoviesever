@@ -54,7 +54,7 @@ export default class Movie extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    console.log("Movie#componentDidUpdate()");
+    //console.log("Movie#componentDidUpdate()");
 
     this.loadImageIfNeeded();
 

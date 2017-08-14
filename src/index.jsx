@@ -208,7 +208,7 @@ class App extends React.PureComponent {
     const onCategories = movie => state.categoryIds.isEmpty() || movie.get("categories").isSuperset(state.categoryIds);
     const onDirector   = movie => state.directorIds.isEmpty() || movie.get("directors").isSuperset(state.directorIds);
 
-    console.log(">>>", state.directorIds, state.categoryIds);
+    //console.log(">>>", state.directorIds, state.categoryIds);
 
     //const onDirector   = movie => console.log(movie.get("directors").toArray(), state.categoryIds.toArray());
 
