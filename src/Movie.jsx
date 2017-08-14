@@ -53,19 +53,24 @@ export default class Movie extends React.PureComponent {
     document.removeEventListener("scroll", this.handleScroll, false);
   }
 
+  xshouldComponentUpdate(nextProps) {
+  }
+
   componentDidUpdate() {
+    console.log("Movie#componentDidUpdate()");
+
     this.loadImageIfNeeded();
 
     if (this.props.selected && ((this.li.offsetTop + this.li.offsetHeight + 10) > (window.innerHeight + document.body.scrollTop) ||
                                 (this.li.offsetTop < document.body.scrollTop + 50))) {
-      //smoothScroll(this.li.offsetTop - 105 - (window.innerHeight / 2) + (this.li.offsetTop / 2));
-      //smoothScroll(this.li.offsetTop - ((window.innerHeight + 50) / 2) + (this.li.offsetHeight / 2));
-      smoothScroll(this.li.offsetTop - ((window.innerHeight + 50 - this.li.offsetHeight) / 2) + 16);
+      setTimeout(() => {
+        smoothScroll(this.li.offsetTop - ((window.innerHeight + 50 - this.li.offsetHeight) / 2) + 16);
+      }, 150);
     }
   }
 
   loadImageIfNeeded() {
-    if (this.li.offsetTop < window.innerHeight + window.scrollY && !this.state.imageURL) {
+    if (!this.state.imageURL && this.li.offsetTop < window.innerHeight + window.scrollY) {
       const imageName = this.props.image ? this.props.image : this.props.title.replace(/ /g, "_");
       const baseURL = location.origin === "http://bestestmoviesever.com" ? "http://d1rus1jxo7361x.cloudfront.net" : "";
 
@@ -107,10 +112,6 @@ export default class Movie extends React.PureComponent {
 
   render() {
     //console.log("Movie#render()");
-
-    const group = this.props.group ? (
-      <h1>{this.props.group}</h1>
-    ) : null;
 
     const stem = this.props.selected ? (
       <div style={{position: "absolute", background: "hsl(0, 0%, 10%)", width: 15, height: 15, left: "50%", marginLeft: -7, bottom: -28,
