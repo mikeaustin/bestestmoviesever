@@ -316,30 +316,8 @@ ul.movies > li > .details .bubble {
   background: hsl(0, 0%, 10%);
   height: 70px;
   border-top: 1px solid hsl(0, 0%, 20%);
-  xtransform: translate3d(0, 0, -10);
-  xz-index: 1000;
 }
 
-/*ul.movies > li .watched::before {
-  position: absolute;
-  display: block;
-  content: "";
-  background: 0 0/26px 26px url(/icons/checked-box.svg) no-repeat;
-  width: 26px; height: 26px;
-  left: 3px; bottom: 2px;
-  color: hsl(0, 0%, 20%);
-  xbackground: hsla(0, 0%, 100%, 0.5);
-  xbox-shadow: 0 0 1px hsla(0, 0%, 0%, 1.0);
-}
-*/
-
-/*ul.movies > li:hover .watched::before {
-  box-shadow: none;
-  xbackground: hsla(0, 0%, 10%, 0.9);
-  background-image: url(/icons/checked-box-highlight.svg);
-  color: hsl(0, 0%, 70%);
-}
-*/
 /**********************************************************\
 **
 ** Mobile
