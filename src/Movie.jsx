@@ -60,9 +60,9 @@ export default class Movie extends React.PureComponent {
 
     if (this.props.selected && ((this.li.offsetTop + this.li.offsetHeight + 10) > (window.innerHeight + document.body.scrollTop) ||
                                 (this.li.offsetTop < document.body.scrollTop + 50))) {
-      setTimeout(() => {
+      //setTimeout(() => {
         smoothScroll(this.li.offsetTop - ((window.innerHeight + 50 - this.li.offsetHeight) / 2) + 16);
-      }, 150);
+      //}, 150);
     }
   }
 

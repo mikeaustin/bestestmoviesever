@@ -221,7 +221,12 @@ const movies = [
   { id: 216, title: "The Chronicles of Riddick", released: 2004, directors: [93], categories: [4, 6, 0, 5] },
   { id: 217, title: "Metropolis", released: 1927, directors: [140], categories: [1, 0] },
   { id: 218, title: "Star Trek II: The Wrath of Khan", image: "Star_Trek_II_The_Wrath_of_Khan", released: 1982, directors: [141], categories: [4, 6, 0] },
-  { id: 219, title: "Requiem for a Dream", released: 2000, directors: [142], categories: [1] }
+  { id: 219, title: "Requiem for a Dream", released: 2000, directors: [142], categories: [1] },
+  { id: 220, title: "Valkyrie", released: 2008, directors: [143], categories: [1, 13, 5, 17] },
+  { id: 221, title: "X-Men: Days of Future Past", image: "X-Men_Days_of_Future_Past", released: 2014, directors: [143], categories: [4, 6, 0, 5] },
+  { id: 222, title: "Iron Man", released: 2008, directors: [144], categories: [4, 6, 0] },
+  { id: 223, title: "X-Men", released: 2000, directors: [143], categories: [4, 6, 0] },
+  { id: 224, title: "Up in Smoke", released: 1978, directors: [145], categories: [2, 9] }
 ];
 
 export default movies;

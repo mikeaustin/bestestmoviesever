@@ -256,7 +256,10 @@ class App extends React.PureComponent {
             <img src="icons/menu-button.svg" height="25" />
           </div>
           <div style={{paddingTop: 5, cursor: "pointer"}} onMouseDown={this.handleToggleDirectors}>
-            <span className="title" style={{fontSize: 25, fontWeight: 800}}>Movies</span> <span className="count" style={{fontSize: 25}}>({this.state.movies.size})</span>
+            <span className="title" style={{fontSize: 25, fontWeight: 800}}>
+              <img src="icons/down-arrow-1.svg" height="10" style={{position: "relative", top: -4}} /> Movies
+            </span>
+            &nbsp;<span className="count" style={{fontSize: 25}}>({this.state.movies.size})</span>
           </div>
         </header>
         {this.state.showDirectors ? directorsList : (

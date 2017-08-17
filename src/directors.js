@@ -145,7 +145,10 @@ const directors = Immutable.Map([
   [139, "Frank Darabont"],
   [140, "Fritz Lang"],
   [141, "Nicholas Meyer"],
-  [142, "Darren Aronofsky"]
+  [142, "Darren Aronofsky"],
+  [143, "Bryan Singer"],
+  [144, "Jon Favreau"],
+  [145, "Lou Adler"]
 ]);
 
 export default directors;
