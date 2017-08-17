@@ -32,6 +32,10 @@ export default class Menu extends React.PureComponent {
     this.props.onShowFavorites();
   }
 
+  handleShowUnwatched = event => {
+    this.props.onShowUnwatched();
+  }
+
   handleChangeCategory = categoryId => event => {
     this.props.onChangeCategory(categoryId);
   }
@@ -92,6 +96,10 @@ export default class Menu extends React.PureComponent {
               <td className={selectedProp("showWatchlist")} onMouseDown={this.handleShowWatchlist}>&#9634; &nbsp;Watchlist</td>
               <th style={{width: "20px"}}></th>
               <td className={selectedProp("showFavorites")} onMouseDown={this.handleShowFavorites}>&#9634; &nbsp;Favorites</td>
+            </tr>
+            <tr>
+              <td className={selectedProp("showUnwatched")} onMouseDown={this.handleShowUnwatched}>&#9634; &nbsp;Not Seen</td>
+              <th style={{width: "20px"}}></th>
             </tr>
             <tr>
               <th>Genres</th>

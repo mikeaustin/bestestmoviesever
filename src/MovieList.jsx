@@ -33,10 +33,12 @@ class MovieList extends React.PureComponent {
                                  selected={movie.get("index") === this.props.selectedIndex}
                                  watchlist={this.props.watchlistIds.includes(movie.get("id"))}
                                  favorite={this.props.favoriteIds.includes(movie.get("id"))}
+                                 watched={this.props.watchedIds.includes(movie.get("id"))}
                                  group={released !== movie.get("released") ? movie.get("released") : ""}
                                  onSelectIndex={this.props.onSelectIndex}
+                                 onToggleWatchlist={this.props.onToggleWatchlist}
                                  onToggleFavorite={this.props.onToggleFavorite}
-                                 onToggleWatchlist={this.props.onToggleWatchlist} />;
+                                 onToggleWatched={this.props.onToggleWatched} />;
 
           return [movie.get("released"), list.concat(element)];
         }, [0, []])[1]}

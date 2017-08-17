@@ -101,6 +101,10 @@ export default class Movie extends React.PureComponent {
     this.props.onToggleFavorite(movieId);
   }
 
+  handleToggleWatched = (movieId) => {
+    this.props.onToggleWatched(movieId);
+  }
+
   //
   // Rendering
   //
@@ -136,8 +140,8 @@ export default class Movie extends React.PureComponent {
           <div className={"image" + (this.state.loaded ? " loaded" : "")} data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
             <img ref={img => this.img = img} src={this.imageURL} title={this.props.title} onLoad={this.handleImageLoad} />
             <ul className="actions" style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}>
+              <ActionButton className={"watched" + selectedProperty("watched")}  id={this.props.id} onInvoke={this.handleToggleWatched} />
               <ActionButton className={"watchlist" + selectedProperty("watchlist")} id={this.props.id} onInvoke={this.handleToggleWatchlist} />
-              <ActionButton className="watched" id={this.props.id} />
               <ActionButton className={"favorite" + selectedProperty("favorite")} id={this.props.id} onInvoke={this.handleToggleFavorite} />
             </ul>
           </div>

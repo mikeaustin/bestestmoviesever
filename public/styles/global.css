@@ -287,9 +287,6 @@ ul.movies > li ul.actions li.favorite {
   background-image: url(/icons/numbered-items-selected.svg);
 }
 */
-ul.movies > li ul.actions li.watched:active {
-  background-image: url(/icons/verification-sign-selected.svg);
-}
 
 ul.movies > li ul.actions li.watchlist.selected {
   background-image: url(/icons/numbered-items-selected.svg);
@@ -299,6 +296,15 @@ ul.movies > li ul.actions li.favorite.selected {
   background-image: url(/icons/heart-selected.svg);
 }
 
+ul.movies > li ul.actions li.watched.selected {
+  background-image: url(/icons/verification-sign-selected.svg);
+}
+
+footer {
+  background: url(/icons/numbered-items-selected.svg),
+              url(/icons/heart-selected.svg),
+              url(/icons/verification-sign-selected.svg);
+}
 
 ul.movies > li > .details {
   height: 70px;

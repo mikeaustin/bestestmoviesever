@@ -6,6 +6,9 @@ export const KeyCode = {
   ARROW_UP:    38,
   ARROW_RIGHT: 39,
   ARROW_DOWN:  40,
+  NUMBER_1:    49,
+  NUMBER_2:    50,
+  NUMBER_3:    51,
   SPACE:       32
 };
 
@@ -85,7 +88,8 @@ export const FilterActions = (() => {
     return {
       selectedIndex: 0,
       showWatchlist: showWatchlist,
-      showFavorites: false
+      showFavorites: false,
+      showUnwatched: false
     };
   };
 
@@ -95,7 +99,19 @@ export const FilterActions = (() => {
     return {
       selectedIndex: 0,
       showFavorites: showFavorites,
-      showWatchlist: false
+      showWatchlist: false,
+      showUnwatched: false
+    };
+  };
+
+  const showUnwatched = state => {
+    const showUnwatched = !state.showUnwatched;
+
+    return {
+      selectedIndex: 0,
+      showUnwatched: showUnwatched,
+      showWatchlist: false,
+      showFavorites: false
     };
   };
 
@@ -115,6 +131,7 @@ export const FilterActions = (() => {
     sortYearDescending,
     showWatchlist,
     showFavorites,
+    showUnwatched,
     changeCategory
   };
 
@@ -142,9 +159,20 @@ export const ToggleActions = (() => {
     };
   };
 
+  const toggleWatched = movieId => state => {
+    const watchedIds = state.watchedIds.includes(movieId) ? state.watchedIds.remove(movieId) : state.watchedIds.add(movieId);
+
+    localStorage.setItem("watchedIds", JSON.stringify(watchedIds.toArray()));
+
+    return {
+      watchedIds: watchedIds,
+    };
+  };
+
   return {
     toggleWatchlist,
-    toggleFavorite
+    toggleFavorite,
+    toggleWatched
   };
 
 })();
