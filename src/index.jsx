@@ -275,6 +275,21 @@ class App extends React.PureComponent {
                      onSelectIndex={this.handleSelectIndex} onToggleWatchlist={this.handleToggleWatchlist} onToggleFavorite={this.handleToggleFavorite} onToggleWatched={this.handleToggleWatched} />
         )}
         <footer />
+        <div style={{position: "fixed", top: 0, right: 0, bottom: 0, left: 0, background: "hsla(0, 0%, 0%, 0.9)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 100}}>
+          <div id="help-modal" style={{background: "hsl(0, 0%, 10%)", border: "1px solid hsl(0, 0%, 20%)", xpadding: 10, margin: 10, borderRadius: 10, maxWidth: 500}}>
+            <h1 className="bold" data-text="Help">Help</h1>
+            <ul>
+              <li className="mobile">Tap the &nbsp;<img src="icons/verification-sign.svg" height="14"/>&nbsp;Seen,
+                &nbsp;<img src="icons/numbered-items.svg" height="14"/>&nbsp;Watchlist and
+                &nbsp;<img src="icons/heart.svg" height="14"/>&nbsp;Favorite buttons to categorize the movies.</li>
+              <li className="mobile">Tap the menu button to sort movies by date or filter by genres. Swipe left to dismiss.</li>
+              <li className="mobile">Tap the Movies header to show and filter by directors. Tap Reset Filter to clear.</li>
+
+              <li className="desktop">Use the arrow keys to navigate and 1, 2, 3 to toggle watchlist, seen and favorite.</li>
+              <li className="desktop">Click the Movies header to show and filter by directors.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     );
   }
