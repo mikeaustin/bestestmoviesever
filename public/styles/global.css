@@ -72,6 +72,7 @@ footer {
   content: attr(data-text);
   position: absolute;
   left: 1px;
+  right: -1px;
 }
 
 
@@ -209,7 +210,6 @@ ul.movies > li .image.loaded {
 @media screen and (min-width: 1280px) {
   ul.movies > li:hover .image {
     transition: all 0.0625s ease-out;
-    xz-index: 100;
     box-shadow: 0 0 30px hsla(200, 100%, 50%, 1.0);
   }
 }
@@ -217,7 +217,6 @@ ul.movies > li .image.loaded {
 ul.movies > li.selected .image {
   transform: translate(0, -15px) scale(1.125, 1.125);
   transition: all 0.0625s ease-out;
-  xz-index: 100;
   box-shadow: 0 0 30px hsla(200, 100%, 50%, 1.0);
 }
 
@@ -334,23 +333,54 @@ ul.movies > li > .details .bubble {
 \**********************************************************/
 
 #help-modal {
-  padding: 0 10px;
+  opacity: 0.0;
+  visibility: hidden;
+  transition: opacity 0.125s ease-in, visibility 0.125s ease-in;
 }
 
-#help-modal ul {
+#help-modal.open {
+  opacity: initial;
+  visibility: visible;
+  transition: opacity 0.125s ease-out, visibility 0.125s ease-out;
+}
+
+#help-modal .dialog {
   padding: 0 10px;
+  margin: 10px;
+  margin-top: 50px;
+  transform: scale(0.9, 0.9);
+  transition: transform 0.125s ease-in;
+}
+
+#help-modal.open .dialog {
+  transform: scale(1, 1);
+  transition: transform 0.125s ease-out;
+}
+
+#help-modal .dialog ul {
+  xpadding: 0 10px;
   list-style: square;
 }
 
-#help-modal h1 {
+#help-modal .dialog h1 {
   font-size: 20px;
   margin: 10px 0 10px 0;
   line-height: 1.5em;
 }
 
-#help-modal ul li {
+#help-modal .dialog h1 span {
   font-size: 20px;
-  margin: 10px 5px 10px 18px;
+  line-height: 1.5em;
+}
+
+#help-modal .dialog ul li {
+  font-size: 20px;
+  margin: 10px 5px 10px 30px;
+  line-height: 1.5em;
+}
+
+#help-modal .dialog ul li * {
+  font-size: 20px;
   line-height: 1.5em;
 }
 
@@ -359,6 +389,12 @@ ul.movies > li > .details .bubble {
 ** Mobile
 **
 \**********************************************************/
+
+@media screen and (min-width: 1025px) {
+  #help-modal .mobile {
+    display: none;
+  }
+}
 
 @media screen and (max-width: 1024px) {
   #help-modal .desktop {

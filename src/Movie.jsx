@@ -114,7 +114,7 @@ export default class Movie extends React.PureComponent {
 
     const stem = this.props.selected ? (
       <div style={{position: "absolute", background: "hsl(0, 0%, 10%)", width: 15, height: 15, left: "50%", marginLeft: -7, bottom: -28,
-                   transform: "rotate(45deg)", borderLeft: "1px solid hsl(0, 0%, 20%)", borderTop: "1px solid hsl(0, 0%, 20%)", zIndex: 100}}></div>
+                   transform: "rotate(45deg)", borderLeft: "1px solid hsl(0, 0%, 20%)", borderTop: "1px solid hsl(0, 0%, 20%)", zIndex: 1}}></div>
     ) : null;
 
     const details = this.props.selected ? (

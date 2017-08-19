@@ -9,6 +9,7 @@ import rawCategories from "./categories";
 
 import Menu from "./Menu";
 import MovieList from "./MovieList";
+import Help from "./Help";
 
 import { ListReducer, NavigationActions, FilterActions, ToggleActions, KeyCode, SortOrder, selectedClass, combineEvery } from "./utils";
 
@@ -54,6 +55,7 @@ class App extends React.PureComponent {
       watchedIds:    Immutable.Set(JSON.parse(localStorage.getItem("watchedIds"))),
       categoryIds:   Immutable.Set(),
       directorIds:   Immutable.Set(),
+      showHelp:      true,
       showMenu:      false,
       showWatchlist: false,
       showFavorites: false,
@@ -133,17 +135,36 @@ class App extends React.PureComponent {
   //
 
   handleToggleMenu = event => {
-    event.preventDefault();
-    event.stopPropagation();
+    console.log("handleToggleMenu()");
+
+    //event.preventDefault();
+    //event.stopPropagation();
 
     this.setState(state => ({
       showMenu: !state.showMenu
     }));
   }
 
+  handleToggleHelp = event => {
+    //event.preventDefault();
+    //event.stopPropagation();
+
+    this.setState(state => ({
+      showHelp: !state.showHelp
+    }));
+  }
+
   handleHideMenu = () => {
     this.setState({
       showMenu: false
+    });
+  }
+
+  handleHideHelp = () => {
+    console.log("handleHideHelp()");
+
+    this.setState({
+      showHelp: false
     });
   }
 
@@ -165,12 +186,6 @@ class App extends React.PureComponent {
   handleShowFavorites = () => this.updateState(FilterActions.showFavorites)
   handleShowUnwatched = () => this.updateState(FilterActions.showUnwatched)
   handleChangeCategory = categoryId => this.updateState(FilterActions.changeCategory(categoryId))
-
-  handleAppTouchEnd = event => {
-    // this.setState({
-    //   showMenu: false
-    // });
-  }
 
   handleToggleDirectors = event => {
     this.setState(state => ({showDirectors: !state.showDirectors}));
@@ -253,15 +268,19 @@ class App extends React.PureComponent {
     ) : null;
 
     return (
-      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} onTouchMove={this.handleAppTouchEnd} onTouchEnd={this.handleAppTouchEnd}>
+      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}}>
+        <Help isOpen={this.state.showHelp} onDismiss={this.handleHideHelp}/>
         <Menu categories={this.props.categories} categoryIds={this.state.categoryIds} isOpen={this.state.showMenu}
               sortOrder={this.state.sortOrder} showWatchlist={this.state.showWatchlist} showFavorites={this.state.showFavorites} showUnwatched={this.state.showUnwatched}
               onSortYearAscending={this.handleSortYearAscending} onSortYearDescending={this.handleSortYearDescending}
               onShowWatchlist={this.handleShowWatchlist} onShowFavorites={this.handleShowFavorites} onShowUnwatched={this.handleShowUnwatched}
               onChangeCategory={this.handleChangeCategory} onHideMenu={this.handleHideMenu} />
         <header>
-          <div style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer", zIndex: 1001}} onMouseDown={this.handleToggleMenu}>
+          <div style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleMenu}>
             <img src="icons/menu-button.svg" height="25" />
+          </div>
+          <div style={{position: "absolute", display: "flex", alignItems: "center", right: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleHelp}>
+            <img src="icons/question-mark.svg" height="25" />
           </div>
           <div style={{paddingTop: 5, cursor: "pointer"}} onMouseDown={this.handleToggleDirectors}>
             <span className="title" style={{fontSize: 25, fontWeight: 800}}>
@@ -275,21 +294,6 @@ class App extends React.PureComponent {
                      onSelectIndex={this.handleSelectIndex} onToggleWatchlist={this.handleToggleWatchlist} onToggleFavorite={this.handleToggleFavorite} onToggleWatched={this.handleToggleWatched} />
         )}
         <footer />
-        <div style={{position: "fixed", top: 0, right: 0, bottom: 0, left: 0, background: "hsla(0, 0%, 0%, 0.9)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 100}}>
-          <div id="help-modal" style={{background: "hsl(0, 0%, 10%)", border: "1px solid hsl(0, 0%, 20%)", xpadding: 10, margin: 10, borderRadius: 10, maxWidth: 500}}>
-            <h1 className="bold" data-text="Help">Help</h1>
-            <ul>
-              <li className="mobile">Tap the &nbsp;<img src="icons/verification-sign.svg" height="14"/>&nbsp;Seen,
-                &nbsp;<img src="icons/numbered-items.svg" height="14"/>&nbsp;Watchlist and
-                &nbsp;<img src="icons/heart.svg" height="14"/>&nbsp;Favorite buttons to categorize the movies.</li>
-              <li className="mobile">Tap the menu button to sort movies by date or filter by genres. Swipe left to dismiss.</li>
-              <li className="mobile">Tap the Movies header to show and filter by directors. Tap Reset Filter to clear.</li>
-
-              <li className="desktop">Use the arrow keys to navigate and 1, 2, 3 to toggle watchlist, seen and favorite.</li>
-              <li className="desktop">Click the Movies header to show and filter by directors.</li>
-            </ul>
-          </div>
-        </div>
       </div>
     );
   }
