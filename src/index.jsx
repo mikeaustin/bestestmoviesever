@@ -252,11 +252,11 @@ class App extends React.PureComponent {
     const selectedSortOrder = selectedClass(arg => this.state.sortOrder == arg);
 
     const directorsList = this.state.showDirectors ? (
-      <div style={{padding: "75px 20px 20px 20px", columnWidth: 300}}>
-        <div className="bold" style={{fontSize: 15, marginBottom: "16px", cursor: "pointer"}} data-text="Reset Filter &mdash;" onMouseDown={this.handleChangeDirector(null)}>Reset Filter &mdash; All Directors</div>
+      <div id="directors" style={{padding: "75px 20px 20px 20px", columnWidth: 300}}>
+        <div className="director bold" style={{fontSize: 15, marginBottom: "16px", cursor: "pointer"}} data-text="Reset Filter &mdash;" onMouseDown={this.handleChangeDirector(null)}>Reset Filter &mdash; All Directors</div>
         {this.directorsSortedByCount.entrySeq().map(([directorId, movieIds]) => (
           <div key={directorId} style={{breakInside: "avoid"}}>
-            <div className="bold" style={{fontSize: 15, marginBottom: "6px", cursor: "pointer"}} data-text={directors.get(directorId)} onMouseDown={this.handleChangeDirector(directorId)}>{directors.get(directorId)} ({movieIds.size})</div>
+            <div className="director bold" style={{fontSize: 15, marginBottom: "6px", cursor: "pointer"}} data-text={directors.get(directorId)} onMouseDown={this.handleChangeDirector(directorId)}>{directors.get(directorId)} ({movieIds.size})</div>
             <div style={{marginBottom: 15}}>
               {movieIds.map(movieId => (
                 <div key={movieId} style={{margin: "5px 0", marginLeft: 10, fontSize: 15, color: "hsl(0, 0%, 60%)"}}>{movies2.get(movieId).get("title")} &mdash; {movies2.get(movieId).get("released")}</div>
@@ -276,10 +276,10 @@ class App extends React.PureComponent {
               onShowWatchlist={this.handleShowWatchlist} onShowFavorites={this.handleShowFavorites} onShowUnwatched={this.handleShowUnwatched}
               onChangeCategory={this.handleChangeCategory} onHideMenu={this.handleHideMenu} />
         <header>
-          <div style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleMenu}>
+          <div id="menu-button" className={selectedState("showMenu")} style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleMenu}>
             <img src="icons/menu-button.svg" height="25" />
           </div>
-          <div style={{position: "absolute", display: "flex", alignItems: "center", right: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleHelp}>
+          <div id="help-button" style={{position: "absolute", display: "flex", alignItems: "center", right: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleHelp}>
             <img src="icons/question-mark.svg" height="25" />
           </div>
           <div style={{paddingTop: 5, cursor: "pointer"}} onMouseDown={this.handleToggleDirectors}>

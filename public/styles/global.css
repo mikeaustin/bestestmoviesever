@@ -76,7 +76,15 @@ footer {
 }
 
 
-div.directors h1 {
+header:hover * {
+  color: hsl(0, 0%, 100%);
+}
+
+#directors .director:hover {
+  color: hsl(0, 0%, 100%);
+}
+
+/*div.directors h1 {
   padding: 0 20px;
   height: 50px;
   display: flex;
@@ -101,12 +109,40 @@ div.directors:hover ul {
 div.directors ul > li {
   padding: 5px 10px;
 }
-
+*/
 /**********************************************************\
 **
 ** Menu
 **
 \**********************************************************/
+
+#menu-button {
+  position: relative;
+}
+
+#menu-button::before {
+  content: "";
+  opacity: 0.0;
+  background: url(/icons/arrow-angle-pointing-to-left.svg);
+  background-size: 100%;
+  position: absolute;
+  margin-left: -3px;
+  width: 30px; height: 30px;
+  transition: all 0.125s ease-out;
+}
+
+#menu-button.selected::before {
+  opacity: 1.0;
+}
+
+#menu-button img {
+  transition: all 0.125s ease-out;
+}
+
+#menu-button.selected img {
+  xtransform: translate(50px);
+  opacity: 0.0;
+}
 
 .menu {
   border-right: 1px transparent;
