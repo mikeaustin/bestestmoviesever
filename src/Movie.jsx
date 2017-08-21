@@ -35,6 +35,7 @@ export default class Movie extends React.PureComponent {
     super(props);
 
     this.state = {
+      imageLoaded: false,
       imageURL: null
     };
   }
@@ -44,6 +45,8 @@ export default class Movie extends React.PureComponent {
   //
 
   componentDidMount() {
+    console.log("Movie#componentDidMount()");
+
     this.loadImageIfNeeded();
 
     document.addEventListener("scroll", this.handleScroll, false);
@@ -77,7 +80,7 @@ export default class Movie extends React.PureComponent {
 
   handleImageLoad = event => {
     this.setState({
-      loaded: true
+      imageLoaded: true
     });
   }
 
@@ -137,7 +140,7 @@ export default class Movie extends React.PureComponent {
         <h1>{this.props.group}</h1>
         <div style={{position: "relative"}}>
           {stem}
-          <div className={"image" + (this.state.loaded ? " loaded" : "")} data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
+          <div className={"image" + (this.state.imageLoaded ? " loaded" : "")} data-title={this.props.title} data-released={this.props.released} onMouseDown={this.handleClick}>
             <img ref={img => this.img = img} src={this.imageURL} title={this.props.title} onLoad={this.handleImageLoad} />
             <ul className="actions" style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}>
               <ActionButton className={"watched" + selectedProperty("watched")}  id={this.props.id} onInvoke={this.handleToggleWatched} />
