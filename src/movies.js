@@ -226,7 +226,12 @@ const movies = [
   { id: 221, title: "X-Men: Days of Future Past", image: "X-Men_Days_of_Future_Past", released: 2014, directors: [143], categories: [4, 6, 0, 5] },
   { id: 222, title: "Iron Man", released: 2008, directors: [144], categories: [4, 6, 0] },
   { id: 223, title: "X-Men", released: 2000, directors: [143], categories: [4, 6, 0] },
-  { id: 224, title: "Up in Smoke", released: 1978, directors: [145], categories: [2, 9] }
+  { id: 224, title: "Up in Smoke", released: 1978, directors: [145], categories: [2, 9] },
+  { id: 225, title: "The Chronicles of Riddick: Dark Fury", image: "The_Chronicles_of_Riddick_Dark_Fury", released: 2004, directors: [146], categories: [4, 11, 0] },
+  { id: 226, title: "A Beautiful Mind", released: 2001, directors: [147], categories: [1] },
+  { id: 227, title: "Apollo 13", released: 1995, directors: [147], categories: [6, 1, 13] },
+  { id: 228, title: "American History X", released: 1998, directors: [148], categories: [3, 1] },
+  { id: 229, title: "Ocean's Eleven", released: 2001, directors: [149], categories: [3, 5] }
 ];
 
 export default movies;
