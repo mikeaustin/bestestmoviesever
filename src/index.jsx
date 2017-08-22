@@ -282,7 +282,7 @@ class App extends React.PureComponent {
           <div id="help-button" style={{position: "absolute", display: "flex", alignItems: "center", right: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleHelp}>
             <img src="icons/question-mark.svg" height="25" />
           </div>
-          <div style={{paddingTop: 5, cursor: "pointer"}} onMouseDown={this.handleToggleDirectors}>
+          <div className="center" style={{paddingTop: 5, cursor: "pointer"}} onMouseDown={this.handleToggleDirectors}>
             <span className="title" style={{fontSize: 25, fontWeight: 800}}>
               <img src="icons/down-arrow-1.svg" height="10" style={{position: "relative", top: -4}} /> Movies
             </span>

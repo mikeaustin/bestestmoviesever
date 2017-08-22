@@ -76,7 +76,7 @@ footer {
 }
 
 
-header:hover * {
+header .center:hover * {
   color: hsl(0, 0%, 100%);
 }
 
@@ -126,6 +126,7 @@ div.directors ul > li {
   background: url(/icons/arrow-angle-pointing-to-left.svg);
   background-size: 100%;
   position: absolute;
+  top: 12px;
   margin-left: -3px;
   width: 30px; height: 30px;
   transition: all 0.125s ease-out;
@@ -269,7 +270,6 @@ ul.movies > li .image > img {
   width: 160px; height: 238px;
   xwidth: 12.5vw; xheight: 18.75vw;
 }
-
 
 ul.movies > li ul.actions {
   padding: 5px 5px;
@@ -437,33 +437,49 @@ ul.movies > li > .details .bubble {
     display: none;
   }
 
+  /* Menu Checkmarks */
   .menu > table td.selected::before {
     margin-left: 0;
     font-size: 100%;
   }
 }
 
-@media screen and (max-width: 1024px) and (orientation: landscape) {
+@media screen and (max-width: 1280px) {
   ul.movies > li .image img {
-    width: 147px; height: 219px;
-    width: 17.7vw; height: 26vw;
-    width: 14.4vw; height: 21.6vw;
+    width: calc(100vw / 7 - 23px);
+    height: calc((100vw / 7 - 23px) * 1.5);
   }
 }
 
-@media screen and (max-width: 800px) and (orientation: landscape) {
+@media screen and (max-width: 1120px) {
   ul.movies > li .image img {
-    width: 21vw; height: 31.5vw;
+    width: calc(100vw / 6 - 23px);
+    height: calc((100vw / 6 - 23px) * 1.5);
   }
 }
 
-@media screen and (max-width: 768px) and (orientation: portrait) {
+@media screen and (max-width: 960px) {
   ul.movies > li .image img {
-    width: 21.8vw; height: 31vw;
+    width: calc(100vw / 5 - 24px);
+    height: calc((100vw / 5 - 24px) * 1.5);
   }
 }
 
-@media screen and (max-width: 480px) and (orientation: portrait) {
+@media screen and (max-width: 800px) {
+  ul.movies > li .image img {
+    width: calc(100vw / 4 - 25px);
+    height: calc((100vw / 4 - 25px) * 1.5);
+  }
+}
+
+@media screen and (max-width: 640px) {
+  ul.movies > li .image img {
+    width: calc(100vw / 3 - 27px);
+    height: calc((100vw / 3 - 27px) * 1.5);
+  }
+}
+
+@media screen and (max-width: 480px) {
   .menu table th, .menu table td {
     font-size: 15px;
     height: 30px;
@@ -474,9 +490,8 @@ ul.movies > li > .details .bubble {
   }
 
   ul.movies > li .image img {
-    xwidth: 41vw; xheight: 61vw;
-    width: calc((100vw / 2) - (10px * 3));
-    height: calc(((100vw / 2) - (10px * 3)) * 1.5);
+    width: calc(100vw / 2 - 30px);
+    height: calc((100vw / 2 - 30px) * 1.5);
   }
 
   ul.movies > li > .details .bubble {
