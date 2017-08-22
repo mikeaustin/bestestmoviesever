@@ -267,7 +267,7 @@ ul.movies > li .image::before {
 
 ul.movies > li .image > img {
   display: block;
-  width: 160px; height: 238px;
+  width: 160px; height: 240px;
   xwidth: 12.5vw; xheight: 18.75vw;
 }
 
@@ -446,36 +446,36 @@ ul.movies > li > .details .bubble {
 
 @media screen and (max-width: 1280px) {
   ul.movies > li .image img {
-    width: calc(100vw / 7 - 23px);
-    height: calc((100vw / 7 - 23px) * 1.5);
+    width: calc(100vw / 7 - 20px - 20px / 7);
+    height: calc((100vw / 7 - 20px - 20px / 7) * 1.5);
   }
 }
 
 @media screen and (max-width: 1120px) {
   ul.movies > li .image img {
-    width: calc(100vw / 6 - 23px);
-    height: calc((100vw / 6 - 23px) * 1.5);
+    width: calc(100vw / 6 - 20px - 20px / 6);
+    height: calc((100vw / 6 - 20px - 20px / 6) * 1.5);
   }
 }
 
 @media screen and (max-width: 960px) {
   ul.movies > li .image img {
-    width: calc(100vw / 5 - 24px);
-    height: calc((100vw / 5 - 24px) * 1.5);
+    width: calc(100vw / 5 - 20px - 20px / 5);
+    height: calc((100vw / 5 - 20px - 20px / 5) * 1.5);
   }
 }
 
 @media screen and (max-width: 800px) {
   ul.movies > li .image img {
-    width: calc(100vw / 4 - 25px);
-    height: calc((100vw / 4 - 25px) * 1.5);
+    width: calc(100vw / 4 - 20px - 20px / 4);
+    height: calc((100vw / 4 - 20px - 20px / 4) * 1.5);
   }
 }
 
 @media screen and (max-width: 640px) {
   ul.movies > li .image img {
-    width: calc(100vw / 3 - 27px);
-    height: calc((100vw / 3 - 27px) * 1.5);
+    width: calc(100vw / 3 - 20px - 20px / 3);
+    height: calc((100vw / 3 - 20px - 20px / 3) * 1.5);
   }
 }
 
@@ -490,8 +490,8 @@ ul.movies > li > .details .bubble {
   }
 
   ul.movies > li .image img {
-    width: calc(100vw / 2 - 30px);
-    height: calc((100vw / 2 - 30px) * 1.5);
+    width: calc(100vw / 2 - 20px - 20px / 2);
+    height: calc((100vw / 2 - 20px - 20px / 2) * 1.5);
   }
 
   ul.movies > li > .details .bubble {
