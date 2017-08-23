@@ -55,7 +55,7 @@ class App extends React.PureComponent {
       watchedIds:    Immutable.Set(JSON.parse(localStorage.getItem("watchedIds"))),
       categoryIds:   Immutable.Set(),
       directorIds:   Immutable.Set(),
-      showHelp:      true,
+      showHelp:      !JSON.parse(localStorage.getItem("seenHelp")),
       showMenu:      false,
       showWatchlist: false,
       showFavorites: false,
@@ -63,6 +63,8 @@ class App extends React.PureComponent {
       showDirectors: false,
       selectedIndex: 0
     };
+
+    localStorage.setItem("seenHelp", true);
   }
 
   //
