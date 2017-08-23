@@ -75,6 +75,10 @@ footer {
   right: -1px;
 }
 
+.action:hover {
+  color: hsl(0, 0%, 100%);
+}
+
 
 header .center:hover * {
   color: hsl(0, 0%, 100%);
@@ -126,9 +130,9 @@ div.directors ul > li {
   background: url(/icons/arrow-angle-pointing-to-left.svg);
   background-size: 100%;
   position: absolute;
-  top: 12px;
+  top: 14px;
   margin-left: -3px;
-  width: 30px; height: 30px;
+  width: 24px; height: 24px;
   transition: all 0.125s ease-out;
 }
 
@@ -496,5 +500,21 @@ ul.movies > li > .details .bubble {
 
   ul.movies > li > .details .bubble {
     left: 0; right: 0;
+  }
+}
+
+@media screen and (max-height: 640px) {
+  .menu {
+    flex-direction: row !important;
+  }
+
+  .menu .separator {
+    border-bottom: none;
+    border-left: 1px solid hsl(0, 0%, 20%);
+    margin: -7px 12px -7px 15px !important;
+  }
+
+  .menu * {
+    font-size: 15px;
   }
 }

@@ -77,7 +77,7 @@ export default class Menu extends React.PureComponent {
     const selectedSortOrder = selectedClass(arg => this.props.sortOrder == arg);
 
     return (
-      <div className={"menu" + (this.props.isOpen ? " open" : "")} style={{display: "flex", flexDirection: "column", position: "fixed", bottom: 0, left: 0, top: 0, padding: "72px 20px 0 20px", background: "hsla(0, 0%, 0%, 0.9)", zIndex: 1000}}
+      <div className={"menu" + (this.props.isOpen ? " open" : "")} style={{display: "flex", flexDirection: "column", position: "fixed", bottom: 0, left: 0, top: 0, padding: "68px 15px 15px 15px", background: "hsla(0, 0%, 0%, 0.9)", zIndex: 1000}}
            onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchEnd}>
         <table>
           <tbody>
@@ -86,7 +86,7 @@ export default class Menu extends React.PureComponent {
             </tr>
             <tr>
               <td className={selectedSortOrder(SortOrder.DESCENDING)} onMouseDown={this.handleSortYearDescending}>&#9634; &nbsp;Year &nbsp;&#8595;</td>
-              <th style={{width: "20px"}}></th>
+              <th style={{width: "15px"}}></th>
               <td className={selectedSortOrder(SortOrder.ASCENDING)} onMouseDown={this.handleSortYearAscending}>&#9634; &nbsp;Year &nbsp;&#8593;</td>
             </tr>
             <tr>
@@ -94,12 +94,12 @@ export default class Menu extends React.PureComponent {
             </tr>
             <tr>
               <td className={selectedProp("showWatchlist")} onMouseDown={this.handleShowWatchlist}>&#9634; &nbsp;Watchlist</td>
-              <th style={{width: "20px"}}></th>
+              <th style={{width: "15px"}}></th>
               <td className={selectedProp("showFavorites")} onMouseDown={this.handleShowFavorites}>&#9634; &nbsp;Favorites</td>
             </tr>
             <tr>
               <td className={selectedProp("showUnwatched")} onMouseDown={this.handleShowUnwatched}>&#9634; &nbsp;Not Seen</td>
-              <th style={{width: "20px"}}></th>
+              <th style={{width: "15px"}}></th>
             </tr>
             <tr>
               <th>Genres</th>
@@ -107,12 +107,16 @@ export default class Menu extends React.PureComponent {
             {this.evenCategories.zipWith((even, odd) => (
               <tr key={even}>
                 <td className={selectedCategory(even[0])} onMouseDown={this.handleChangeCategory(even[0])}>&#9634; &nbsp;{even[1]}</td>
-                <th style={{width: "20px"}}></th>
+                <th style={{width: "15px"}}></th>
                 {odd[1] !== null ? <td className={selectedCategory(odd[0])} onMouseDown={this.handleChangeCategory(odd[0])}>&#9634; &nbsp;{odd[1]}</td> : null}
               </tr>
             ), this.oddCategories)}
           </tbody>
         </table>
+        <div className="separator" style={{flex: 1, borderBottom: "1px solid hsl(0, 0%, 20%)", margin: "0 -7px 15px -7px"}}></div>
+        <div>
+          <div className="action" style={{fontSize: 20, cursor: "pointer"}} onMouseDown={this.props.onShowHelp}><img src="/icons/question-mark.svg" height="14" /> Help</div>
+        </div>
       </div>
     );
   }

@@ -152,7 +152,8 @@ class App extends React.PureComponent {
     //event.stopPropagation();
 
     this.setState(state => ({
-      showHelp: !state.showHelp
+      showHelp: !state.showHelp,
+      showMenu: false,
     }));
   }
 
@@ -276,13 +277,13 @@ class App extends React.PureComponent {
               sortOrder={this.state.sortOrder} showWatchlist={this.state.showWatchlist} showFavorites={this.state.showFavorites} showUnwatched={this.state.showUnwatched}
               onSortYearAscending={this.handleSortYearAscending} onSortYearDescending={this.handleSortYearDescending}
               onShowWatchlist={this.handleShowWatchlist} onShowFavorites={this.handleShowFavorites} onShowUnwatched={this.handleShowUnwatched}
-              onChangeCategory={this.handleChangeCategory} onHideMenu={this.handleHideMenu} />
+              onChangeCategory={this.handleChangeCategory} onHideMenu={this.handleHideMenu} onShowHelp={this.handleToggleHelp} />
         <header>
-          <div id="menu-button" className={selectedState("showMenu")} style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleMenu}>
+          <div id="menu-button" className={selectedState("showMenu")} style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 15px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleMenu}>
             <img src="icons/menu-button.svg" height="25" />
           </div>
-          <div id="help-button" style={{position: "absolute", display: "flex", alignItems: "center", right: 0, top: 0, height: 50, padding: "0 20px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleHelp}>
-            <img src="icons/question-mark.svg" height="25" />
+          <div id="help-button" style={{position: "absolute", display: "flex", alignItems: "center", right: 0, top: 0, height: 50, padding: "0 15px", paddingTop: 2, cursor: "pointer"}} onMouseDown={this.handleToggleHelp}>
+            <img src="icons/search.svg" height="25" />
           </div>
           <div className="center" style={{paddingTop: 5, cursor: "pointer"}} onMouseDown={this.handleToggleDirectors}>
             <span className="title" style={{fontSize: 25, fontWeight: 800}}>
