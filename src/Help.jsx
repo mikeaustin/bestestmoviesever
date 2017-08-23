@@ -25,9 +25,6 @@ class Help extends React.PureComponent {
   }
 
   handleTouchStart = event => {
-    event.preventDefault();
-    event.stopPropagation();
-    
     this.props.onDismiss();
   }
 
