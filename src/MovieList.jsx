@@ -27,6 +27,7 @@ class MovieList extends React.PureComponent {
                                  key={movie.get("index")}
                                  index={movie.get("index")}
                                  id={movie.get("id")}
+                                 hidden={movie.get("hidden")}
                                  title={movie.get("title")}
                                  released={movie.get("released")}
                                  directorIds={movie.get("directors")}

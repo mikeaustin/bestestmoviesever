@@ -56,8 +56,16 @@ export default class Movie extends React.PureComponent {
     document.removeEventListener("scroll", this.handleScroll, false);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.image !== this.props.image) {
+      this.setState({
+        imageLoaded: false
+      });
+    }
+  }
+
   componentDidUpdate() {
-    //console.log("Movie#componentDidUpdate()");
+    console.log("Movie#componentDidUpdate()");
 
     this.loadImageIfNeeded();
 
@@ -136,7 +144,7 @@ export default class Movie extends React.PureComponent {
     const selectedProperty = selectedClass(arg => this.props[arg]);
 
     return (
-      <li ref={li => this.li = li} className={selectedProperty("selected")} data-id={this.props.id} data-index={this.props.index}>
+      <li ref={li => this.li = li} className={selectedProperty("selected")} data-id={this.props.id} data-index={this.props.index} style={{display: this.props.hidden ? "none" : ""}}>
         <h1>{this.props.group}</h1>
         <div style={{position: "relative"}}>
           {stem}

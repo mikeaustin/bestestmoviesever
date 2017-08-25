@@ -44,8 +44,6 @@ class App extends React.PureComponent {
     //   return movie.get("directors").map(directorId => map.update(directors.get(directorId), (count = 0) => count + 1));
     // }, Immutable.Map());
 
-    console.log(this.directors2);
-
     this.directorsSortedByCount = this.directors2.sortBy((movieIds, director) => -movieIds.size);
 
     this.state = {
@@ -152,8 +150,6 @@ class App extends React.PureComponent {
   //
 
   handleToggleMenu = event => {
-    console.log("handleToggleMenu()");
-
     this.setState(state => ({
       showMenu: !state.showMenu,
       showSearch: false
@@ -183,8 +179,6 @@ class App extends React.PureComponent {
   }
 
   handleHideHelp = () => {
-    console.log("handleHideHelp()");
-
     this.setState({
       showHelp: false
     });
@@ -266,6 +260,12 @@ class App extends React.PureComponent {
     ].filter(pair => pair[0]).map(pair => pair[1]);
 
     const sortOrder = state.sortOrder === SortOrder.ASCENDING ? ascending : descending;
+
+    // const grouped = this.props.movies.groupBy(combineEvery(onCriteria));
+    // const visible = grouped.has(true) ? grouped.get(true) : Immutable.List();
+    // const hidden = grouped.has(false) ? grouped.get(false) : Immutable.List();
+
+    // return visible.sort(byReleased(sortOrder)(byTitle())).map(movie => movie.set("hidden", false)).concat(hidden.map(movie => movie.set("hidden", true))).map(withIndex);
 
     //return this.props.movies.filter(combineEvery([onWatchlist, onFavorites, onUnwatched, onCategories, onDirectors])).sort(byReleased(sortOrder)(byTitle())).map(withIndex);
     return this.props.movies.filter(combineEvery(onCriteria)).sort(byReleased(sortOrder)(byTitle())).map(withIndex);

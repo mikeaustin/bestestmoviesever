@@ -45,7 +45,6 @@ export default class Search extends React.PureComponent {
       //}
 
       if (!nextProps.isOpen) {
-        console.log("here");
         this.input.blur();
       }
     }
@@ -70,8 +69,6 @@ export default class Search extends React.PureComponent {
 
     this.input.blur();
 
-    console.log("handleSubmit()");
-
     this.setState({
       query: "",
       results: Immutable.List()
@@ -90,8 +87,6 @@ export default class Search extends React.PureComponent {
   }
 
   render() {
-    console.log(this.props.isOpen);
-
     return (
       <div className={"search" + (this.props.isOpen ? " selected" : "")}>
         <form onSubmit={this.handleSubmit}>
