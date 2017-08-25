@@ -74,6 +74,8 @@ class App extends React.PureComponent {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown, false);
+    document.addEventListener("wheel", this.handleScroll, false);
+    document.addEventListener("touchmove", this.handleScroll, false);
 
     this.selectedItem = document.querySelector(".movies > li.selected");
 
@@ -136,6 +138,29 @@ class App extends React.PureComponent {
       case KeyCode.NUMBER_1:    return this.handleToggleWatched(Number(this.selectedItem.dataset.id));
       case KeyCode.NUMBER_2:    return this.handleToggleWatchlist(Number(this.selectedItem.dataset.id));
       case KeyCode.NUMBER_3:    return this.handleToggleFavorite(Number(this.selectedItem.dataset.id));
+    }
+  }
+
+  handleScroll = event => {
+    if (this.state.showMenu || this.state.showSearch) {
+      if (event.target.className === "action") {
+        console.log(event);
+
+        const offsetParent = event.target.offsetParent;
+        const clientY = event.touches ? event.touches[0].clientY : 0;
+        const deltaY = event.touches ? this.clientY - clientY : event.deltaY;
+
+        if ((deltaY > 0 && offsetParent.offsetHeight + offsetParent.scrollTop >= offsetParent.scrollHeight) ||
+             deltaY < 0 && offsetParent.scrollTop === 0) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        this.clientY = clientY;
+      } else {
+        event.preventDefault();
+        event.stopPropagation();
+      }
     }
   }
 
