@@ -23,7 +23,8 @@ class MovieList extends React.PureComponent {
     return (
       <ul className="movies">
         {this.props.movies.reduce(([released, list], movie) => {
-          const element = <Movie key={movie.get("id")}
+          const element = <Movie xkey={movie.get("id")}
+                                 key={movie.get("index")}
                                  index={movie.get("index")}
                                  id={movie.get("id")}
                                  title={movie.get("title")}

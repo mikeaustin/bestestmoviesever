@@ -113,7 +113,7 @@ export default class Menu extends React.PureComponent {
             ), this.oddCategories)}
           </tbody>
         </table>
-        <div className="separator" style={{flex: 1, borderBottom: "1px solid hsl(0, 0%, 20%)", margin: "0 -7px 15px -7px"}}></div>
+        <div className="separator" style={{flex: 1, borderBottom: "1px solid hsl(0, 0%, 10%)", margin: "0 -7px 15px -7px"}}></div>
         <div>
           <div className="action" style={{fontSize: 20, cursor: "pointer"}} onMouseDown={this.props.onShowHelp}><img src="/icons/question-mark.svg" height="14" /> Help</div>
         </div>

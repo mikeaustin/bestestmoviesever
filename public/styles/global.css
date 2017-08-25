@@ -114,6 +114,7 @@ div.directors ul > li {
   padding: 5px 10px;
 }
 */
+
 /**********************************************************\
 **
 ** Menu
@@ -427,6 +428,58 @@ ul.movies > li > .details .bubble {
 
 /**********************************************************\
 **
+** Search
+**
+\**********************************************************/
+
+.search {
+  position: absolute;
+  right: 0;
+  width: 40px; height: 50px;
+}
+
+.search.selected {
+  right: 0;
+  width: 330px;
+  max-width: calc(100vw - 50px);
+}
+
+.search form {
+  height: 35;
+  margin: 8px 15px 8px 0;
+  background: hsl(0, 0%, 80%);
+  background: right center/25px 25px url(/icons/search.svg) no-repeat;
+}
+
+.search.selected form {
+  margin-right: 45px;
+  padding: 0 15px;
+  border-radius: 17px;
+  background-color: hsl(0, 0%, 80%);
+}
+
+.search form input {
+  cursor: pointer;
+}
+
+.search .results {
+  display: none;
+  overflow-y: auto;
+  xmax-height: calc(100vh - 50px);
+  xmax-height: calc(100vh / 2.6 - 50px);
+  max-height: 230px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 10px hsl(0, 0%, 0%);
+  border-bottom: 1px solid hsl(0, 0%, 10%);
+}
+
+.search.selected .results {
+  display: inherit;
+}
+
+/**********************************************************\
+**
 ** Mobile
 **
 \**********************************************************/
@@ -485,6 +538,10 @@ ul.movies > li > .details .bubble {
 }
 
 @media screen and (max-width: 480px) {
+  .search.selected {
+    width: calc(100vw - 50px);
+  }
+
   .menu table th, .menu table td {
     font-size: 15px;
     height: 30px;
@@ -511,11 +568,15 @@ ul.movies > li > .details .bubble {
 
   .menu .separator {
     border-bottom: none;
-    border-left: 1px solid hsl(0, 0%, 20%);
+    border-left: 1px solid hsl(0, 0%, 10%);
     margin: -7px 12px -7px 15px !important;
   }
 
   .menu * {
     font-size: 15px;
+  }
+
+  x.search .results {
+    max-height: calc(300px);
   }
 }

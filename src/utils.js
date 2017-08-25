@@ -2,6 +2,7 @@ import Immutable from "immutable";
 
 
 export const KeyCode = {
+  ESCAPE:      27,
   ARROW_LEFT:  37,
   ARROW_UP:    38,
   ARROW_RIGHT: 39,
