@@ -129,9 +129,15 @@ class App extends React.PureComponent {
       return;
     }
 
-    event.preventDefault();
-    event.stopPropagation();
-
+    if (!this.state.showSearch) {
+      for (var prop in KeyCode) {
+        if (KeyCode[prop] === event.keyCode) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }
+    }
+    
     switch (event.keyCode) {
       case KeyCode.TAB:         return this.handleToggleMenu();
       case 72:                  return this.handleToggleHelp(); 
