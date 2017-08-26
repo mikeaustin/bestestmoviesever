@@ -50,10 +50,11 @@ class Help extends React.PureComponent {
           </ul>
           <div className="desktop">
             <h1 style={{display: "flex", justifyContent: "center"}}>
-              <span className="bold" data-text="Keyboard Navigation">Keyboard Navigation</span>
+              <span className="bold" data-text="Keyboard Shortcuts">Keyboard Shortcuts</span>
             </h1>
             <ul>
               <li className="desktop">Use the arrow keys to navigate and 1, 2, 3 keys to toggle Seen, Watchlist, and Favorite.</li>
+              <li className="desktop">Press the space bar to search for movies. Press escape to exit search or exit the menu.</li>
             </ul>
           </div>
         </div>

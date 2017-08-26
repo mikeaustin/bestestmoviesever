@@ -74,8 +74,7 @@ class App extends React.PureComponent {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown, false);
-    document.addEventListener("wheel", this.handleScroll, false);
-    document.addEventListener("touchmove", this.handleScroll, false);
+    document.addEventListener("touchmove", this.handleScroll, {passive: false});
 
     this.selectedItem = document.querySelector(".movies > li.selected");
 
@@ -109,28 +108,34 @@ class App extends React.PureComponent {
   //
 
   handleKeyDown = event => {
-    console.log(event.keyCode);
+    console.log(">>>", event.keyCode);
 
-    if (!this.state.showSearch) {
-      for (var prop in KeyCode) {
-        if (KeyCode[prop] === event.keyCode) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      }
+    if (event.keyCode !== 72) {
+      this.setState({
+        showHelp: false
+      });
     }
 
     if (event.keyCode === KeyCode.ESCAPE) {
       this.setState({
         showMenu: false,
         showSearch: false,
-        showHelp: false
       });
 
       return;
     }
 
+    if (this.state.showSearch) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
     switch (event.keyCode) {
+      case KeyCode.TAB:         return this.handleToggleMenu();
+      case 72:                  return this.handleToggleHelp(); 
+      case KeyCode.ENTER:       return this.handleShowSearch();
       case KeyCode.ARROW_LEFT:  return this.updateState(NavigationActions.moveLeft);
       case KeyCode.ARROW_RIGHT: return this.updateState(NavigationActions.moveRight);
       case KeyCode.ARROW_UP:    return this.updateState(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
@@ -177,7 +182,7 @@ class App extends React.PureComponent {
   handleToggleMenu = event => {
     this.setState(state => ({
       showMenu: !state.showMenu,
-      showSearch: false
+      showSearch: false,
     }));
   }
 
@@ -192,7 +197,7 @@ class App extends React.PureComponent {
     this.setState(state => {
       return {
         showSearch: true,
-        showMenu: false
+        showMenu: false,
       };
     });
   }
@@ -200,6 +205,12 @@ class App extends React.PureComponent {
   handleHideMenu = () => {
     this.setState({
       showMenu: false
+    });
+  }
+
+  handleHideSearch = () => {
+    this.setState({
+      showSearch: false
     });
   }
 
@@ -227,7 +238,7 @@ class App extends React.PureComponent {
   handleShowFavorites = () => this.updateState(FilterActions.showFavorites)
   handleShowUnwatched = () => this.updateState(FilterActions.showUnwatched)
   handleChangeCategory = categoryId => this.updateState(FilterActions.changeCategory(categoryId))
-  handleShowMovieIds = movieIds => this.updateState(state => ({filteredIds: movieIds, showSearch: false}))
+  handleShowMovieIds = movieIds => this.updateState(state => ({filteredIds: movieIds, showSearch: false, selectedIndex: 0}))
 
   handleToggleDirectors = event => {
     this.setState(state => ({showDirectors: !state.showDirectors}));
@@ -336,7 +347,7 @@ class App extends React.PureComponent {
             <img src="icons/menu-button.svg" height="25" />
           </div>
 
-          <Search isOpen={this.state.showSearch} movies={this.state.movies} directors={rawDirectors} onShowSearch={this.handleShowSearch} onShowMovieIds={this.handleShowMovieIds} />
+          <Search isOpen={this.state.showSearch} movies={this.state.movies} directors={rawDirectors} onShowSearch={this.handleShowSearch} onHideSearch={this.handleHideSearch} onShowMovieIds={this.handleShowMovieIds} />
 
           {/*<div id="search-button" style={{position: "absolute", display: "flex", alignItems: "center", right: 0, top: 0, height: 50, padding: "0 15px", paddingTop: 2, cursor: "pointer"}}
                ref={element => this.searchButton = element} onClick={this.handleToggleSearch}>

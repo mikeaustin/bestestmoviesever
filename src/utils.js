@@ -2,15 +2,17 @@ import Immutable from "immutable";
 
 
 export const KeyCode = {
+  TAB:          9,
+  ENTER:       13,
   ESCAPE:      27,
+  SPACE:       32,
   ARROW_LEFT:  37,
   ARROW_UP:    38,
   ARROW_RIGHT: 39,
   ARROW_DOWN:  40,
   NUMBER_1:    49,
   NUMBER_2:    50,
-  NUMBER_3:    51,
-  SPACE:       32
+  NUMBER_3:    51
 };
 
 export const SortOrder = {

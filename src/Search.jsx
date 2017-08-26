@@ -36,6 +36,27 @@ export default class Search extends React.PureComponent {
   }
 
   componentDidMount() {
+    this.results.addEventListener("touchstart", this.handleTouchStart, {passive: false});
+    this.results.addEventListener("wheel", this.handleScroll, {passive: false});
+    this.results.addEventListener("touchmove", this.handleScroll, {passive: false});
+  }
+
+  handleTouchStart = event => {
+    this.clientY = event.touches ? event.touches[0].clientY : 0;
+  }
+
+  handleScroll = event => {
+    const element = this.results;
+    const clientY = event.touches ? event.touches[0].clientY : 0;
+    const deltaY = event.touches ? this.clientY - clientY : event.deltaY;
+
+    if ((deltaY > 0 && element.offsetHeight + element.scrollTop >= element.scrollHeight) ||
+        (deltaY < 0 && element.scrollTop <= 0)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    this.clientY = clientY;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -47,7 +68,9 @@ export default class Search extends React.PureComponent {
         });
       //}
 
-      if (!nextProps.isOpen) {
+      if (nextProps.isOpen) {
+        this.input.focus();
+      } else {
         this.input.blur();
       }
     }
@@ -61,6 +84,8 @@ export default class Search extends React.PureComponent {
       query: query,
       results: results
     }));
+
+    this.results.scrollTop = 0;
 
     //console.log("here", "[" + event.target.value + "]");
 
@@ -90,6 +115,9 @@ export default class Search extends React.PureComponent {
   }
 
   handleBlur = event => {
+    console.log("here");
+
+    this.props.onHideSearch();
   }
 
   render() {
@@ -99,7 +127,7 @@ export default class Search extends React.PureComponent {
           <input type="text" value={this.state.query} autoCorrect="off" autoCapitalize="none" style={{height: 35, fontSize: 20, paddingTop: 2, width: "100%", background: "transparent", color: "hsl(0, 0%, 20%)"}}
                  ref={element => this.input = element} onClick={this.handleClick} onKeyDown={this.handleKeyDown} onChange={this.handleChange} onBlur={this.handleBlur} />
         </form>
-        <div className="results" ref={element => this.results = element} style={{width: "100%", background: "hsla(0, 0%, 0%, 0.9)", borderLeft: "1px solid hsl(0, 0%, 10%)", padding: "10px 0"}} onScroll={event => event.preventDefault()}>
+        <div className="results" ref={element => this.results = element} style={{width: "100%", background: "hsla(0, 0%, 0%, 0.9)", borderLeft: "1px solid hsl(0, 0%, 10%)", padding: "10px 0"}}>
           <div></div>
           {this.state.results.map(movie => (
             <Item key={movie.get("id")} id={movie.get("id")} className="action" title={movie.get("title")} style={{padding: "7px 15px", fontSize: 20, cursor: "pointer"}} onShowMovieIds={this.props.onShowMovieIds} />
