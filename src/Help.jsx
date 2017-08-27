@@ -54,7 +54,7 @@ class Help extends React.PureComponent {
             </h1>
             <ul>
               <li className="desktop">Use the arrow keys to navigate and 1, 2, 3 keys to toggle Seen, Watchlist, and Favorite.</li>
-              <li className="desktop">Press the space bar to search for movies. Press escape to exit search or exit the menu.</li>
+              <li className="desktop">Press Enter to search for movies. Press Escape to exit search or exit the menu.</li>
             </ul>
           </div>
         </div>
