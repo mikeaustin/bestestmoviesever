@@ -110,7 +110,7 @@ class App extends React.PureComponent {
   handleKeyDown = event => {
     console.log(">>>", event.keyCode);
 
-    if (event.keyCode !== 72) {
+    if (event.keyCode !== 32) {
       this.setState({
         showHelp: false
       });
@@ -149,6 +149,7 @@ class App extends React.PureComponent {
     switch (event.keyCode) {
       case 76: case KeyCode.TAB:      return this.handleToggleMenu();
       case  0: case KeyCode.ENTER:    return this.handleShowSearch();
+      case 32:                        return this.handleToggleHelp();
       case KeyCode.ARROW_LEFT:        return this.updateState(NavigationActions.moveLeft);
       case KeyCode.ARROW_RIGHT:       return this.updateState(NavigationActions.moveRight);
       case KeyCode.ARROW_UP:          return this.updateState(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
