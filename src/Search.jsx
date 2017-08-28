@@ -10,7 +10,7 @@ class Item extends React.PureComponent {
 
   render() {
     return (
-      <div className="action" style={{padding: "7px 15px", paddingRight: 30, marginRight: 15, fontSize: 20, xlineHeight: "1.5em", cursor: "pointer", background: "right 6px/20px 20px url(/icons/analogic-video-camera.svg) no-repeat"}} onMouseDown={this.handleMouseDown}>{this.props.title}</div>
+      <div className="action" style={{padding: "7px 15px", paddingRight: 30, marginRight: 15, fontSize: 20, xlineHeight: "1.5em", cursor: "pointer", background: "right 6px/20px 20px url(icons/analogic-video-camera.svg) no-repeat"}} onMouseDown={this.handleMouseDown}>{this.props.title}</div>
     );
   }
 

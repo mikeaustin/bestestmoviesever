@@ -129,26 +129,33 @@ class App extends React.PureComponent {
       return;
     }
 
-    if (!this.state.showSearch) {
-      for (var prop in KeyCode) {
-        if (KeyCode[prop] === event.keyCode) {
+    // if (!this.state.showSearch) {
+    //   for (var prop in KeyCode) {
+    //    if (KeyCode[prop] === event.keyCode) {
           event.preventDefault();
           event.stopPropagation();
-        }
+    //    }
+    //   }
+    // }
+
+    if (this.state.showMenu) {
+      switch (event.keyCode) {
+        case 89: case KeyCode.NUMBER_1: return this.handleShowUnwatched();
+        case 74: case KeyCode.NUMBER_2: return this.handleShowWatchlist();
+        case 85: case KeyCode.NUMBER_3: return this.handleShowFavorites();
       }
     }
-    
+
     switch (event.keyCode) {
-      case KeyCode.TAB:         return this.handleToggleMenu();
-      case 72:                  return this.handleToggleHelp(); 
-      case KeyCode.ENTER:       return this.handleShowSearch();
-      case KeyCode.ARROW_LEFT:  return this.updateState(NavigationActions.moveLeft);
-      case KeyCode.ARROW_RIGHT: return this.updateState(NavigationActions.moveRight);
-      case KeyCode.ARROW_UP:    return this.updateState(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
-      case KeyCode.ARROW_DOWN:  return this.updateState(NavigationActions.moveDown(this.allItems, this.selectedItem, this.minOffsetLeft));
-      case KeyCode.NUMBER_1:    return this.handleToggleWatched(Number(this.selectedItem.dataset.id));
-      case KeyCode.NUMBER_2:    return this.handleToggleWatchlist(Number(this.selectedItem.dataset.id));
-      case KeyCode.NUMBER_3:    return this.handleToggleFavorite(Number(this.selectedItem.dataset.id));
+      case 76: case KeyCode.TAB:      return this.handleToggleMenu();
+      case  0: case KeyCode.ENTER:    return this.handleShowSearch();
+      case KeyCode.ARROW_LEFT:        return this.updateState(NavigationActions.moveLeft);
+      case KeyCode.ARROW_RIGHT:       return this.updateState(NavigationActions.moveRight);
+      case KeyCode.ARROW_UP:          return this.updateState(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
+      case KeyCode.ARROW_DOWN:        return this.updateState(NavigationActions.moveDown(this.allItems, this.selectedItem, this.minOffsetLeft));
+      case 89: case KeyCode.NUMBER_1: return this.handleToggleWatched(Number(this.selectedItem.dataset.id));
+      case 74: case KeyCode.NUMBER_2: return this.handleToggleWatchlist(Number(this.selectedItem.dataset.id));
+      case 85: case KeyCode.NUMBER_3: return this.handleToggleFavorite(Number(this.selectedItem.dataset.id));
     }
   }
 

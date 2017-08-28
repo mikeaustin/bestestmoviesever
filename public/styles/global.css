@@ -129,7 +129,7 @@ div.directors ul > li {
 #menu-button::before {
   content: "";
   opacity: 0.0;
-  background: url(/icons/arrow-angle-pointing-to-left.svg);
+  background: url(../icons/arrow-angle-pointing-to-left.svg);
   background-size: 100%;
   position: absolute;
   top: 14px;
@@ -316,15 +316,15 @@ ul.movies > li ul.actions li {
 */
 
 ul.movies > li ul.actions li.watchlist {
-  background-image: url(/icons/numbered-items.svg);
+  background-image: url(../icons/numbered-items.svg);
 }
 
 ul.movies > li ul.actions li.watched {
-  background-image: url(/icons/verification-sign.svg);
+  background-image: url(../icons/verification-sign.svg);
 }
 
 ul.movies > li ul.actions li.favorite {
-  background-image: url(/icons/heart.svg);
+  background-image: url(../icons/heart.svg);
 }
 
 /*ul.movies > li ul.actions li.watchlist:active {
@@ -333,21 +333,21 @@ ul.movies > li ul.actions li.favorite {
 */
 
 ul.movies > li ul.actions li.watchlist.selected {
-  background-image: url(/icons/numbered-items-selected.svg);
+  background-image: url(../icons/numbered-items-selected.svg);
 }
 
 ul.movies > li ul.actions li.favorite.selected {
-  background-image: url(/icons/heart-selected.svg);
+  background-image: url(../icons/heart-selected.svg);
 }
 
 ul.movies > li ul.actions li.watched.selected {
-  background-image: url(/icons/verification-sign-selected.svg);
+  background-image: url(../icons/verification-sign-selected.svg);
 }
 
 footer {
-  background: url(/icons/numbered-items-selected.svg),
-              url(/icons/heart-selected.svg),
-              url(/icons/verification-sign-selected.svg);
+  background: url(../icons/numbered-items-selected.svg),
+              url(../icons/heart-selected.svg),
+              url(../icons/verification-sign-selected.svg);
 }
 
 ul.movies > li > .details {
@@ -449,7 +449,7 @@ ul.movies > li > .details .bubble {
   height: 35;
   margin: 8px 15px 8px 0;
   background: hsl(0, 0%, 80%);
-  background: right center/25px 25px url(/icons/search.svg) no-repeat;
+  background: right center/25px 25px url(../icons/search.svg) no-repeat;
 }
 
 .search.selected form {
