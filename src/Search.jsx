@@ -77,7 +77,7 @@ export default class Search extends React.PureComponent {
   }
 
   handleChange = event => {
-    const query = event.target.value;
+    const query = event.target.value.toLowerCase();
     const results = query !== "" ? this.movies.filter(movie => movie.get("lowerCaseTitle").includes(query)) : Immutable.List();
 
     this.setState(state => ({
@@ -124,7 +124,7 @@ export default class Search extends React.PureComponent {
     return (
       <div className={"search" + (this.props.isOpen ? " selected" : "")}>
         <form action="" onSubmit={this.handleSubmit}>
-          <input type="text" name="search" value={this.state.query} autoCorrect="off" autoCapitalize="none" style={{height: 35, fontSize: 20, paddingTop: 2, width: "100%", background: "transparent", color: "hsl(0, 0%, 20%)"}}
+          <input type="text" name="search" value={this.state.query} autoCorrect="off" autoCapitalize="none" autoComplete="off" style={{height: 35, fontSize: 20, paddingTop: 2, width: "100%", background: "transparent", color: "hsl(0, 0%, 20%)"}}
                  ref={element => this.input = element} onClick={this.handleClick} onKeyDown={this.handleKeyDown} onChange={this.handleChange} onBlur={this.handleBlur} />
         </form>
         <div className="results" ref={element => this.results = element} style={{width: "100%", background: "hsla(0, 0%, 0%, 0.9)", borderLeft: "1px solid hsl(0, 0%, 10%)", padding: "10px 0"}}>
