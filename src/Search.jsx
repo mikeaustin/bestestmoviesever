@@ -123,12 +123,11 @@ export default class Search extends React.PureComponent {
   render() {
     return (
       <div className={"search" + (this.props.isOpen ? " selected" : "")}>
-        <form onSubmit={this.handleSubmit}>
-          <input type="text" value={this.state.query} autoCorrect="off" autoCapitalize="none" style={{height: 35, fontSize: 20, paddingTop: 2, width: "100%", background: "transparent", color: "hsl(0, 0%, 20%)"}}
+        <form action="" onSubmit={this.handleSubmit}>
+          <input type="text" name="search" value={this.state.query} autoCorrect="off" autoCapitalize="none" style={{height: 35, fontSize: 20, paddingTop: 2, width: "100%", background: "transparent", color: "hsl(0, 0%, 20%)"}}
                  ref={element => this.input = element} onClick={this.handleClick} onKeyDown={this.handleKeyDown} onChange={this.handleChange} onBlur={this.handleBlur} />
         </form>
         <div className="results" ref={element => this.results = element} style={{width: "100%", background: "hsla(0, 0%, 0%, 0.9)", borderLeft: "1px solid hsl(0, 0%, 10%)", padding: "10px 0"}}>
-          <div></div>
           {this.state.results.map(movie => (
             <Item key={movie.get("id")} id={movie.get("id")} className="action" title={movie.get("title")} style={{padding: "7px 15px", fontSize: 20, cursor: "pointer"}} onShowMovieIds={this.props.onShowMovieIds} />
           ))}

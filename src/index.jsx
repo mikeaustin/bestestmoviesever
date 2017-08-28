@@ -129,14 +129,14 @@ class App extends React.PureComponent {
       return;
     }
 
-    // if (!this.state.showSearch) {
-    //   for (var prop in KeyCode) {
-    //    if (KeyCode[prop] === event.keyCode) {
+    if (!this.state.showSearch) {
+      for (var prop in KeyCode) {
+       if (KeyCode[prop] === event.keyCode) {
           event.preventDefault();
           event.stopPropagation();
-    //    }
-    //   }
-    // }
+       }
+      }
+    }
 
     if (this.state.showMenu) {
       switch (event.keyCode) {
@@ -348,7 +348,7 @@ class App extends React.PureComponent {
     ) : null;
 
     return (
-      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}}>
+      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} data-user-agent={navigator.userAgent}>
         <Help isOpen={this.state.showHelp} onDismiss={this.handleHideHelp}/>
         <Menu categories={this.props.categories} categoryIds={this.state.categoryIds} isOpen={this.state.showMenu}
               sortOrder={this.state.sortOrder} showWatchlist={this.state.showWatchlist} showFavorites={this.state.showFavorites} showUnwatched={this.state.showUnwatched}

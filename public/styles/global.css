@@ -482,6 +482,43 @@ ul.movies > li > .details .bubble {
 
 /**********************************************************\
 **
+** Keyboard
+**
+\**********************************************************/
+
+.keyboard {
+  display: none;
+  width: 100%;
+  max-width: 1280px;
+  padding: 5px 2px;
+  background: hsl(0, 0%, 10%);
+  z-index: 10001;
+  border-top: 1px solid hsl(0, 0%, 20%);
+  box-shadow: 0 0 20px hsl(0, 0%, 0%);
+}
+
+.keyboard .row {
+  display: flex;
+  xjustify-content: space-around;
+}
+
+.keyboard .key {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  xwidth: 33px; height: 40px;
+  margin: 5px 2px;
+  background: hsl(0, 0%, 0%);
+  text-align: center;
+  font-size: 20px;
+  flex: 1;
+  xborder-top: 1px solid hsl(0, 0%, 12%);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/**********************************************************\
+**
 ** Mobile
 **
 \**********************************************************/
