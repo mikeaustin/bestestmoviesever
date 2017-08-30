@@ -139,7 +139,7 @@ export default class Movie extends React.PureComponent {
       <div className="details">
         <div className="bubble">
           <div className="title" style={{fontSize: 20, fontWeight: 700, marginBottom: 8, textAlign: "center"}}>{this.props.title}</div>
-          <div className="extra" style={{fontSize: 15, fontWeight: 400, textAlign: "center"}}>
+          <div className="extra" style={{fontSize: 20, fontWeight: 400, textAlign: "center"}}>
             {this.props.released}
             &nbsp; &#9724;&#xfe0e; &nbsp;
             {this.props.directorIds ? this.props.directorIds.map(id => this.props.directors.get(id)).join(", ") : "Unknown"}
