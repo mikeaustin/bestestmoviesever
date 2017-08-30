@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Immutable from "immutable";
 import smoothScroll from "smoothscroll";
+import UAParser from "ua-parser-js";
 
 import rawMovies from "./movies";
 import rawDirectors from "./directors";
@@ -36,7 +37,7 @@ class App extends React.PureComponent {
     //   return map.update(directors.get(movie.get("directors").get(0)), (count = 0) => count + 1)
     // }, Immutable.Map());
 
-    this.directors2 = this.props.movies.reduce((map, movie) => {
+    this.directors = this.props.movies.reduce((map, movie) => {
       return movie.get("directors").reduce((map, directorId) => map.update(directorId, (movieIds = Immutable.List()) => movieIds.push(movie.get("id"))), map);
     }, Immutable.Map());
 
@@ -44,7 +45,7 @@ class App extends React.PureComponent {
     //   return movie.get("directors").map(directorId => map.update(directors.get(directorId), (count = 0) => count + 1));
     // }, Immutable.Map());
 
-    this.directorsSortedByCount = this.directors2.sortBy((movieIds, director) => -movieIds.size);
+    this.directorsSortedByCount = this.directors.sortBy((movieIds, director) => -movieIds.size);
 
     this.state = {
       movies:        this.props.movies.sort(byReleased(descending)(byTitle())).map(withIndex),

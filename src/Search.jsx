@@ -10,7 +10,7 @@ class Item extends React.PureComponent {
 
   render() {
     return (
-      <div className="action" style={{padding: "7px 15px", paddingRight: 30, marginRight: 15, fontSize: 20, xlineHeight: "1.5em", cursor: "pointer", background: "right 6px/20px 20px url(icons/analogic-video-camera.svg) no-repeat"}} onMouseDown={this.handleMouseDown}>{this.props.title}</div>
+      <div className={"action" + " " + this.props.type} style={{padding: "7px 15px", paddingRight: 30, marginRight: 15, fontSize: 20, xlineHeight: "1.5em", cursor: "pointer"}} onMouseDown={this.handleMouseDown}>{this.props.title}</div>
     );
   }
 
@@ -22,13 +22,14 @@ export default class Search extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.movies = this.props.movies.map(movie => movie.set("type", "movie").set("lowerCaseTitle", movie.get("title").toLowerCase()));
+    this.directors = this.props.directors.map(director => Immutable.Map([["type", "director"], ["id", director], ["title", director], ["lowerCaseTitle", director.toLowerCase()]]));
+    this.combined = this.movies.concat(this.directors).sortBy(item => item.get("lowerCaseTitle"));
+
     this.state = {
       query: "",
-      results: Immutable.List()
+      results: this.movies
     };
-
-    this.movies = this.props.movies.sortBy(movie => movie.get("title")).map(movie => movie.set("lowerCaseTitle", movie.get("title").toLowerCase()));
-    //this.directors = this.props.directors.sortBy(director => director).map(director => director.set("lowerCaseName", director.toLowerCase()));
   }
 
   handleKeyDown = event => {
@@ -62,10 +63,10 @@ export default class Search extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.isOpen !== this.props.isOpen) {
       //if (nextProps.isOpen) {
-        this.setState({
-          query: "",
-          results: Immutable.List(),
-        });
+        // this.setState({
+        //   query: "",
+        //   results: Immutable.List(),
+        // });
       //}
 
       if (nextProps.isOpen) {
@@ -78,7 +79,8 @@ export default class Search extends React.PureComponent {
 
   handleChange = event => {
     const query = event.target.value.toLowerCase();
-    const results = query !== "" ? this.movies.filter(movie => movie.get("lowerCaseTitle").includes(query)) : Immutable.List();
+    //const results = query !== "" ? this.movies.filter(movie => movie.get("lowerCaseTitle").includes(query)) : Immutable.List();
+    const results = this.movies.filter(movie => movie.get("lowerCaseTitle").includes(query));
 
     this.setState(state => ({
       query: query,
@@ -86,10 +88,6 @@ export default class Search extends React.PureComponent {
     }));
 
     this.results.scrollTop = 0;
-
-    //console.log("here", "[" + event.target.value + "]");
-
-    // this.props.onShowMovieIds(query !== "" && results.isEmpty() ? Immutable.List([null]) : results.map(movie => movie.get("id")));
   }
 
   handleSubmit = event => {
@@ -97,10 +95,10 @@ export default class Search extends React.PureComponent {
 
     this.input.blur();
 
-    this.setState({
-      query: "",
-      results: Immutable.List()
-    })
+    // this.setState({
+    //   query: "",
+    //   results: Immutable.List()
+    // })
 
     this.props.onShowMovieIds(this.state.results.map(movie => movie.get("id")));
   }
@@ -115,8 +113,6 @@ export default class Search extends React.PureComponent {
   }
 
   handleBlur = event => {
-    console.log("here");
-
     this.props.onHideSearch();
   }
 
@@ -124,12 +120,13 @@ export default class Search extends React.PureComponent {
     return (
       <div className={"search" + (this.props.isOpen ? " selected" : "")}>
         <form action="" onSubmit={this.handleSubmit}>
-          <input type="text" name="search" value={this.state.query} autoCorrect="off" autoCapitalize="none" autoComplete="off" style={{height: 35, fontSize: 20, paddingTop: 2, width: "100%", background: "transparent", color: "hsl(0, 0%, 20%)"}}
+          <input type="text" name="search" value={this.state.query} autoCorrect="off" autoCapitalize="none" autoComplete="off"
+                 style={{height: 35, fontSize: 20, paddingTop: 2, width: "100%", background: "transparent", color: "hsl(0, 0%, 20%)"}}
                  ref={element => this.input = element} onClick={this.handleClick} onKeyDown={this.handleKeyDown} onChange={this.handleChange} onBlur={this.handleBlur} />
         </form>
         <div className="results" ref={element => this.results = element} style={{width: "100%", background: "hsla(0, 0%, 0%, 0.9)", borderLeft: "1px solid hsl(0, 0%, 10%)", padding: "10px 0"}}>
           {this.state.results.map(movie => (
-            <Item key={movie.get("id")} id={movie.get("id")} className="action" title={movie.get("title")} style={{padding: "7px 15px", fontSize: 20, cursor: "pointer"}} onShowMovieIds={this.props.onShowMovieIds} />
+            <Item key={movie.get("id")} id={movie.get("id")} type={movie.get("type")} title={movie.get("title")} style={{padding: "7px 15px", fontSize: 20, cursor: "pointer"}} onShowMovieIds={this.props.onShowMovieIds} />
           ))}
         </div>
       </div>

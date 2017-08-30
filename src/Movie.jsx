@@ -1,10 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import smoothScroll from "smoothscroll";
+import _smoothScroll from "smoothscroll";
 
 import { selectedClass } from "./utils";
 
+var smoothScroll = _smoothScroll;
+
+if (navigator.userAgent.includes("armv7l")) {
+  smoothScroll = top => window.scrollTo(0, top);
+}
 
 class ActionButton extends React.PureComponent {
 
@@ -102,6 +107,8 @@ export default class Movie extends React.PureComponent {
 
   handleClick = (event) => {
     this.props.onSelectIndex(this.props.index);
+
+    //window.location = "itmss://itunes.apple.com/us/movie/the-matrix/id271469518";
   }
 
   handleToggleWatchlist = (movieId) => {

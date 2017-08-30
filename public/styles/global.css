@@ -480,6 +480,14 @@ ul.movies > li > .details .bubble {
   display: inherit;
 }
 
+.search .results .action {
+  background: right 6px/20px 20px url(../icons/analogic-video-camera.svg) no-repeat;
+}
+
+.search .results .action.director {
+  background-image: url(../icons/clapper.svg);
+}
+
 /**********************************************************\
 **
 ** Keyboard
@@ -522,6 +530,10 @@ ul.movies > li > .details .bubble {
 ** Mobile
 **
 \**********************************************************/
+
+main div[data-user-agent*='armv7l'] * {
+  transition: none !important;
+}
 
 @media screen and (min-width: 1025px) {
   #help-modal .mobile {
