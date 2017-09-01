@@ -598,7 +598,8 @@ main div[data-user-agent*='armv7l'] * {
     height: 30px;
   }
 
-  .movies > li > .details .bubble .title {
+  .movies > li > .details .bubble .title,
+  .movies > li > .details .bubble .extra {
     font-size: 15px !important;
   }
 
