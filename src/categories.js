@@ -19,7 +19,8 @@ const categories = [
   { id: 14, name: "Mystery" },
   { id: 15, name: "Family" },
   { id: 16, name: "Sport" },
-  { id: 17, name: "War" }
+  { id: 17, name: "War" },
+  { id: 18, name: "Biography" },
 ];
 
 export default categories;

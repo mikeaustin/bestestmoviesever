@@ -231,7 +231,18 @@ const movies = [
   { id: 226, title: "A Beautiful Mind", released: 2001, directors: [147], categories: [1] },
   { id: 227, title: "Apollo 13", released: 1995, directors: [147], categories: [6, 1, 13] },
   { id: 228, title: "American History X", released: 1998, directors: [148], categories: [3, 1] },
-  { id: 229, title: "Ocean's Eleven", released: 2001, directors: [149], categories: [3, 5] }
+  { id: 229, title: "Ocean's Eleven", released: 2001, directors: [149], categories: [3, 5] },
+  { id: 230, title: "The Burbs", released: 1989, directors: [150], categories: [2, 14, 5] },
+  { id: 231, title: "The Adventures of Buckaroo Banzai", released: 1984, directors: [151], categories: [6, 2, 12] },
+  { id: 232, title: "Sneakers", released: 1992, directors: [152], categories: [2, 3, 1] },
+  { id: 233, title: "Evolution", released: 2001, directors: [83], categories: [2, 0] },
+  { id: 234, title: "Men at Work", released: 1990, directors: [153], categories: [4, 2, 3] },
+  { id: 235, title: "Dune", released: 1984, directors: [154], categories: [4, 6, 0] },
+  { id: 236, title: "The Secret Life of Pets", released: 2016, directors: [155, 156], categories: [11, 6, 2] },
+  { id: 237, title: "Deadpool", released: 2016, directors: [157], categories: [4, 6, 2] },
+  { id: 238, title: "Wreck-It Ralph", released: 2012, directors: [158], categories: [11, 6, 2] },
+  { id: 239, title: "Ready Player One", released: 2018, directors: [5], categories: [4, 6, 0] },
+  { id: 240, title: "Bohemian Rhapsody", released: 2018, directors: [143], categories: [18, 1, 9] },
 ];
 
 export default movies;
