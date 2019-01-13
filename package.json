@@ -6,6 +6,7 @@
   "main": "index.jsx",
   "author": "Mike Austin <mike@mike-austin.com>",
   "scripts": {
+    "start": "webpack-dev-server --content-base public/ --host 0.0.0.0",
     "build": "webpack -p",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
