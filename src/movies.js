@@ -243,6 +243,15 @@ const movies = [
   { id: 238, title: "Wreck-It Ralph", released: 2012, directors: [158], categories: [11, 6, 2] },
   { id: 239, title: "Ready Player One", released: 2018, directors: [5], categories: [4, 6, 0] },
   { id: 240, title: "Bohemian Rhapsody", released: 2018, directors: [143], categories: [18, 1, 9] },
+  { id: 241, title: "Judge Dredd", released: 1995, directors: [159], categories: [4, 3, 0] },
+  { id: 242, title: "Dredd", released: 2012, directors: [160], categories: [4, 3, 0] },
+  { id: 243, title: "Creed", released: 2015, directors: [161], categories: [1, 16] },
+  { id: 244, title: "The Lego Batman Movie", released: 2017, directors: [162], categories: [11, 4, 2] },
+  { id: 245, title: "Baby Driver", released: 2017, directors: [163], categories: [4, 3, 1] },
+  { id: 246, title: "Guardians of the Galaxy", released: 2014, directors: [164], categories: [4, 6, 2, 0] },
+  { id: 247, title: "John Wick", released: 2014, directors: [165], categories: [4, 3, 5] },
+  { id: 248, title: "The Ninth Gate", released: 1999, directors: [166], categories: [14, 5] },
+  { id: 249, title: "The Good, The Bad, and the Ugly", image: "The_Good_The_Bad_and_the_Ugly", released: 1966, directors: [167], categories: [7] },
 ];
 
 export default movies;
