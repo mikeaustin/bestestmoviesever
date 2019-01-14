@@ -252,6 +252,16 @@ const movies = [
   { id: 247, title: "John Wick", released: 2014, directors: [165], categories: [4, 3, 5] },
   { id: 248, title: "The Ninth Gate", released: 1999, directors: [166], categories: [14, 5] },
   { id: 249, title: "The Good, The Bad, and the Ugly", image: "The_Good_The_Bad_and_the_Ugly", released: 1966, directors: [167], categories: [7] },
+  { id: 250, title: "Game Night", released: 2018, directors: [168, 169], categories: [4, 2, 3] },
+  { id: 251, title: "Rampage", released: 2018, directors: [170], categories: [4, 6, 0] },
+  { id: 252, title: "Pacific Rim", released: 2013, directors: [106], categories: [4, 6, 0] },
+  { id: 253, title: "Early Man", released: 2018, directors: [171], categories: [11, 6, 2] },
+  { id: 254, title: "Kingsman: The Secret Service", image: "Kingsman_The_Secret_Service", released: 2014, directors: [17], categories: [4, 6, 2] },
+  { id: 255, title: "Sideways", released: 2004, directors: [172], categories: [2, 1, 12] },
+  { id: 256, title: "Suicide Squad", released: 2016, directors: [173], categories: [4, 6, 10] },
+  { id: 257, title: "The Revenant", released: 2015, directors: [174], categories: [4, 6, 18] },
+  { id: 258, title: "Pixels", released: 2015, directors: [92], categories: [4, 2, 0] },
+  { id: 259, title: "Big Hero 6", released: 2014, directors: [175, 176], categories: [11, 4, 6] },
 ];
 
 export default movies;
