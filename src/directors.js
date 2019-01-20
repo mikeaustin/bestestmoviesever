@@ -1,6 +1,5 @@
 import Immutable from "immutable";
 
-
 const directors2 = [
   { id: 0, name: "Ridley Scott" },
   { id: 1, name: "James Cameron" },
@@ -334,6 +333,14 @@ const directors = Immutable.Map([
   [174, "Alejandro G. Iñárritu"],
   [175, "Don Hall"],
   [176, "Chris Williams"],
+  [177, "Danny Leiner"],
+  [178, "Seth Gordon"],
+  [179, "Dexter Fletcher"],
+  [180, "Graham Annable"],
+  [181, "Anthony Stacchi"],
+  [182, "John Fortenberry"],
+  [183, "Iain Softley"],
+  [184, "Gavin O'Connor"],
 ]);
 
 export default directors;

@@ -1,6 +1,5 @@
 import Immutable from "immutable";
 
-
 const categories = [
   { id: 0, name: "Sci-Fi" },
   { id: 1, name: "Drama" },

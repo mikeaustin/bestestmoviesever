@@ -84,7 +84,9 @@ export default class Movie extends React.PureComponent {
 
   loadImageIfNeeded() {
     if (!this.state.imageURL && this.li.offsetTop < window.innerHeight + window.scrollY) {
-      const imageName = this.props.image ? this.props.image : this.props.title.replace(/ /g, "_");
+      const imageName = this.props.image
+        ? this.props.image
+        : this.props.title.replace(/[^\d\w\s&.-]/g, "").replace(/ /g, "_");
       const baseURL = location.origin === "http://bestestmoviesever.com" ? "http://d1rus1jxo7361x.cloudfront.net/" : "";
 
       this.img.src = baseURL + "images/" + imageName + ".jpg";
