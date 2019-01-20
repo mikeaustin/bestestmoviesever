@@ -273,6 +273,15 @@ const movies = [
   { id: 268, title: "A Night at the Roxbury", released: 1998, directors: [182], categories: [2, 9, 12] },
   { id: 269, title: "Hackers", released: 1995, directors: [183], categories: [2, 3, 1] },
   { id: 270, title: "The Accountant", released: 2016, directors: [184], categories: [4, 3, 1] },
+  { id: 271, title: "Machete", released: 2010, directors: [185, 8], categories: [4, 3, 5] },
+  { id: 272, title: "Despicable Me", released: 2010, directors: [186, 155], categories: [11, 2, 15] },
+  { id: 273, title: "The Equalizer", released: 2014, directors: [187], categories: [4, 3, 5] },
+  { id: 274, title: "Oblivion", released: 2013, directors: [188], categories: [4, 6, 14] },
+  { id: 275, title: "Escape Plan", released: 2013, directors: [189], categories: [4, 3, 14] },
+  { id: 276, title: "Man of Steel", released: 2013, directors: [77], categories: [4, 6, 10] },
+  { id: 277, title: "Eternal Sunshine of the Spotless Mind", released: 2004, directors: [190], categories: [1, 12, 0] },
+  { id: 278, title: "Shrek", released: 2001, directors: [191, 192], categories: [11, 6, 2] },
+  { id: 279, title: "The Pink Panther", released: 1963, directors: [193], categories: [2, 3, 12] },
 ];
 
 export default movies;
