@@ -282,6 +282,16 @@ const movies = [
   { id: 277, title: "Eternal Sunshine of the Spotless Mind", released: 2004, directors: [190], categories: [1, 12, 0] },
   { id: 278, title: "Shrek", released: 2001, directors: [191, 192], categories: [11, 6, 2] },
   { id: 279, title: "The Pink Panther", released: 1963, directors: [193], categories: [2, 3, 12] },
+  { id: 280, title: "Cloverfield", released: 2008, directors: [194], categories: [4, 8, 0] },
+  { id: 281, title: "The Shape of Water", released: 2017, directors: [106], categories: [6, 1, 10] },
+  { id: 282, title: "Atomic Blonde", released: 2017, directors: [195], categories: [4, 14, 5] },
+  { id: 283, title: "Killer Klowns from Outer Space", released: 1988, directors: [196], categories: [2, 8, 0] },
+  { id: 284, title: "Psycho", released: 1960, directors: [197], categories: [8, 14, 5] },
+  { id: 285, title: "Night at the Museum", released: 2006, directors: [198], categories: [6, 2, 15] },
+  { id: 286, title: "Jack Reacher", released: 2012, directors: [199], categories: [4, 3, 5] },
+  { id: 287, title: "Meet the Parents", released: 2000, directors: [122], categories: [2, 12] },
+  { id: 288, title: "Priest", released: 2011, directors: [200], categories: [4, 6, 8] },
+  { id: 289, title: "The Nightmare before Christmas", released: 1993, directors: [201], categories: [11, 15, 10] },
 ];
 
 export default movies;
