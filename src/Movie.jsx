@@ -187,7 +187,7 @@ export default class Movie extends React.PureComponent {
               className="actions"
               style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}
             >
-              <ActionButton className={"watched" + selectedProperty("watched")}  id={this.props.id} onInvoke={this.handleToggleWatched} />
+              <ActionButton className={"watched" + selectedProperty("watched")} id={this.props.id} onInvoke={this.handleToggleWatched} />
               <ActionButton className={"watchlist" + selectedProperty("watchlist")} id={this.props.id} onInvoke={this.handleToggleWatchlist} />
               <ActionButton className={"favorite" + selectedProperty("favorite")} id={this.props.id} onInvoke={this.handleToggleFavorite} />
             </ul>
