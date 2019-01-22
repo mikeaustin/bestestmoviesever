@@ -1,3 +1,5 @@
+// @flow
+
 import React from "react";
 import ReactDOM from "react-dom";
 import Immutable from "immutable";
@@ -13,8 +15,16 @@ import MovieList from "./MovieList";
 import Help from "./Help";
 import Search from "./Search";
 
-import { ListReducer, NavigationActions, FilterActions, ToggleActions, KeyCode, SortOrder, selectedClass, combineEvery } from "./utils";
-
+import {
+  ListReducer,
+  NavigationActions,
+  FilterActions,
+  ToggleActions,
+  KeyCode,
+  SortOrder,
+  selectedClass,
+  combineEvery
+} from "./utils";
 
 const always     = x => (a, b) => x;
 const comparator = f => (next = always(0), x, y) => (a, b) => f(a, b) ? -1 : f(b, a) ? 1 : next(x, y);
@@ -24,14 +34,16 @@ const byReleased = order => next => (a, b) => order(next, a, b)(a.get("released"
 const byTitle    = next => (a, b) => ascending(next)(a.get("title"), b.get("title"));
 const withIndex  = (movie, index) => movie.set("index", index);
 
-
 class App extends React.PureComponent {
-
   constructor(props) {
     super(props);
 
-    this.evenCategories = this.props.categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 == 0).entrySeq();
-    this.oddCategories = this.props.categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 != 0).set(-1, null).entrySeq();
+    this.evenCategories = this.props.categories
+      .sortBy((genre, id) => id)
+      .filter((genre, id) => id % 2 == 0).entrySeq();
+    this.oddCategories = this.props.categories
+      .sortBy((genre, id) => id)
+      .filter((genre, id) => id % 2 != 0).set(-1, null).entrySeq();
 
     // this.directors2 = this.props.movies.reduce((map, movie) => {
     //   return map.update(directors.get(movie.get("directors").get(0)), (count = 0) => count + 1)
@@ -98,9 +110,13 @@ class App extends React.PureComponent {
     this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
 
     if (!this.allItems.isEmpty()) {
-      this.minOffsetLeft = this.allItems.first().offsetLeft;
-      this.maxOffsetLeft = this.allItems.skip(1).takeWhile(item => item.offsetLeft > this.allItems.first().offsetLeft)
-                                                .reduce((max, item) => Math.max(item.offsetLeft, max), this.allItems.first().offsetLeft);
+      this.minOffsetLeft = this.allItems
+        .first()
+        .offsetLeft;
+      this.maxOffsetLeft = this.allItems
+        .skip(1)
+        .takeWhile(item => item.offsetLeft > this.allItems.first().offsetLeft)
+        .reduce((max, item) => Math.max(item.offsetLeft, max), this.allItems.first().offsetLeft);
     }
   }
 
@@ -253,7 +269,11 @@ class App extends React.PureComponent {
   handleShowFavorites = () => this.updateState(FilterActions.showFavorites)
   handleShowUnwatched = () => this.updateState(FilterActions.showUnwatched)
   handleChangeCategory = categoryId => this.updateState(FilterActions.changeCategory(categoryId))
-  handleShowMovieIds = movieIds => this.updateState(state => ({filteredIds: movieIds, showSearch: false, selectedIndex: 0}))
+  handleShowMovieIds = movieIds => this.updateState(state => ({
+    filteredIds: movieIds,
+    showSearch: false,
+    selectedIndex: 0
+  }))
 
   handleToggleDirectors = event => {
     this.setState(state => ({showDirectors: !state.showDirectors}));
@@ -261,7 +281,12 @@ class App extends React.PureComponent {
     window.scrollTo(0, 0);
   }
 
-  handleChangeDirector = directorId => event => this.updateState(state => ({directorIds: Immutable.Set(directorId !== null ? [directorId] : null), showDirectors: false}));
+  handleChangeDirector = directorId => event => (
+    this.updateState(state => ({
+      directorIds: Immutable.Set(directorId !== null ? [directorId] : null),
+      showDirectors: false
+    }))
+  )
 
   //
   // State Management
@@ -269,14 +294,30 @@ class App extends React.PureComponent {
 
   updateState(reducer = () => ({})) {
     this.setState(state => {
-      const newState = { ...state, ...reducer(state) };
+      const newState = {
+        ...state,
+        ...reducer(state)
+      };
+      
+      const shouldRefresh =
+        newState.showFavorites !== state.showFavorites ||
+        newState.showWatchlist !== state.showWatchlist ||
+        newState.showUnwatched !== state.showUnwatched ||
+        !newState.favoriteIds.equals(state.favoriteIds) ||
+        !newState.watchlistIds.equals(state.watchlistIds) ||
+        !newState.watchedIds.equals(state.watchedIds) ||
+        !newState.directorIds.equals(state.directorIds) ||
+        !newState.filteredIds.equals(state.filteredIds) ||
+        newState.sortOrder !== state.sortOrder ||
+        !newState.categoryIds.equals(state.categoryIds);
 
-      const shouldRefresh = (newState.showFavorites && !newState.favoriteIds.equals(state.favoriteIds)) || newState.showFavorites !== state.showFavorites ||
-                            (newState.showWatchlist && !newState.watchlistIds.equals(state.watchlistIds)) || newState.showWatchlist !== state.showWatchlist ||
-                            (newState.showUnwatched && !newState.watchedIds.equals(state.watchedIds)) || newState.showUnwatched !== state.showUnwatched ||
-                            !newState.directorIds.equals(state.directorIds) ||
-                            !newState.filteredIds.equals(state.filteredIds) ||
-                            newState.sortOrder !== state.sortOrder || !newState.categoryIds.equals(state.categoryIds);
+      // const shouldRefresh =
+      //   (newState.showFavorites && !newState.favoriteIds.equals(state.favoriteIds)) || newState.showFavorites !== state.showFavorites ||
+      //   (newState.showWatchlist && !newState.watchlistIds.equals(state.watchlistIds)) || newState.showWatchlist !== state.showWatchlist ||
+      //   (newState.showUnwatched && !newState.watchedIds.equals(state.watchedIds)) || newState.showUnwatched !== state.showUnwatched ||
+      //   !newState.directorIds.equals(state.directorIds) ||
+      //   !newState.filteredIds.equals(state.filteredIds) ||
+      //   newState.sortOrder !== state.sortOrder || !newState.categoryIds.equals(state.categoryIds);
 
       const movies = shouldRefresh ? this.refreshMovies(newState) : state.movies;
 
@@ -319,7 +360,10 @@ class App extends React.PureComponent {
     // return visible.sort(byReleased(sortOrder)(byTitle())).map(movie => movie.set("hidden", false)).concat(hidden.map(movie => movie.set("hidden", true))).map(withIndex);
 
     //return this.props.movies.filter(combineEvery([onWatchlist, onFavorites, onUnwatched, onCategories, onDirectors])).sort(byReleased(sortOrder)(byTitle())).map(withIndex);
-    return this.props.movies.filter(combineEvery(onCriteria)).sort(byReleased(sortOrder)(byTitle())).map(withIndex);
+    return this.props.movies
+      .filter(combineEvery(onCriteria))
+      .sort(byReleased(sortOrder)(byTitle()))
+      .map(withIndex);
   }
 
   //
@@ -335,13 +379,32 @@ class App extends React.PureComponent {
 
     const directorsList = this.state.showDirectors ? (
       <div id="directors" style={{padding: "75px 20px 20px 20px", columnWidth: 300}}>
-        <div className="director bold" style={{fontSize: 15, marginBottom: "16px", cursor: "pointer"}} data-text="Reset Filter &mdash;" onClick={this.handleChangeDirector(null)}>Reset Filter &mdash; All Directors</div>
+        <div
+          className="director bold"
+          style={{fontSize: 15, marginBottom: "16px", cursor: "pointer"}}
+          data-text="Reset Filter &mdash;"
+          onClick={this.handleChangeDirector(null)}
+          >
+            Reset Filter &mdash; All Directors
+          </div>
         {this.directorsSortedByCount.entrySeq().map(([directorId, movieIds]) => (
           <div key={directorId} style={{breakInside: "avoid"}}>
-            <div className="director bold" style={{fontSize: 15, marginBottom: "6px", cursor: "pointer"}} data-text={rawDirectors.get(directorId)} onClick={this.handleChangeDirector(directorId)}>{rawDirectors.get(directorId)} ({movieIds.size})</div>
+            <div
+              className="director bold"
+              style={{fontSize: 15, marginBottom: "6px", cursor: "pointer"}}
+              data-text={rawDirectors.get(directorId)}
+              onClick={this.handleChangeDirector(directorId)}
+            >
+              {rawDirectors.get(directorId)} ({movieIds.size})
+            </div>
             <div style={{marginBottom: 15}}>
               {movieIds.map(movieId => (
-                <div key={movieId} style={{margin: "5px 0", marginLeft: 10, fontSize: 15, color: "hsl(0, 0%, 60%)"}}>{movies2.get(movieId).get("title")} &mdash; {movies2.get(movieId).get("released")}</div>
+                <div
+                  key={movieId}
+                  style={{margin: "5px 0", marginLeft: 10, fontSize: 15, color: "hsl(0, 0%, 60%)"}}
+                >
+                  {movies2.get(movieId).get("title")} &mdash; {movies2.get(movieId).get("released")}
+                </div>
               ))}
             </div>
           </div>
@@ -352,17 +415,51 @@ class App extends React.PureComponent {
     return (
       <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} data-user-agent={navigator.userAgent}>
         <Help isOpen={this.state.showHelp} onDismiss={this.handleHideHelp}/>
-        <Menu categories={this.props.categories} categoryIds={this.state.categoryIds} isOpen={this.state.showMenu}
-              sortOrder={this.state.sortOrder} showWatchlist={this.state.showWatchlist} showFavorites={this.state.showFavorites} showUnwatched={this.state.showUnwatched}
-              onSortYearAscending={this.handleSortYearAscending} onSortYearDescending={this.handleSortYearDescending}
-              onShowWatchlist={this.handleShowWatchlist} onShowFavorites={this.handleShowFavorites} onShowUnwatched={this.handleShowUnwatched}
-              onChangeCategory={this.handleChangeCategory} onHideMenu={this.handleHideMenu} onShowHelp={this.handleToggleHelp} />
+        <Menu
+          categories={this.props.categories}
+          categoryIds={this.state.categoryIds}
+          isOpen={this.state.showMenu}
+          sortOrder={this.state.sortOrder}
+          showWatchlist={this.state.showWatchlist}
+          showFavorites={this.state.showFavorites}
+          showUnwatched={this.state.showUnwatched}
+          onSortYearAscending={this.handleSortYearAscending}
+          onSortYearDescending={this.handleSortYearDescending}
+          onShowWatchlist={this.handleShowWatchlist}
+          onShowFavorites={this.handleShowFavorites}
+          onShowUnwatched={this.handleShowUnwatched}
+          onChangeCategory={this.handleChangeCategory}
+          onHideMenu={this.handleHideMenu}
+          onShowHelp={this.handleToggleHelp}
+        />
         <header>
-          <div id="menu-button" className={selectedState("showMenu")} style={{position: "absolute", display: "flex", alignItems: "center", left: 0, top: 0, height: 50, padding: "0 15px", paddingTop: 2, cursor: "pointer"}} onClick={this.handleToggleMenu}>
+          <div
+            id="menu-button"
+            className={selectedState("showMenu")}
+            style={{
+              position: "absolute",
+              display: "flex",
+              alignItems: "center",
+              left: 0,
+              top: 0,
+              height: 50,
+              padding: "0 15px",
+              paddingTop: 2,
+              cursor: "pointer"
+            }}
+            onClick={this.handleToggleMenu}
+          >
             <img src="icons/menu-button.svg" height="25" />
           </div>
 
-          <Search isOpen={this.state.showSearch} movies={this.state.movies} directors={rawDirectors} onShowSearch={this.handleShowSearch} onHideSearch={this.handleHideSearch} onShowMovieIds={this.handleShowMovieIds} />
+          <Search
+            isOpen={this.state.showSearch}
+            movies={this.state.movies}
+            directors={rawDirectors}
+            onShowSearch={this.handleShowSearch}
+            onHideSearch={this.handleHideSearch}
+            onShowMovieIds={this.handleShowMovieIds}
+          />
 
           {/*<div id="search-button" style={{position: "absolute", display: "flex", alignItems: "center", right: 0, top: 0, height: 50, padding: "0 15px", paddingTop: 2, cursor: "pointer"}}
                ref={element => this.searchButton = element} onClick={this.handleToggleSearch}>
@@ -376,8 +473,18 @@ class App extends React.PureComponent {
           </div>
         </header>
         {this.state.showDirectors ? directorsList : (
-          <MovieList movies={this.state.movies} directors={rawDirectors} watchlistIds={this.state.watchlistIds} favoriteIds={this.state.favoriteIds} watchedIds={this.state.watchedIds} selectedIndex={this.state.selectedIndex}
-                     onSelectIndex={this.handleSelectIndex} onToggleWatchlist={this.handleToggleWatchlist} onToggleFavorite={this.handleToggleFavorite} onToggleWatched={this.handleToggleWatched} />
+          <MovieList
+            movies={this.state.movies}
+            directors={rawDirectors}
+            watchlistIds={this.state.watchlistIds}
+            favoriteIds={this.state.favoriteIds}
+            watchedIds={this.state.watchedIds}
+            selectedIndex={this.state.selectedIndex}
+            onSelectIndex={this.handleSelectIndex}
+            onToggleWatchlist={this.handleToggleWatchlist}
+            onToggleFavorite={this.handleToggleFavorite}
+            onToggleWatched={this.handleToggleWatched}
+          />
         )}
         <footer />
       </div>
@@ -386,9 +493,13 @@ class App extends React.PureComponent {
 
 }
 
-const categories = Immutable.fromJS(rawCategories).reduce((map, item) => map.set(item.get("id"), item.get("name")), Immutable.Map());
+const categories = Immutable.fromJS(rawCategories).reduce((map, item) => (
+  map.set(item.get("id"), item.get("name")
+)), Immutable.Map());
 const movies = Immutable.fromJS(rawMovies);
-const movies2 = Immutable.fromJS(rawMovies).reduce((map, movie) => map.set(movie.get("id"), movie), Immutable.Map());
+const movies2 = Immutable.fromJS(rawMovies).reduce((map, movie) => (
+  map.set(movie.get("id"), movie)
+), Immutable.Map());
 
 window.movies = movies;
 

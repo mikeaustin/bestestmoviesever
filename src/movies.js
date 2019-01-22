@@ -130,7 +130,7 @@ const movies = [
   { id: 125, title: "Weird Science", released: 1985, directors: [22], categories: [2, 12, 0] },
   { id: 126, title: "The Goonies", released: 1985, directors: [92], categories: [6, 2, 15] },
   { id: 127, title: "Tron", released: 1982, directors: [26], categories: [4, 6, 0] },
-  { id: 128, title: "Tropic Thunder", released: 2008, directors: [27], categories: [4, 2] },
+  { id: 128, title: "Tropic Thunder", released: 2008, directors: [27], categories: [4, 2, 17] },
   { id: 129, title: "Wonder Woman", released: 2017, directors: [112], categories: [4, 6, 10] },
   { id: 130, title: "Logan", released: 2017, directors: [105], categories: [4, 1, 0] },
   { id: 131, title: "The Fifth Element", released: 1997, directors: [23], categories: [4, 6, 0] },
@@ -292,6 +292,16 @@ const movies = [
   { id: 287, title: "Meet the Parents", released: 2000, directors: [122], categories: [2, 12] },
   { id: 288, title: "Priest", released: 2011, directors: [200], categories: [4, 6, 8] },
   { id: 289, title: "The Nightmare before Christmas", released: 1993, directors: [201], categories: [11, 15, 10] },
+  { id: 290, title: "R.I.P.D.", released: 2013, directors: [130], categories: [4, 6, 2] },
+  { id: 291, title: "Abraham Lincoln: Vampire Hunter", released: 2012, directors: [202], categories: [4, 10, 8] },
+  { id: 292, title: "The Abyss", released: 1989, directors: [1], categories: [6, 1, 0] },
+  { id: 293, title: "History of the World: Part I", released: 1981, directors: [68], categories: [2, 13] },
+  { id: 294, title: "Tomorrowland", released: 2015, directors: [203], categories: [4, 6, 15] },
+  { id: 295, title: "Borat", released: 2006, directors: [204], categories: [2] },
+  { id: 296, title: "Queen of the Damned", released: 2002, directors: [205], categories: [2, 10, 8] },
+  { id: 297, title: "Beavis and Butthead do America", released: 1996, directors: [40], categories: [11, 6, 2] },
+  { id: 298, title: "Ex Machina", released: 2014, directors: [206], categories: [1, 14, 0] },
+  { id: 299, title: "Contact", released: 1997, directors: [76], categories: [1, 14, 0] },
 ];
 
 export default movies;

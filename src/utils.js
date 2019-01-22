@@ -1,5 +1,6 @@
-import Immutable from "immutable";
+// @flow
 
+import Immutable from "immutable";
 
 export const KeyCode = {
   TAB:          9,
@@ -20,12 +21,10 @@ export const SortOrder = {
   DESCENDING: +1
 };
 
-
 export const selectedClass = f => x => f(x) ? " selected" : "";
 export const combineEvery = fs => x => fs.every(f => f(x));
 
 export class ListReducer {
-
   constructor(list, acc = Immutable.List()) {
     this.list = list;
     this.acc = acc;
@@ -54,7 +53,6 @@ export class ListReducer {
   last() {
     return this.acc.last();
   }
-
 }
 
 
@@ -68,9 +66,7 @@ export class ListReducer {
 //   return { index: index, id: movie.id, title: movie.title, image: movie.image, released: movie.released, directors: movie.directors, categories: movie.categories };
 // };
 
-
 export const FilterActions = (() => {
-
   const sortYearAscending = state => {
     return {
       selectedIndex: 0,
@@ -120,7 +116,9 @@ export const FilterActions = (() => {
 
   const changeCategory = categoryId => {
     return state => {
-      const categoryIds = state.categoryIds.includes(categoryId) ? state.categoryIds.delete(categoryId) : state.categoryIds.add(categoryId);
+      const categoryIds = state.categoryIds.includes(categoryId)
+        ? state.categoryIds.delete(categoryId)
+        : state.categoryIds.add(categoryId);
 
       return {
         selectedIndex: 0,
@@ -137,13 +135,13 @@ export const FilterActions = (() => {
     showUnwatched,
     changeCategory
   };
-
 })();
 
 export const ToggleActions = (() => {
-
   const toggleWatchlist = movieId => state => {
-    const watchlistIds = state.watchlistIds.includes(movieId) ? state.watchlistIds.remove(movieId) : state.watchlistIds.add(movieId);
+    const watchlistIds = state.watchlistIds.includes(movieId)
+      ? state.watchlistIds.remove(movieId)
+      : state.watchlistIds.add(movieId);
 
     localStorage.setItem("watchlistIds", JSON.stringify(watchlistIds.toArray()));
 
@@ -153,7 +151,9 @@ export const ToggleActions = (() => {
   };
 
   const toggleFavorite = movieId => state => {
-    const favoriteIds = state.favoriteIds.includes(movieId) ? state.favoriteIds.remove(movieId) : state.favoriteIds.add(movieId);
+    const favoriteIds = state.favoriteIds.includes(movieId)
+      ? state.favoriteIds.remove(movieId)
+      : state.favoriteIds.add(movieId);
 
     localStorage.setItem("favoriteIds", JSON.stringify(favoriteIds.toArray()));
 
@@ -163,7 +163,9 @@ export const ToggleActions = (() => {
   };
 
   const toggleWatched = movieId => state => {
-    const watchedIds = state.watchedIds.includes(movieId) ? state.watchedIds.remove(movieId) : state.watchedIds.add(movieId);
+    const watchedIds = state.watchedIds.includes(movieId)
+      ? state.watchedIds.remove(movieId)
+      : state.watchedIds.add(movieId);
 
     localStorage.setItem("watchedIds", JSON.stringify(watchedIds.toArray()));
 
@@ -177,11 +179,9 @@ export const ToggleActions = (() => {
     toggleFavorite,
     toggleWatched
   };
-
 })();
 
 export const NavigationActions = (() => {
-
   const moveLeft = state => {
     if (state.selectedIndex > 0) {
       return {
@@ -234,5 +234,4 @@ export const NavigationActions = (() => {
     moveUp,
     moveDown
   }
-
 })();

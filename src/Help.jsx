@@ -1,8 +1,8 @@
+// @flow
+
 import React from "react";
 
-
 class Help extends React.PureComponent {
-
   constructor(props) {
     super(props);
   }
@@ -61,7 +61,6 @@ class Help extends React.PureComponent {
       </div>
     );
   }
-
 }
 
 export default Help;

@@ -1,15 +1,19 @@
+// @flow
+
 import React from "react";
 
 import { ListReducer, FilterEventHelper, KeyCode, SortOrder, selectedClass, combineEvery } from "./utils";
 
-
 export default class Menu extends React.PureComponent {
-
   constructor(props) {
     super(props);
 
-    this.evenCategories = this.props.categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 == 0).entrySeq();
-    this.oddCategories = this.props.categories.sortBy((genre, id) => id).filter((genre, id) => id % 2 != 0).set(-1, null).entrySeq();
+    this.evenCategories = this.props.categories
+      .sortBy((genre, id) => id)
+      .filter((genre, id) => id % 2 == 0).entrySeq();
+    this.oddCategories = this.props.categories
+      .sortBy((genre, id) => id)
+      .filter((genre, id) => id % 2 != 0).set(-1, null).entrySeq();
   }
 
   //
@@ -120,5 +124,4 @@ export default class Menu extends React.PureComponent {
       </div>
     );
   }
-
 }

@@ -1,6 +1,6 @@
+// @flow
 
 export default class Keyboard extends React.PureComponent {
-
   render() {
     return (
       <div className="keyboard" style={{position: "fixed", bottom: 0, display: "flex", flexDirection: "column"}}>
@@ -51,6 +51,5 @@ export default class Keyboard extends React.PureComponent {
         </div>
       </div>
     );
-  }
-  
+  }  
 }

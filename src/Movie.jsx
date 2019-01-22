@@ -1,3 +1,5 @@
+// @flow
+
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -12,7 +14,6 @@ if (navigator.userAgent.includes("armv7l")) {
 }
 
 class ActionButton extends React.PureComponent {
-
   constructor(props) {
     super(props);
   }
@@ -35,7 +36,6 @@ class ActionButton extends React.PureComponent {
 
 
 export default class Movie extends React.PureComponent {
-
   constructor(props) {
     super(props);
 
@@ -74,12 +74,23 @@ export default class Movie extends React.PureComponent {
 
     this.loadImageIfNeeded();
 
-    if (this.props.selected && ((this.li.offsetTop + this.li.offsetHeight + 10) > (window.innerHeight + document.body.scrollTop) ||
-                                (this.li.offsetTop < document.body.scrollTop + 50))) {
-      //setTimeout(() => {
-        smoothScroll(this.li.offsetTop - ((window.innerHeight + 50 - this.li.offsetHeight) / 2) + 16);
-      //}, 150);
+    if (!this.props.selected) {
+      return;
     }
+
+    const scrollTop = document.documentElement.scrollTop;
+    const isClippedBelow = (this.li.offsetTop + this.li.offsetHeight + 10) > (window.innerHeight + scrollTop);
+    const isClippedAbove = this.li.offsetTop < scrollTop + 50;
+
+    if (isClippedBelow || isClippedAbove) {
+      smoothScroll(this.li.offsetTop - ((window.innerHeight + 50 - this.li.offsetHeight) / 2) + 16);
+    }
+
+    // if (this.props.selected &&
+    //     ((this.li.offsetTop + this.li.offsetHeight + 10) > (window.innerHeight + document.body.scrollTop) ||
+    //       (this.li.offsetTop < document.body.scrollTop + 50))) {
+    //     smoothScroll(this.li.offsetTop - ((window.innerHeight + 50 - this.li.offsetHeight) / 2) + 16);
+    // }
   }
 
   loadImageIfNeeded() {
@@ -87,7 +98,9 @@ export default class Movie extends React.PureComponent {
       const imageName = this.props.image
         ? this.props.image
         : this.props.title.replace(/[^\d\w\s&.-]/g, "").replace(/ /g, "_");
-      const baseURL = location.origin === "http://bestestmoviesever.com" ? "http://d1rus1jxo7361x.cloudfront.net/" : "";
+      const baseURL = location.origin === "http://bestestmoviesever.com"
+        ? "http://d1rus1jxo7361x.cloudfront.net/"
+        : "";
 
       this.img.src = baseURL + "images/" + imageName + ".jpg";
     }
@@ -170,5 +183,4 @@ export default class Movie extends React.PureComponent {
       </li>
     );
   }
-
 }
