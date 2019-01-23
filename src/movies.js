@@ -302,6 +302,10 @@ const movies = [
   { id: 297, title: "Beavis and Butthead do America", released: 1996, directors: [40], categories: [11, 6, 2] },
   { id: 298, title: "Ex Machina", released: 2014, directors: [206], categories: [1, 14, 0] },
   { id: 299, title: "Contact", released: 1997, directors: [76], categories: [1, 14, 0] },
+  { id: 300, title: "Dirty Rotten Scoundrels", released: 1988, directors: [207], categories: [2, 3] },
+  { id: 301, title: "Star Wars: Episode VI - Return of the Jedi", released: 1983, directors: [208], categories: [4, 6, 10] },
+  { id: 302, title: "Forgetting Sarah Marshall", released: 2008, directors: [209], categories: [2, 1, 12] },
+  { id: 303, title: "The Book of Eli", released: 2010, directors: [210, 211], categories: [4, 6, 1] },
 ];
 
 export default movies;

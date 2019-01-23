@@ -363,6 +363,11 @@ const directors = Immutable.Map([
   [204, "Larry Charles"],
   [205, "Michael Rymer"],
   [206, "Alex Garland"],
+  [207, "Frank Oz"],
+  [208, "Richard Marquand"],
+  [209, "Nicholas Stoller"],
+  [210, "Albert Hughes"],
+  [211, "Allen Hughes"],
 ]);
 
 export default directors;
