@@ -299,25 +299,25 @@ class App extends React.PureComponent {
         ...reducer(state)
       };
       
-      const shouldRefresh =
-        newState.showFavorites !== state.showFavorites ||
-        newState.showWatchlist !== state.showWatchlist ||
-        newState.showUnwatched !== state.showUnwatched ||
-        !newState.favoriteIds.equals(state.favoriteIds) ||
-        !newState.watchlistIds.equals(state.watchlistIds) ||
-        !newState.watchedIds.equals(state.watchedIds) ||
-        !newState.directorIds.equals(state.directorIds) ||
-        !newState.filteredIds.equals(state.filteredIds) ||
-        newState.sortOrder !== state.sortOrder ||
-        !newState.categoryIds.equals(state.categoryIds);
-
       // const shouldRefresh =
-      //   (newState.showFavorites && !newState.favoriteIds.equals(state.favoriteIds)) || newState.showFavorites !== state.showFavorites ||
-      //   (newState.showWatchlist && !newState.watchlistIds.equals(state.watchlistIds)) || newState.showWatchlist !== state.showWatchlist ||
-      //   (newState.showUnwatched && !newState.watchedIds.equals(state.watchedIds)) || newState.showUnwatched !== state.showUnwatched ||
+      //   newState.showFavorites !== state.showFavorites ||
+      //   newState.showWatchlist !== state.showWatchlist ||
+      //   newState.showUnwatched !== state.showUnwatched ||
+      //   !newState.favoriteIds.equals(state.favoriteIds) ||
+      //   !newState.watchlistIds.equals(state.watchlistIds) ||
+      //   !newState.watchedIds.equals(state.watchedIds) ||
       //   !newState.directorIds.equals(state.directorIds) ||
       //   !newState.filteredIds.equals(state.filteredIds) ||
-      //   newState.sortOrder !== state.sortOrder || !newState.categoryIds.equals(state.categoryIds);
+      //   newState.sortOrder !== state.sortOrder ||
+      //   !newState.categoryIds.equals(state.categoryIds);
+
+      const shouldRefresh =
+        (newState.showFavorites && !newState.favoriteIds.equals(state.favoriteIds)) || newState.showFavorites !== state.showFavorites ||
+        (newState.showWatchlist && !newState.watchlistIds.equals(state.watchlistIds)) || newState.showWatchlist !== state.showWatchlist ||
+        (newState.showUnwatched && !newState.watchedIds.equals(state.watchedIds)) || newState.showUnwatched !== state.showUnwatched ||
+        !newState.directorIds.equals(state.directorIds) ||
+        !newState.filteredIds.equals(state.filteredIds) ||
+        newState.sortOrder !== state.sortOrder || !newState.categoryIds.equals(state.categoryIds);
 
       const movies = shouldRefresh ? this.refreshMovies(newState) : state.movies;
 
