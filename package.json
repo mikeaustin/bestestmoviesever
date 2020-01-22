@@ -21,7 +21,7 @@
     "react-dom": "^15.6.1",
     "smoothscroll": "^0.3.0",
     "webpack": "^3.3.0",
-    "webpack-dev-server": "^2.5.1"
+    "webpack-dev-server": "^3.1.11"
   },
   "devDependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
