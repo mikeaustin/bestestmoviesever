@@ -4,7 +4,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Immutable from "immutable";
 import smoothScroll from "smoothscroll";
-import UAParser from "ua-parser-js";
 
 import rawMovies from "./movies";
 import rawDirectors from "./directors";
@@ -26,13 +25,13 @@ import {
   combineEvery
 } from "./utils";
 
-const always     = x => (a, b) => x;
+const always = x => (a, b) => x;
 const comparator = f => (next = always(0), x, y) => (a, b) => f(a, b) ? -1 : f(b, a) ? 1 : next(x, y);
-const ascending  = (next, x, y) => comparator((a, b) => a < b)(next, x, y);
+const ascending = (next, x, y) => comparator((a, b) => a < b)(next, x, y);
 const descending = (next, x, y) => comparator((a, b) => a > b)(next, x, y);
 const byReleased = order => next => (a, b) => order(next, a, b)(a.get("released"), b.get("released"));
-const byTitle    = next => (a, b) => ascending(next)(a.get("title"), b.get("title"));
-const withIndex  = (movie, index) => movie.set("index", index);
+const byTitle = next => (a, b) => ascending(next)(a.get("title"), b.get("title"));
+const withIndex = (movie, index) => movie.set("index", index);
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -60,17 +59,17 @@ class App extends React.PureComponent {
     this.directorsSortedByCount = this.directors.sortBy((movieIds, director) => -movieIds.size);
 
     this.state = {
-      movies:        this.props.movies.sort(byReleased(descending)(byTitle())).map(withIndex),
-      sortOrder:     SortOrder.DESCENDING,
-      watchlistIds:  Immutable.Set(JSON.parse(localStorage.getItem("watchlistIds"))),
-      favoriteIds:   Immutable.Set(JSON.parse(localStorage.getItem("favoriteIds"))),
-      watchedIds:    Immutable.Set(JSON.parse(localStorage.getItem("watchedIds"))),
-      categoryIds:   Immutable.Set(),
-      filteredIds:   Immutable.Set(),
-      directorIds:   Immutable.Set(),
-      showHelp:      !JSON.parse(localStorage.getItem("seenHelp")),
-      showMenu:      false,
-      showSearch:    false,
+      movies: this.props.movies.sort(byReleased(descending)(byTitle())).map(withIndex),
+      sortOrder: SortOrder.DESCENDING,
+      watchlistIds: Immutable.Set(JSON.parse(localStorage.getItem("watchlistIds"))),
+      favoriteIds: Immutable.Set(JSON.parse(localStorage.getItem("favoriteIds"))),
+      watchedIds: Immutable.Set(JSON.parse(localStorage.getItem("watchedIds"))),
+      categoryIds: Immutable.Set(),
+      filteredIds: Immutable.Set(),
+      directorIds: Immutable.Set(),
+      showHelp: !JSON.parse(localStorage.getItem("seenHelp")),
+      showMenu: false,
+      showSearch: false,
       showWatchlist: false,
       showFavorites: false,
       showUnwatched: false,
@@ -87,7 +86,7 @@ class App extends React.PureComponent {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown, false);
-    document.addEventListener("touchmove", this.handleScroll, {passive: false});
+    document.addEventListener("touchmove", this.handleScroll, { passive: false });
 
     this.selectedItem = document.querySelector(".movies > li.selected");
 
@@ -148,10 +147,10 @@ class App extends React.PureComponent {
 
     if (!this.state.showSearch) {
       for (var prop in KeyCode) {
-       if (KeyCode[prop] === event.keyCode) {
+        if (KeyCode[prop] === event.keyCode) {
           event.preventDefault();
           event.stopPropagation();
-       }
+        }
       }
     }
 
@@ -164,16 +163,25 @@ class App extends React.PureComponent {
     }
 
     switch (event.keyCode) {
-      case 76: case KeyCode.TAB:      return this.handleToggleMenu();
-      case  0: case KeyCode.ENTER:    return this.handleShowSearch();
-      case 32:                        return this.handleToggleHelp();
-      case KeyCode.ARROW_LEFT:        return this.updateState(NavigationActions.moveLeft);
-      case KeyCode.ARROW_RIGHT:       return this.updateState(NavigationActions.moveRight);
-      case KeyCode.ARROW_UP:          return this.updateState(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
-      case KeyCode.ARROW_DOWN:        return this.updateState(NavigationActions.moveDown(this.allItems, this.selectedItem, this.minOffsetLeft));
-      case 89: case KeyCode.NUMBER_1: return this.handleToggleWatched(Number(this.selectedItem.dataset.id));
-      case 74: case KeyCode.NUMBER_2: return this.handleToggleWatchlist(Number(this.selectedItem.dataset.id));
-      case 85: case KeyCode.NUMBER_3: return this.handleToggleFavorite(Number(this.selectedItem.dataset.id));
+      case 76: case KeyCode.TAB:
+        return this.handleToggleMenu();
+      case 0: case KeyCode.ENTER:
+        return this.handleShowSearch();
+      case 32: return this.handleToggleHelp();
+      case KeyCode.ARROW_LEFT:
+        return this.updateState(NavigationActions.moveLeft);
+      case KeyCode.ARROW_RIGHT:
+        return this.updateState(NavigationActions.moveRight);
+      case KeyCode.ARROW_UP:
+        return this.updateState(NavigationActions.moveUp(this.allItems, this.selectedItem, this.maxOffsetLeft));
+      case KeyCode.ARROW_DOWN:
+        return this.updateState(NavigationActions.moveDown(this.allItems, this.selectedItem, this.minOffsetLeft));
+      case 89: case KeyCode.NUMBER_1:
+        return this.handleToggleWatched(Number(this.selectedItem.dataset.id));
+      case 74: case KeyCode.NUMBER_2:
+        return this.handleToggleWatchlist(Number(this.selectedItem.dataset.id));
+      case 85: case KeyCode.NUMBER_3:
+        return this.handleToggleFavorite(Number(this.selectedItem.dataset.id));
     }
   }
 
@@ -186,8 +194,10 @@ class App extends React.PureComponent {
         const clientY = event.touches ? event.touches[0].clientY : 0;
         const deltaY = event.touches ? this.clientY - clientY : event.deltaY;
 
-        if ((deltaY > 0 && offsetParent.offsetHeight + offsetParent.scrollTop >= offsetParent.scrollHeight) ||
-             deltaY < 0 && offsetParent.scrollTop === 0) {
+        if (
+          (deltaY > 0 && offsetParent.offsetHeight + offsetParent.scrollTop >= offsetParent.scrollHeight) ||
+          deltaY < 0 && offsetParent.scrollTop === 0
+        ) {
           event.preventDefault();
           event.stopPropagation();
         }
@@ -276,7 +286,7 @@ class App extends React.PureComponent {
   }))
 
   handleToggleDirectors = event => {
-    this.setState(state => ({showDirectors: !state.showDirectors}));
+    this.setState(state => ({ showDirectors: !state.showDirectors }));
 
     window.scrollTo(0, 0);
   }
@@ -298,7 +308,7 @@ class App extends React.PureComponent {
         ...state,
         ...reducer(state)
       };
-      
+
       // const shouldRefresh =
       //   newState.showFavorites !== state.showFavorites ||
       //   newState.showWatchlist !== state.showWatchlist ||
@@ -335,12 +345,12 @@ class App extends React.PureComponent {
   refreshMovies(state) {
     console.log("refreshMovies()");
 
-    const onWatchlist  = movie => state.watchlistIds.includes(movie.get("id"));
-    const onFavorites  = movie => state.favoriteIds.includes(movie.get("id"));
-    const onUnwatched  = movie => !state.watchedIds.includes(movie.get("id"));
+    const onWatchlist = movie => state.watchlistIds.includes(movie.get("id"));
+    const onFavorites = movie => state.favoriteIds.includes(movie.get("id"));
+    const onUnwatched = movie => !state.watchedIds.includes(movie.get("id"));
     const onCategories = movie => movie.get("categories").isSuperset(state.categoryIds);
-    const onDirectors  = movie => movie.get("directors").isSuperset(state.directorIds);
-    const onFilter     = movie => state.filteredIds.includes(movie.get("id"));
+    const onDirectors = movie => movie.get("directors").isSuperset(state.directorIds);
+    const onFilter = movie => state.filteredIds.includes(movie.get("id"));
 
     var onCriteria = [
       [state.showWatchlist, onWatchlist],
@@ -378,30 +388,30 @@ class App extends React.PureComponent {
     const selectedSortOrder = selectedClass(arg => this.state.sortOrder == arg);
 
     const directorsList = this.state.showDirectors ? (
-      <div id="directors" style={{padding: "75px 20px 20px 20px", columnWidth: 300}}>
+      <div id="directors" style={{ padding: "75px 20px 20px 20px", columnWidth: 300 }}>
         <div
           className="director bold"
-          style={{fontSize: 15, marginBottom: "16px", cursor: "pointer"}}
+          style={{ fontSize: 15, marginBottom: "16px", cursor: "pointer" }}
           data-text="Reset Filter &mdash;"
           onClick={this.handleChangeDirector(null)}
-          >
-            Reset Filter &mdash; All Directors
+        >
+          Reset Filter &mdash; All Directors
           </div>
         {this.directorsSortedByCount.entrySeq().map(([directorId, movieIds]) => (
-          <div key={directorId} style={{breakInside: "avoid"}}>
+          <div key={directorId} style={{ breakInside: "avoid" }}>
             <div
               className="director bold"
-              style={{fontSize: 15, marginBottom: "6px", cursor: "pointer"}}
+              style={{ fontSize: 15, marginBottom: "6px", cursor: "pointer" }}
               data-text={rawDirectors.get(directorId)}
               onClick={this.handleChangeDirector(directorId)}
             >
               {rawDirectors.get(directorId)} ({movieIds.size})
             </div>
-            <div style={{marginBottom: 15}}>
+            <div style={{ marginBottom: 15 }}>
               {movieIds.map(movieId => (
                 <div
                   key={movieId}
-                  style={{margin: "5px 0", marginLeft: 10, fontSize: 15, color: "hsl(0, 0%, 60%)"}}
+                  style={{ margin: "5px 0", marginLeft: 10, fontSize: 15, color: "hsl(0, 0%, 60%)" }}
                 >
                   {movies2.get(movieId).get("title")} &mdash; {movies2.get(movieId).get("released")}
                 </div>
@@ -413,8 +423,8 @@ class App extends React.PureComponent {
     ) : null;
 
     return (
-      <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}} data-user-agent={navigator.userAgent}>
-        <Help isOpen={this.state.showHelp} onDismiss={this.handleHideHelp}/>
+      <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }} data-user-agent={navigator.userAgent}>
+        <Help isOpen={this.state.showHelp} onDismiss={this.handleHideHelp} />
         <Menu
           categories={this.props.categories}
           categoryIds={this.state.categoryIds}
@@ -465,11 +475,11 @@ class App extends React.PureComponent {
                ref={element => this.searchButton = element} onClick={this.handleToggleSearch}>
             <img src="icons/search.svg" height="25" />
           </div>*/}
-          <div className="center" style={{paddingTop: 5, cursor: "pointer"}} onClick={this.handleToggleDirectors}>
-            <span className="title" style={{fontSize: 25, fontWeight: 800}}>
-              <img src="icons/down-arrow-1.svg" height="10" style={{position: "relative", top: -4}} /> Movies
+          <div className="center" style={{ paddingTop: 5, cursor: "pointer" }} onClick={this.handleToggleDirectors}>
+            <span className="title" style={{ fontSize: 25, fontWeight: 800 }}>
+              <img src="icons/down-arrow-1.svg" height="10" style={{ position: "relative", top: -4 }} /> Movies
             </span>
-            &nbsp;<span className="count" style={{fontSize: 25}}>({this.state.movies.size})</span>
+            &nbsp;<span className="count" style={{ fontSize: 25 }}>({this.state.movies.size})</span>
           </div>
         </header>
         {this.state.showDirectors ? directorsList : (
@@ -495,7 +505,7 @@ class App extends React.PureComponent {
 
 const categories = Immutable.fromJS(rawCategories).reduce((map, item) => (
   map.set(item.get("id"), item.get("name")
-)), Immutable.Map());
+  )), Immutable.Map());
 const movies = Immutable.fromJS(rawMovies);
 const movies2 = Immutable.fromJS(rawMovies).reduce((map, movie) => (
   map.set(movie.get("id"), movie)
