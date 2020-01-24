@@ -104,7 +104,7 @@ class App extends React.PureComponent {
   }
 
   refreshDOMCache() {
-    console.log("refreshDOMCache()");
+    // console.log("refreshDOMCache()");
 
     this.allItems = Immutable.List(document.querySelectorAll(".movies > li"));
 
@@ -124,7 +124,7 @@ class App extends React.PureComponent {
   //
 
   handleKeyDown = event => {
-    console.log(">>>", event.keyCode);
+    // console.log(">>>", event.keyCode);
 
     if (event.keyCode !== 32) {
       this.setState({
@@ -188,7 +188,7 @@ class App extends React.PureComponent {
   handleScroll = event => {
     if (this.state.showMenu || this.state.showSearch) {
       if (event.target.className === "action") {
-        console.log(event);
+        // console.log(event);
 
         const offsetParent = event.target.offsetParent;
         const clientY = event.touches ? event.touches[0].clientY : 0;
@@ -343,7 +343,7 @@ class App extends React.PureComponent {
   }
 
   refreshMovies(state) {
-    console.log("refreshMovies()");
+    // console.log("refreshMovies()");
 
     const onWatchlist = movie => state.watchlistIds.includes(movie.get("id"));
     const onFavorites = movie => state.favoriteIds.includes(movie.get("id"));
@@ -381,7 +381,7 @@ class App extends React.PureComponent {
   //
 
   render() {
-    console.log("App#render()");
+    // console.log("App#render()");
 
     const selectedState = selectedClass(arg => this.state[arg]);
     const selectedCategory = selectedClass(arg => this.state.categoryIds.includes(arg));

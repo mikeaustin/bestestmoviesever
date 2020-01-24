@@ -31,7 +31,7 @@ class ActionButton extends React.PureComponent {
     return (
       <li className={this.props.className} onMouseDown={this.handleMouseDown} />
     );
-  }  
+  }
 }
 
 
@@ -50,7 +50,7 @@ export default class Movie extends React.PureComponent {
   //
 
   componentDidMount() {
-    console.log("Movie#componentDidMount()");
+    // console.log("Movie#componentDidMount()");
 
     this.loadImageIfNeeded();
 
@@ -70,7 +70,7 @@ export default class Movie extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    console.log("Movie#componentDidUpdate()");
+    // console.log("Movie#componentDidUpdate()");
 
     this.loadImageIfNeeded();
 
@@ -127,7 +127,7 @@ export default class Movie extends React.PureComponent {
   }
 
   handleToggleWatchlist = (movieId) => {
-      this.props.onToggleWatchlist(movieId);
+    this.props.onToggleWatchlist(movieId);
   }
 
   handleToggleFavorite = (movieId) => {
@@ -146,15 +146,17 @@ export default class Movie extends React.PureComponent {
     //console.log("Movie#render()");
 
     const stem = this.props.selected ? (
-      <div style={{position: "absolute", background: "hsl(0, 0%, 10%)", width: 15, height: 15, left: "50%", marginLeft: -7, bottom: -28,
-                   transform: "rotate(45deg)", borderLeft: "1px solid hsl(0, 0%, 20%)", borderTop: "1px solid hsl(0, 0%, 20%)", zIndex: 1}}></div>
+      <div style={{
+        position: "absolute", background: "hsl(0, 0%, 10%)", width: 15, height: 15, left: "50%", marginLeft: -7, bottom: -28,
+        transform: "rotate(45deg)", borderLeft: "1px solid hsl(0, 0%, 20%)", borderTop: "1px solid hsl(0, 0%, 20%)", zIndex: 1
+      }}></div>
     ) : null;
 
     const details = this.props.selected ? (
       <div className="details">
         <div className="bubble">
-          <div className="title" style={{fontSize: 20, fontWeight: 700, marginBottom: 8, textAlign: "center"}}>{this.props.title}</div>
-          <div className="extra" style={{fontSize: 20, fontWeight: 400, textAlign: "center"}}>
+          <div className="title" style={{ fontSize: 20, fontWeight: 700, marginBottom: 8, textAlign: "center" }}>{this.props.title}</div>
+          <div className="extra" style={{ fontSize: 20, fontWeight: 400, textAlign: "center" }}>
             {this.props.released}
             &nbsp; &#9724;&#xfe0e; &nbsp;
             {this.props.directorIds ? this.props.directorIds.map(id => this.props.directors.get(id)).join(", ") : "Unknown"}
@@ -171,10 +173,10 @@ export default class Movie extends React.PureComponent {
         className={selectedProperty("selected")}
         data-id={this.props.id}
         data-index={this.props.index}
-        style={{display: this.props.hidden ? "none" : ""}}
+        style={{ display: this.props.hidden ? "none" : "" }}
       >
         <h1>{this.props.group}</h1>
-        <div style={{position: "relative"}}>
+        <div style={{ position: "relative" }}>
           {stem}
           <div
             className={"image" + (this.state.imageLoaded ? " loaded" : "")}
@@ -185,7 +187,7 @@ export default class Movie extends React.PureComponent {
             <img ref={img => this.img = img} src={this.imageURL} title={this.props.title} onLoad={this.handleImageLoad} />
             <ul
               className="actions"
-              style={{display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50}}
+              style={{ display: "flex", alignItems: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 50 }}
             >
               <ActionButton className={"watched" + selectedProperty("watched")} id={this.props.id} onInvoke={this.handleToggleWatched} />
               <ActionButton className={"watchlist" + selectedProperty("watchlist")} id={this.props.id} onInvoke={this.handleToggleWatchlist} />

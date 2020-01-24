@@ -18,9 +18,9 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "immutable": "^3.8.2",
-    "react": "^15.6.2",
-    "react-dom": "^15.6.2",
-    "smoothscroll": "^0.3.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "smoothscroll": "^0.4.0",
     "webpack": "^3.3.0",
     "webpack-dev-server": "^2.11.5"
   }

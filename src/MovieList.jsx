@@ -12,12 +12,12 @@ class MovieList extends React.PureComponent {
   }
 
   render() {
-    console.log("MovieList#render()");
-    
+    // console.log("MovieList#render()");
+
     if (this.props.movies.isEmpty()) {
       return (
         <div
-          style={{marginTop: 50, flex: 1, display: "flex", justifyContent: "center", alignItems: "center", fontSize: 30}}
+          style={{ marginTop: 50, flex: 1, display: "flex", justifyContent: "center", alignItems: "center", fontSize: 30 }}
         >
           No Matches
         </div>
