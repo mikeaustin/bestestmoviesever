@@ -306,6 +306,22 @@ const movies = [
   { id: 301, title: "Star Wars: Episode VI - Return of the Jedi", released: 1983, directors: [208], categories: [4, 6, 10] },
   { id: 302, title: "Forgetting Sarah Marshall", released: 2008, directors: [209], categories: [2, 1, 12] },
   { id: 303, title: "The Book of Eli", released: 2010, directors: [210, 211], categories: [4, 6, 1] },
+  { id: 304, title: "Joker", released: 2019, directors: [212], categories: [3, 1, 5] },
+  { id: 305, title: "Ad Astra", released: 2019, directors: [213], categories: [6, 1, 14] },
+  { id: 306, title: "John Wick: Chapter 3", released: 2019, directors: [165], categories: [4, 3, 5] },
+  { id: 307, title: "Spider-Man: Far from Home", released: 2019, directors: [214], categories: [4, 6, 0] },
+  { id: 308, title: "Alita: Battle Angel", released: 2019, directors: [8], categories: [4, 6, 0] },
+  { id: 309, title: "Major Payne", released: 1995, directors: [215], categories: [6, 2, 15] },
+  { id: 310, title: "The Last Starfighter", released: 1984, directors: [215], categories: [4, 6, 0] },
+  { id: 311, title: "Source Code", released: 2011, directors: [216], categories: [4, 1, 14] },
+  { id: 312, title: "Night of the Living Dead", released: 1968, directors: [217], categories: [8] },
+  { id: 313, title: "Day of the Dead", released: 1985, directors: [217], categories: [8, 5] },
+  { id: 314, title: "Black Panther", released: 2018, directors: [161], categories: [4, 6, 0] },
+  { id: 315, title: "Spider-Man: Into the Spider-Verse", released: 2018, directors: [218, 219], categories: [11, 4, 6] },
+  { id: 316, title: "Deadpool 2", released: 2018, directors: [195], categories: [4, 6, 2] },
+  { id: 317, title: "Fast & Furious Presents: Hobbs & Shaw", released: 2019, directors: [195], categories: [4, 6] },
+  { id: 318, title: "Zombieland: Double Tap", released: 2019, directors: [88], categories: [4, 2, 8] },
+  { id: 319, title: "Men in Black II", released: 2002, directors: [48], categories: [4, 6, 2, 0] },
 ];
 
 export default movies;
