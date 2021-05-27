@@ -376,6 +376,20 @@ const directors = Immutable.Map([
   [217, "George A. Romero"],
   [218, "Bob Persichetti"],
   [219, "Peter Ramsey"],
+  [220, "Martin Campbell"],
+  [221, "Nelson Shin"],
+  [222, "Rian Johnson"],
+  [223, "Ben Affleck"],
+  [224, "Jan Pinkava"],
+  [225, "Chris Carter"],
+  [226, "Billy Bob Thornton"],
+  [227, "Mamoru Oshii"],
+  [228, "Chuck Russell"],
+  [229, "Alex Proyas"],
+  [230, "Wes Craven"],
+  [231, "Tobe Hooper"],
+  [232, "Don Siegel"],
+  [233, "Victor Fleming"],
 ]);
 
 export default directors;
