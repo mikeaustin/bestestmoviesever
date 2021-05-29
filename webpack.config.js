@@ -1,8 +1,9 @@
-var webpack = require('webpack');
-var path = require('path');
+const webpack = require('webpack');
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const path = require('path');
 
-var BUILD_DIR = path.resolve(__dirname, 'public');
-var APP_DIR = path.resolve(__dirname, 'src');
+const BUILD_DIR = path.resolve(__dirname, 'public');
+const APP_DIR = path.resolve(__dirname, 'src');
 
 module.exports = {
   entry: APP_DIR + '/index.jsx',
@@ -17,7 +18,7 @@ module.exports = {
     contentBase: BUILD_DIR
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         include: APP_DIR,
@@ -33,8 +34,21 @@ module.exports = {
           importLoaders: 1,
           localIdentName: '[name]__[local]___[hash:base64:5]'
         }
-      }
+      },
+      // {
+      //   test: /\.(jpe?g|png|gif|svg)$/i,
+      //   use: [
+      //     {
+      //       loader: ImageMinimizerPlugin.loader,
+      //       options: {
+      //         severityError: "warning", // Ignore errors on corrupted images
+      //         minimizerOptions: {
+      //           plugins: ["mozjpeg"],
+      //         },
+      //       },
+      //     },
+      //   ],
+      // },
     ]
-  }
+  },
 };
-
